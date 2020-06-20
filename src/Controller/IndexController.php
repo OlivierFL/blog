@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class FrontController
+class IndexController
 {
     public function home()
     {
