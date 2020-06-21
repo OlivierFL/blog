@@ -56,6 +56,7 @@ class Router
             case Dispatcher::FOUND:
                 if ('index' === $routeName) {
                     $controller = new IndexController();
+
                     return $controller->home();
                 }
 
@@ -68,6 +69,7 @@ class Router
                     if (!empty($params) && $params['id']) {
                         return $controller->{$action}($params['id']);
                     }
+
                     return $controller->{$action}();
                 }
 
@@ -75,14 +77,13 @@ class Router
             default:
                 echo '404 not found';
         }
-
     }
 
     private function formatControllerName(string $name): string
     {
-        $controller = ucfirst($name) . 'Controller';
+        $controller = ucfirst($name).'Controller';
         $namespace = 'App\\Controller\\';
 
-        return $namespace . $controller;
+        return $namespace.$controller;
     }
 }
