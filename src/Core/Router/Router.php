@@ -23,22 +23,6 @@ class Router
         });
     }
 
-    public function run()
-    {
-        $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
-
-        // Strip query string (?foo=bar) and decode URI
-        if (false !== $pos = strpos($uri, '?')) {
-            $uri = substr($uri, 0, $pos);
-        }
-        $uri = rawurldecode($uri);
-
-        $matchedRoute = $this->dispatcher->dispatch($httpMethod, $uri);
-
-        $this->handleRoute($matchedRoute);
-    }
-
     private function handleRoute(array $matchedRoute)
     {
         $routeName = $matchedRoute[1];
@@ -85,5 +69,21 @@ class Router
         $namespace = 'App\\Controller\\';
 
         return $namespace.$controller;
+    }
+
+    public function run()
+    {
+        $httpMethod = $_SERVER['REQUEST_METHOD'];
+        $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
+
+        // Strip query string (?foo=bar) and decode URI
+        if (false !== $pos = strpos($uri, '?')) {
+            $uri = substr($uri, 0, $pos);
+        }
+        $uri = rawurldecode($uri);
+
+        $matchedRoute = $this->dispatcher->dispatch($httpMethod, $uri);
+
+        $this->handleRoute($matchedRoute);
     }
 }
