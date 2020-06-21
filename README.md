@@ -4,3 +4,17 @@
 # blog
 Project 5 - First blog built with PHP
 
+# Installation
+This project is developed with Docker.
+
+To install this project on your local machine, simply clone this repository.
+
+The stack is composed of 4 containers : 
+- nginx
+- php
+- mysql
+- phpMyAdmin
+
+Then launch the dev stack with Docker : `docker-compose up -d`.
+
+The homepage is available on : `blog.localhost:8080`
