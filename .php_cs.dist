@@ -2,6 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('var')
+    ->notPath('src/Core/Router.php')
     ->in(__DIR__)
     ->append([__DIR__.'/php-cs-fixer'])
 ;

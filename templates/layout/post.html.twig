@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {{ post_title }}
+{% endblock %}
+
+{% block body %}
+  <div class="hero-img">
+    <div class="hero-text text-center">
+      <h1>{{ post_title }}</h1>
+      <hr class="separator-white">
+    </div>
+  </div>
+  <div class="container">
+    <section class="m-60 text-center">
+      <hr class="separator-orange">
+      <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, at blanditiis corporis
+        dolore dolores
+        excepturi itaque, mollitia odit, optio quaerat quidem reiciendis totam veniam? A, quo, vel. Ab
+        accusantium adipisci asperiores cumque debitis dolorum ea earum et eveniet, id in iure magnam minima
+        nihil praesentium quam quas quo reiciendis sint suscipit temporibus ut vitae. Alias at doloribus
+        esse
+        exercitationem illo ipsam nisi provident quos rerum. Dicta id natus recusandae sed. Lorem ipsum dolor sit
+        amet, consectetur adipisicing elit. Ab alias animi cupiditate esse et eveniet, expedita modi officiis
+        quibusdam quod sunt temporibus? Ad aliquid amet, blanditiis consequuntur eius enim, illum inventore itaque
+        nam non provident reiciendis reprehenderit, rerum saepe similique.</p>
+      <a class="btn btn-primary mt-5" href="/posts/">Retour aux actualités</a>
+    </section>
+  </div>
+{% endblock %}

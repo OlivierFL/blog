@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Admin
+{% endblock %}
+
+{% block body %}
+  <div class="hero-img">
+    <div class="hero-text text-center">
+      <h1>Admin</h1>
+      <hr class="separator-white">
+    </div>
+  </div>
+  <div class="container">
+    <section class="m-60 text-center">
+      <h2>Les dernières news</h2>
+      <hr class="separator-orange">
+      <div class="row justify-content-around">
+        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
+          <a href="fiche_actualite.html">
+            <img class="img-fluid img-news" src="img/ai-nhan-H2MvVcxoeeA-unsplash_1.jpg" alt="Actualité 1">
+            <div class="hero-text bg-orange p-4">
+              <h3>Post 1</h3>
+              <p>Lire plus</p>
+            </div>
+          </a>
+        </article>
+        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
+          <a href="fiche_actualite.html">
+            <img class="img-fluid img-news" src="img/nils-schirmer-aZQcT5RdnfU-unsplash_1.jpg" alt="Actualité 2">
+            <div class="hero-text bg-orange p-4">
+              <h3>Post 2</h3>
+              <p>Lire plus</p>
+            </div>
+          </a>
+        </article>
+        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
+          <a href="fiche_actualite.html">
+            <img class="img-fluid img-news" src="img/robert-bye-4hcpIbqQM8c-unsplash_1.jpg" alt="Actualité 3">
+            <div class="hero-text bg-orange p-4">
+              <h3>Post 3</h3>
+              <p>Lire plus</p>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+  </div>
+{% endblock %}
