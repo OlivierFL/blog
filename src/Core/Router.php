@@ -1,8 +1,7 @@
 <?php
 
-namespace Core\Router;
+namespace Core;
 
-use App\Controller\IndexController;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
@@ -14,12 +13,14 @@ class Router
     public function __construct()
     {
         $this->dispatcher = simpleDispatcher(static function (RouteCollector $routes) {
-            $routes->get('/', 'index');
+            $routes->get('/', 'index.home');
             $routes->addGroup('/posts', static function (RouteCollector $routes) {
                 $routes->get('', 'posts.list');
                 $routes->get('/', 'posts.list');
                 $routes->get('/{id:\d+}', 'posts.show');
             });
+            $routes->get('/admin', 'admin.home');
+            $routes->get('/login', 'user.login');
         });
     }
 
@@ -38,12 +39,6 @@ class Router
 
                 break;
             case Dispatcher::FOUND:
-                if ('index' === $routeName) {
-                    $controller = new IndexController();
-
-                    return $controller->home();
-                }
-
                 if (preg_match('/(\w+)\.?(\w+)?/', $routeName, $matches)) {
                     $controller = $this->formatControllerName($matches[1]);
                     $controller = new $controller();
@@ -65,10 +60,10 @@ class Router
 
     private function formatControllerName(string $name): string
     {
-        $controller = ucfirst($name).'Controller';
+        $controller = ucfirst($name) . 'Controller';
         $namespace = 'App\\Controller\\';
 
-        return $namespace.$controller;
+        return $namespace . $controller;
     }
 
     public function run()
