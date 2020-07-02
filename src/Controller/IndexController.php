@@ -2,10 +2,16 @@
 
 namespace App\Controller;
 
-class IndexController
+use Core\Controller;
+use Exception;
+
+class IndexController extends Controller
 {
+    /**
+     * @throws Exception
+     */
     public function home()
     {
-        echo 'Hello World';
+        return $this->render('layout/index.html.twig');
     }
 }
