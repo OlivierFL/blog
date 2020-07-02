@@ -24,6 +24,16 @@ class Router
         });
     }
 
+    /**
+     * @param array $matchedRoute
+     * $matchedRoute is an array which contains route information returned by the dispatcher
+     * $matchedRoute = [
+     *      0 => an integer indicating if the route has a match, or the route is not found or the method is not allowed,
+     *      1 => handler name specified when adding routes,
+     *      2 => an array of "get/post" params if they exists,
+     * ]
+     * @return mixed
+     */
     private function handleRoute(array $matchedRoute)
     {
         $routeName = $matchedRoute[1];
@@ -39,6 +49,12 @@ class Router
 
                 break;
             case Dispatcher::FOUND:
+                /**
+                 * array $matches contains the results of the preg_match function
+                 * $matches[0] contains the full match
+                 * $matches[1] contains the match of the first capturing group of the regex (used to get the right controller name)
+                 * $matches[2] contains the match of the second capturing group (used to call the right controller action)
+                 */
                 if (preg_match('/(\w+)\.?(\w+)?/', $routeName, $matches)) {
                     $controller = $this->formatControllerName($matches[1]);
                     $controller = new $controller();

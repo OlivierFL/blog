@@ -10,5 +10,4 @@ class UserController extends Controller
     {
         return $this->render('layout/login.html.twig');
     }
-
 }
