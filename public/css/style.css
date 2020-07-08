@@ -49,7 +49,7 @@ a:focus {
 
 footer {
     color: #ffffff;
-    background-image: linear-gradient(#073763, #03213B);
+    background-image: linear-gradient(#1c768f, #032539);
     padding: 1rem;
 }
 
@@ -64,7 +64,7 @@ footer {
 
 /* Bootstrap override */
 .bg-dark {
-    background-color: #0F4B81 !important;
+    background-color: #1c768f !important;
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -83,20 +83,20 @@ footer {
 }
 
 .btn-primary {
-    background-image: linear-gradient(135deg, #fb9363, #c7450a);
+    background-image: linear-gradient(135deg, #1c768f, #032539);
     border: none;
     color: #ffffff;
-    border-radius: 2rem;
+    border-radius: 0;
 }
 
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
-    background-image: linear-gradient(135deg, rgba(251, 147, 99, 0.8), rgba(199, 69, 10, 0.81));
+    background-image: linear-gradient(135deg, rgba(28, 118, 143, 0.8), rgba(3, 37, 57, 0.81));
     background-color: transparent;
     border: none;
     color: #ffffff;
-    border-radius: 2rem;
+    border-radius: 0;
     transition: none;
-    box-shadow: 0 0 8px -0.3rem #c7450a;
+    box-shadow: 0 0 8px -0.3rem #1c768f;
 }
 
 .btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show > .btn-primary.dropdown-toggle:focus {
@@ -105,20 +105,28 @@ footer {
 }
 
 .form-control {
-    border: 2px solid #c7450a;
-    border-radius: 2rem;
+    border: 2px solid #1c768f;
+    border-radius: 0;
     background-color: transparent;
-    color: #c7450a;
+    color: #1c768f;
 }
 
 .form-control::placeholder {
-    color: #c7450a;
+    color: #1c768f;
 }
 
 .form-control:focus {
-    border: 2px solid #c7450a;
-    box-shadow: 0 0 8px -0.2rem #c7450a;
-    color: #c7450a;
+    border: 2px solid #1c768f;
+    box-shadow: 0 0 8px -0.2rem #1c768f;
+    color: #1c768f;
+}
+
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
 }
 
 .custom-select {
@@ -150,7 +158,7 @@ footer {
 }
 
 .hero-img {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url("../img/hero-img.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url("../img/ilya-pavlov-OqtafYT5kTw-unsplash.jpg");
     height: 80vh;
     background-position: center;
     background-repeat: no-repeat;
@@ -188,13 +196,13 @@ footer {
 }
 
 .bg-orange {
-    background-color: rgba(199, 69, 10, 0.51);
+    background-color: rgba(28, 118, 143, 0.51);
 }
 
 .card-dotted-border {
     color: #000000;
-    border: 2px dotted #c7450a;
-    border-radius: 2rem;
+    border: 2px dotted #1c768f;
+    border-radius: 0;
     padding: 2rem;
 }
 
@@ -202,7 +210,7 @@ footer {
     box-shadow: 0 0 20px -10px #03213B;
     border-radius: 10px;
     background-image: linear-gradient(30deg, #4777a3, #0F4C81);
-    background-color: #4777a3;
+    background-color: #1c768f;
     color: #ffffff;
 }
 
@@ -214,15 +222,15 @@ footer {
     border-radius: 10px 10px 0 0;
 }
 
-.separator-orange {
+.separator-blue {
     width: 4em;
-    border: 2px solid #c7450a;
+    border: 2px solid #1c768f;
     margin: 0.5rem auto 1.8rem auto;
 }
 
-.separator-orange-left {
+.separator-blue-left {
     width: 6em;
-    border: 2px solid #c7450a;
+    border: 2px solid #1c768f;
     margin: 1rem 0 1rem 0;
 }
 
