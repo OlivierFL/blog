@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Admin
+{% endblock %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      {% include('admin/_admin_nav.html.twig') %}
+
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        {% block admin_body %}
+        {% endblock %}
+      </main>
+    </div>
+  </div>
+{% endblock %}

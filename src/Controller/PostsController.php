@@ -18,7 +18,7 @@ class PostsController extends Controller
     /**
      * @throws Exception
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         return $this->render('layout/post.html.twig', [
             'post_title' => 'Post '.$id,

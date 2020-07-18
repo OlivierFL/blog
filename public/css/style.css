@@ -7,6 +7,10 @@ body {
     background-color: #f5f5f5;
 }
 
+main {
+    min-height: 100vh;
+}
+
 h1 {
     font-family: 'Abril Fatface', sans-serif;
     font-size: 6rem;
@@ -30,8 +34,8 @@ h4 {
 }
 
 h5 {
-    font-size: .8rem;
-    padding: 1.1rem;
+    font-size: 1rem;
+    padding: 0.5rem 0 0.5rem 0;
     margin: 0;
 }
 
@@ -53,12 +57,20 @@ footer {
     padding: 1rem;
 }
 
+li {
+    margin-bottom: 1rem;
+}
+
 /* Tools */
 .m-60 {
     margin: 60px 0 120px 0;
 }
 
 .black {
+    color: #000000;
+}
+
+.black:hover {
     color: #000000;
 }
 
@@ -76,6 +88,10 @@ footer {
 .navbar-dark .navbar-nav .nav-link:hover {
     color: #ffffff;
     border-bottom: 2px solid #ffffff;
+}
+
+.text-primary {
+    color: #5d75c4 !important;
 }
 
 .btn {
@@ -102,6 +118,26 @@ footer {
 .btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show > .btn-primary.dropdown-toggle:focus {
     box-shadow: none;
     background-color: transparent;
+}
+
+.btn-danger {
+    padding: 0.5rem;
+    border-radius: 0;
+    border: #dc3545 solid 2px;
+}
+
+.btn-danger:hover {
+    border: #dc3545 solid 2px;
+}
+
+.btn-success {
+    padding: 0.5rem;
+    border-radius: 0;
+    border: #28a745 solid 2px;
+}
+
+.btn-success:hover {
+    border: #28a745 solid 2px;
 }
 
 .form-control {
@@ -231,7 +267,7 @@ footer {
 .separator-blue-left {
     width: 6em;
     border: 2px solid #1c768f;
-    margin: 1rem 0 1rem 0;
+    margin: 0 0 1rem 0;
 }
 
 .separator-white {
@@ -252,6 +288,22 @@ footer {
 .copyright {
     margin-bottom: 0;
     padding: 1rem 0 0.5rem 0;
+}
+
+/* ADMIN custom styles */
+.btn-edit {
+    color: #ffffff;
+    background: #5D75C4;
+    padding: 0.5rem;
+    border: #5D75C4 solid 2px;
+    border-radius: 0;
+}
+
+.btn-edit:hover {
+    color: #ffffff;
+    background-color: #505CA0;
+    border: #505CA0 solid 2px;
+    border-radius: 0;
 }
 
 /* Responsive */
