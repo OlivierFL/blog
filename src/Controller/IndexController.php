@@ -10,8 +10,14 @@ class IndexController extends Controller
     /**
      * @throws Exception
      */
-    public function home()
+    public function index()
     {
         return $this->render('layout/index.html.twig');
+    }
+
+    public function notFound()
+    {
+        return $this->render('layout/404.html.twig');
+
     }
 }

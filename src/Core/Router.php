@@ -2,9 +2,12 @@
 
 namespace Core;
 
+use App\Controller\IndexController;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 class Router
 {
@@ -12,16 +15,41 @@ class Router
 
     public function __construct()
     {
-        $this->dispatcher = simpleDispatcher(static function (RouteCollector $routes) {
-            $routes->get('/', 'index.home');
-            $routes->addGroup('/posts', static function (RouteCollector $routes) {
-                $routes->get('', 'posts.list');
-                $routes->get('/', 'posts.list');
-                $routes->get('/{id:\d+}', 'posts.show');
-            });
-            $routes->get('/admin', 'admin.home');
-            $routes->get('/login', 'user.login');
+        $this->dispatcher = $this->addRoutes();
+
+//            $routes->addGroup('/admin', static function (RouteCollector $routes) {
+//                $routes->get('', 'admin.home');
+//                $routes->get('/posts', 'admin.listPosts');
+//                $routes->get('/posts/{id:\d+}', 'admin.showPost');
+//                $routes->get('/posts/edit/{id:\d+}', 'admin.editPost');
+//                $routes->get('/comments', 'admin.listComments');
+//                $routes->get('/users', 'admin.listUsers');
+//            });
+//            $routes->get('/login', 'user.login');
+    }
+
+    private function addRoutes(): Dispatcher
+    {
+        $routesConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routes.yaml');
+
+        try {
+            $parsedRoutes = Yaml::parse($routesConfig);
+        } catch (ParseException $e) {
+            throw $e;
+        }
+
+        $dispatcher = simpleDispatcher(static function (RouteCollector $routes) use ($parsedRoutes) {
+            foreach ($parsedRoutes as $key => $parsedRoute) {
+                $routes->addGroup('/' . $key, static function (RouteCollector $routes) use ($parsedRoute, $key) {
+                    foreach ($parsedRoute as $route) {
+                        $routes->addRoute($route['methods'], $route['path'], $key . '.' . $route['action']);
+                    }
+                });
+            }
         });
+//        dump($dispatcher);
+
+        return $dispatcher;
     }
 
     /**
@@ -41,7 +69,8 @@ class Router
 
         switch ($matchedRoute[0]) {
             case Dispatcher::NOT_FOUND:
-                echo '404 not found';
+                $controller = new IndexController();
+                return $controller->notFound();
 
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
@@ -97,4 +126,5 @@ class Router
 
         $this->handleRoute($matchedRoute);
     }
+
 }
