@@ -6,8 +6,6 @@ use App\Controller\IndexController;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Yaml;
 
 class Router
 {
@@ -16,38 +14,31 @@ class Router
     public function __construct()
     {
         $this->dispatcher = $this->addRoutes();
-
-//            $routes->addGroup('/admin', static function (RouteCollector $routes) {
-//                $routes->get('', 'admin.home');
-//                $routes->get('/posts', 'admin.listPosts');
-//                $routes->get('/posts/{id:\d+}', 'admin.showPost');
-//                $routes->get('/posts/edit/{id:\d+}', 'admin.editPost');
-//                $routes->get('/comments', 'admin.listComments');
-//                $routes->get('/users', 'admin.listUsers');
-//            });
-//            $routes->get('/login', 'user.login');
     }
 
     private function addRoutes(): Dispatcher
     {
         $routesConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routes.yaml');
 
-        try {
-            $parsedRoutes = Yaml::parse($routesConfig);
-        } catch (ParseException $e) {
-            throw $e;
-        }
+        $parsedRoutes = yaml_parse($routesConfig);
 
         $dispatcher = simpleDispatcher(static function (RouteCollector $routes) use ($parsedRoutes) {
-            foreach ($parsedRoutes as $key => $parsedRoute) {
-                $routes->addGroup('/' . $key, static function (RouteCollector $routes) use ($parsedRoute, $key) {
-                    foreach ($parsedRoute as $route) {
-                        $routes->addRoute($route['methods'], $route['path'], $key . '.' . $route['action']);
-                    }
-                });
+            foreach ($parsedRoutes as $routeGroup => $parsedRoute) {
+                if ('index' === $routeGroup) {
+                    $routes->addGroup('', static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
+                        foreach ($parsedRoute as $route) {
+                            $routes->addRoute($route['methods'], $route['path'], $routeGroup . '.' . $route['action']);
+                        }
+                    });
+                } else {
+                    $routes->addGroup('/' . $routeGroup, static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
+                        foreach ($parsedRoute as $route) {
+                            $routes->addRoute($route['methods'], $route['path'], $routeGroup . '.' . $route['action']);
+                        }
+                    });
+                }
             }
         });
-//        dump($dispatcher);
 
         return $dispatcher;
     }
@@ -126,5 +117,4 @@ class Router
 
         $this->handleRoute($matchedRoute);
     }
-
 }

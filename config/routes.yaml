@@ -1,6 +1,6 @@
 index:
   - action: index
-    path: ''
+    path: /
     methods: GET
 posts:
   - action: list
@@ -43,5 +43,8 @@ admin:
 user:
   - action: login
     path: /login
+    methods: GET
+  - action: signup
+    path: /signup
     methods: GET
 

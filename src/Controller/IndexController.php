@@ -18,6 +18,5 @@ class IndexController extends Controller
     public function notFound()
     {
         return $this->render('layout/404.html.twig');
-
     }
 }
