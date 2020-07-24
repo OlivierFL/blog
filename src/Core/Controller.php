@@ -21,6 +21,7 @@ class Controller
     {
         $this->loader = new FilesystemLoader('templates', getcwd().'/../');
         $this->twig = new Environment($this->loader);
+        $this->setConfig($this->twig);
     }
 
     /**
@@ -32,6 +33,19 @@ class Controller
             echo $this->twig->render($templateName, $params);
         } catch (Exception $e) {
             throw $e;
+        }
+    }
+
+    private function setConfig(Environment $twig): void
+    {
+        $configFile = file_get_contents(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config'.\DIRECTORY_SEPARATOR.'config.yaml');
+
+        $parsedConfigFile = yaml_parse($configFile);
+
+        foreach ($parsedConfigFile as $key => $config) {
+            if (\in_array(strtolower($key), ['locale', 'charset'], true)) {
+                $twig->addGlobal(strtolower($key), strtolower($config));
+            }
         }
     }
 }
