@@ -22,25 +22,15 @@ class Router
 
         $parsedRoutes = yaml_parse($routesConfig);
 
-        $dispatcher = simpleDispatcher(static function (RouteCollector $routes) use ($parsedRoutes) {
+        return simpleDispatcher(static function (RouteCollector $routes) use ($parsedRoutes) {
             foreach ($parsedRoutes as $routeGroup => $parsedRoute) {
-                if ('index' === $routeGroup) {
-                    $routes->addGroup('', static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
-                        foreach ($parsedRoute as $route) {
-                            $routes->addRoute($route['methods'], $route['path'], $routeGroup . '.' . $route['action']);
-                        }
-                    });
-                } else {
-                    $routes->addGroup('/' . $routeGroup, static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
-                        foreach ($parsedRoute as $route) {
-                            $routes->addRoute($route['methods'], $route['path'], $routeGroup . '.' . $route['action']);
-                        }
-                    });
-                }
+                $routes->addGroup($routeGroup === 'index' ? '' : '/' . $routeGroup, static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
+                    foreach ($parsedRoute as $route) {
+                        $routes->addRoute($route['methods'], $route['path'], $routeGroup . '.' . $route['action']);
+                    }
+                });
             }
         });
-
-        return $dispatcher;
     }
 
     /**
