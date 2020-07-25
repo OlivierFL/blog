@@ -1,0 +1,31 @@
+#--------------------------------------------------
+# Répertoire : /public/
+#--------------------------------------------------
+
+# Le serveur doit suivre les liens symboliques :
+Options +FollowSymlinks
+
+# Activation du module de réécriture d'URL :
+RewriteEngine on
+
+#--------------------------------------------------
+# Règles de réécriture d'URL :
+#--------------------------------------------------
+
+RewriteRule ^(\w+)/(\w+)/(\w+)/(\d+)$ index.php?route=$1-$2-$3&id=$4
+
+RewriteRule ^(\w+)/(\w+)/(\d+)$ index.php?route=$1-$2&id=$3
+
+RewriteRule ^(\w+)/(\d+)$ index.php?route=$1&id=$2
+
+RewriteRule ^(\w+)/(\w+)$ index.php?route=$1-$2
+
+# Page :
+RewriteRule ^(\w+)$ index.php?route=$1
+
+# Index :
+RewriteRule ^$ index.php [L]
+
+
+
+

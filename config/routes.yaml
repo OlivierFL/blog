@@ -1,0 +1,50 @@
+index:
+  - action: index
+    path: /
+    methods: GET
+posts:
+  - action: list
+    path: ''
+    methods: GET
+  - action: show
+    path: /{id:\d+}
+    methods: GET
+admin:
+  - action: index
+    path: ''
+    methods: GET
+  - action: listPosts
+    path: /posts
+    methods: GET
+  - action: showPost
+    path: /posts/{id:\d+}
+    methods: GET
+  - action: editPost
+    path: /posts/edit/{id:\d+}
+    methods: GET
+  - action: listComments
+    path: /comments
+    methods: GET
+  - action: showComment
+    path: /comments/{id:\d+}
+    methods: GET
+  - action: editComment
+    path: /comments/edit/{id:\d+}
+    methods: GET
+  - action: listUsers
+    path: /users
+    methods: GET
+  - action: showUser
+    path: /users/{id:\d+}
+    methods: GET
+  - action: editUser
+    path: /users/edit/{id:\d+}
+    methods: GET
+user:
+  - action: login
+    path: /login
+    methods: GET
+  - action: signup
+    path: /signup
+    methods: GET
+
