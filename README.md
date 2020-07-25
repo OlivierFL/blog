@@ -18,3 +18,12 @@ The stack is composed of 4 containers :
 Then launch the dev stack with Docker : `docker-compose up -d`.
 
 The homepage is available on : `blog.localhost:8080`
+
+# Database configuration
+Database configuration example is available in `db-config.yaml.example`.
+
+
+In order to have a working connection, copy and paste the content of `db-config.yaml.example` in a file called `db_config.yaml`.
+This file will be parsed to get the data needed by the PDOFactory to connect to the database. 
+
+When using Docker, the name of the `database host` is the not `localhost`, but the name of the container, which by default is `mysql`.
