@@ -39,4 +39,24 @@ class AdminController extends Controller
             'post_title' => 'Post'.$id,
         ]);
     }
+
+    public function showComment()
+    {
+        return $this->render('admin/comment.html.twig');
+    }
+
+    public function editComment()
+    {
+        return $this->render('admin/comment_edit.html.twig');
+    }
+
+    public function showUser()
+    {
+        return $this->render('admin/user.html.twig');
+    }
+
+    public function editUser()
+    {
+        return $this->render('admin/user_edit.html.twig');
+    }
 }

@@ -13,7 +13,6 @@
   </div>
   <div class="container">
     <section class="m-60 text-center">
-      <hr class="separator-blue">
       <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, at blanditiis corporis
         dolore dolores
         excepturi itaque, mollitia odit, optio quaerat quidem reiciendis totam veniam? A, quo, vel. Ab
@@ -25,6 +24,15 @@
         quibusdam quod sunt temporibus? Ad aliquid amet, blanditiis consequuntur eius enim, illum inventore itaque
         nam non provident reiciendis reprehenderit, rerum saepe similique.</p>
       <a class="btn btn-primary mt-5" href="/posts">Retour aux articles</a>
+    </section>
+    <section class="mb-5 text-center">
+      <h4>Commentaires</h4>
+      <hr class="separator-blue">
+      {{ include('layout/_comment_form.html.twig') }}
+    </section>
+    <section class="m-60">
+      <hr class="separator-blue">
+      {{ include('layout/_comments.html.twig') }}
     </section>
   </div>
 {% endblock %}

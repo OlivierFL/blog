@@ -1,0 +1,51 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+
+{% block admin_body %}
+  <div class="container">
+    <section class="my-5">
+      <div class="row">
+        <div class="col-md-4">
+          <h5>Auteur</h5>
+          <hr class="separator-blue-left">
+          <p>Olivier Floch</p>
+        </div>
+        <div class="col-md-4">
+          <h5>Date de création</h5>
+          <hr class="separator-blue-left">
+          <p>10/07/2020 à 15:00</p>
+        </div>
+        <div class="col-md-4">
+          <h5>Date de modification</h5>
+          <hr class="separator-blue-left">
+          <p>10/07/2020 à 16:30</p>
+        </div>
+      </div>
+    </section>
+    <section class="mb-5">
+      <h5>Contenu du commentaire</h5>
+      <hr class="separator-blue-left">
+      <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, at blanditiis corporis
+        dolore dolores
+        excepturi itaque, mollitia odit, optio quaerat quidem reiciendis totam veniam? A, quo, vel. Ab
+        accusantium adipisci asperiores cumque debitis dolorum ea earum et eveniet, id in iure magnam minima
+        nihil praesentium quam quas quo reiciendis sint suscipit temporibus ut vitae. Alias at doloribus
+        esse
+        exercitationem illo ipsam nisi provident quos rerum. Dicta id natus recusandae sed. Lorem ipsum dolor sit
+        amet, consectetur adipisicing elit. Ab alias animi cupiditate esse et eveniet, expedita modi officiis
+        quibusdam quod sunt temporibus? Ad aliquid amet, blanditiis consequuntur eius enim, illum inventore itaque
+        nam non provident reiciendis reprehenderit, rerum saepe similique.</p>
+    </section>
+    <section class="row justify-content-around justify-content-md-end">
+      <a href="/admin/comments" class="btn btn-edit mr-md-3 mb-4">
+        <i class="fas fa-chevron-left"></i>
+        Retour</a>
+      <a href="/admin/comments/edit/1" class="btn btn-edit mr-md-3 mb-4">
+        <i class="fas fa-edit"></i>
+        Éditer</a>
+      <a href="/admin/comments/delete/1" class="btn btn-danger mb-4">
+        <i class="fas fa-trash-alt"></i>
+        Supprimer</a>
+    </section>
+  </div>
+{% endblock %}

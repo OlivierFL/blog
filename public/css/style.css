@@ -74,6 +74,10 @@ li {
     color: #000000;
 }
 
+.grey {
+    background-color: #f5f5f5;
+}
+
 /* Bootstrap override */
 .bg-dark {
     background-color: #1c768f !important;
@@ -175,6 +179,10 @@ li {
     border-radius: 0;
 }
 
+.card-header {
+    border: none;
+}
+
 .card-body {
     padding: 0;
 }
@@ -185,6 +193,24 @@ li {
 
 .embed-responsive {
     max-height: 80vh;
+}
+
+/* Pagination */
+.page-link {
+    color: #1c768f;
+}
+
+.page-link:hover {
+    color: #1c768f;
+}
+
+.page-link:focus {
+    box-shadow: none;
+}
+
+.page-item.active .page-link {
+    background-color: #1c768f;
+    border-color: #1c768f;
 }
 
 /* Custom styles */
