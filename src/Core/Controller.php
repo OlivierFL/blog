@@ -38,9 +38,7 @@ class Controller
 
     private function setConfig(Environment $twig): void
     {
-        $configFile = file_get_contents(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config'.\DIRECTORY_SEPARATOR.'config.yaml');
-
-        $parsedConfigFile = yaml_parse($configFile);
+        $parsedConfigFile = yaml_parse_file(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config'.\DIRECTORY_SEPARATOR.'config.yaml');
 
         foreach ($parsedConfigFile as $key => $config) {
             if (\in_array(strtolower($key), ['locale', 'charset'], true)) {

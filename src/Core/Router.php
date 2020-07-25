@@ -18,9 +18,7 @@ class Router
 
     private function addRoutes(): Dispatcher
     {
-        $routesConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routes.yaml');
-
-        $parsedRoutes = yaml_parse($routesConfig);
+        $parsedRoutes = yaml_parse_file(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routes.yaml');
 
         return simpleDispatcher(static function (RouteCollector $routes) use ($parsedRoutes) {
             foreach ($parsedRoutes as $routeGroup => $parsedRoute) {
