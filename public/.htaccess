@@ -12,11 +12,16 @@ RewriteEngine on
 # Règles de réécriture d'URL :
 #--------------------------------------------------
 
-# Page avec numéro de chapitre :
-RewriteRule ^([a-zA-Z]+)/([0-9]+)$ index.php?route=$1&id=$2
+RewriteRule ^(\w+)/(\w+)/(\w+)/(\d+)$ index.php?route=$1-$2-$3&id=$4
+
+RewriteRule ^(\w+)/(\w+)/(\d+)$ index.php?route=$1-$2&id=$3
+
+RewriteRule ^(\w+)/(\d+)$ index.php?route=$1&id=$2
+
+RewriteRule ^(\w+)/(\w+)$ index.php?route=$1-$2
 
 # Page :
-RewriteRule ^([a-zA-Z]+)$ index.php?route=$1
+RewriteRule ^(\w+)$ index.php?route=$1
 
 # Index :
 RewriteRule ^$ index.php [L]
