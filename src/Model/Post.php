@@ -21,6 +21,11 @@ class Post extends Entity
     /** @var \DateTime */
     private $updatedAt;
 
+    public function __construct(array $data)
+    {
+        $this->hydrate($data);
+    }
+
     public function getTitle(): string
     {
         return $this->title;
