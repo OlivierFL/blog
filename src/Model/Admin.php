@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
-use App\Core\Entity;
+use App\Model\User;
 
-class Admin extends Entity
+class Admin extends User
 {
     /** @var string */
     private $description;
