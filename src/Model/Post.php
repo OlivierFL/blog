@@ -2,10 +2,13 @@
 
 namespace App\Model;
 
+use App\Core\TimestampableEntity;
 use App\Core\Entity;
 
 class Post extends Entity
 {
+    use TimestampableEntity;
+
     /** @var string */
     private $title;
     /** @var string */
@@ -16,10 +19,6 @@ class Post extends Entity
     private $coverImg;
     /** @var string */
     private $altCoverImg;
-    /** @var \DateTime */
-    private $createdAt;
-    /** @var \DateTime */
-    private $updatedAt;
 
     public function __construct(array $data)
     {
@@ -74,25 +73,5 @@ class Post extends Entity
     public function setAltCoverImg(string $altCoverImg): void
     {
         $this->altCoverImg = $altCoverImg;
-    }
-
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): \DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 }
