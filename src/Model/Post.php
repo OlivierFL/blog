@@ -2,12 +2,12 @@
 
 namespace App\Model;
 
-use App\Core\DateTrait;
+use App\Core\TimestampableEntity;
 use App\Core\Entity;
 
 class Post extends Entity
 {
-    use DateTrait;
+    use TimestampableEntity;
 
     /** @var string */
     private $title;

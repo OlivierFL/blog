@@ -2,12 +2,12 @@
 
 namespace App\Model;
 
-use App\Core\DateTrait;
+use App\Core\TimestampableEntity;
 use App\Core\Entity;
 
 class Comment extends Entity
 {
-    use DateTrait;
+    use TimestampableEntity;
 
     /** @var string */
     public const STATUS_PENDING = 'pending';

@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-trait DateTrait
+trait TimestampableEntity
 {
     /** @var \DateTime */
     private $createdAt;
