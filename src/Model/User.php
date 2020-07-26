@@ -21,7 +21,7 @@ class User extends Entity
     /** @var string */
     private $password;
     /** @var string */
-    private $role = self::ROLE_USER;
+    private $role;
     /** @var \DateTime */
     private $createdAt;
     /** @var \DateTime */
@@ -84,6 +84,9 @@ class User extends Entity
 
     public function getRole(): string
     {
+        if (null === $this->role) {
+            return $this->role = self::ROLE_USER;
+        }
         return $this->role;
     }
 
