@@ -27,6 +27,11 @@ class User extends Entity
     /** @var \DateTime */
     private $updatedAt;
 
+    public function __construct(array $data)
+    {
+        $this->hydrate($data);
+    }
+
     public function getUserName(): string
     {
         return $this->userName;
