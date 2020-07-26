@@ -2,10 +2,13 @@
 
 namespace App\Model;
 
+use App\Core\DateTrait;
 use App\Core\Entity;
 
 class User extends Entity
 {
+    use DateTrait;
+
     /** @var string */
     public const ROLE_USER = 'user';
     /** @var string */
@@ -22,10 +25,6 @@ class User extends Entity
     private $password;
     /** @var string */
     private $role;
-    /** @var \DateTime */
-    private $createdAt;
-    /** @var \DateTime */
-    private $updatedAt;
 
     public function __construct(array $data)
     {
@@ -94,25 +93,5 @@ class User extends Entity
     public function setRole(string $role): void
     {
         $this->role = $role;
-    }
-
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): \DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 }

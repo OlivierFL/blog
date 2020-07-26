@@ -2,10 +2,13 @@
 
 namespace App\Model;
 
+use App\Core\DateTrait;
 use App\Core\Entity;
 
 class Comment extends Entity
 {
+    use DateTrait;
+
     /** @var string */
     public const STATUS_PENDING = 'pending';
     /** @var string */
@@ -14,10 +17,6 @@ class Comment extends Entity
     public const STATUS_REJECTED = 'rejected';
     /** @var string */
     private $content;
-    /** @var \DateTime */
-    private $createdAt;
-    /** @var \DateTime */
-    private $updatedAt;
     /** @var string */
     private $status;
 
@@ -34,26 +33,6 @@ class Comment extends Entity
     public function setContent(string $content): void
     {
         $this->content = $content;
-    }
-
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): \DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getStatus(): string
