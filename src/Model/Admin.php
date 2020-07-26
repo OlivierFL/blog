@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use App\Model\User;
-
 class Admin extends User
 {
     /** @var string */

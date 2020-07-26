@@ -87,6 +87,7 @@ class User extends Entity
         if (null === $this->role) {
             return $this->role = self::ROLE_USER;
         }
+
         return $this->role;
     }
 
