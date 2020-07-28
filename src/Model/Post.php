@@ -19,6 +19,8 @@ class Post extends Entity
     private $coverImg;
     /** @var string */
     private $altCoverImg;
+    /** @var string */
+    private $adminId;
 
     public function __construct(array $data)
     {
@@ -73,5 +75,15 @@ class Post extends Entity
     public function setAltCoverImg(string $altCoverImg): void
     {
         $this->altCoverImg = $altCoverImg;
+    }
+
+    public function getAdminId(): string
+    {
+        return $this->adminId;
+    }
+
+    public function setAdminId(string $adminId): void
+    {
+        $this->adminId = $adminId;
     }
 }

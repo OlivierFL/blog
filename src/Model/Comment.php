@@ -19,6 +19,10 @@ class Comment extends Entity
     private $content;
     /** @var string */
     private $status;
+    /** @var string */
+    private $userId;
+    /** @var string */
+    private $postId;
 
     public function __construct(array $data)
     {
@@ -47,5 +51,25 @@ class Comment extends Entity
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(string $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    public function getPostId(): string
+    {
+        return $this->postId;
+    }
+
+    public function setPostId(string $postId): void
+    {
+        $this->postId = $postId;
     }
 }

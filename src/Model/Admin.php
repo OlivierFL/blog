@@ -12,6 +12,8 @@ class Admin extends User
     private $altAvatar;
     /** @var string */
     private $urlCV;
+    /** @var string */
+    private $userId;
 
     public function __construct(array $data)
     {
@@ -56,5 +58,15 @@ class Admin extends User
     public function setUrlCV(string $urlCV): void
     {
         $this->urlCV = $urlCV;
+    }
+
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(string $userId): void
+    {
+        $this->userId = $userId;
     }
 }
