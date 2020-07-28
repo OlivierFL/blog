@@ -2,8 +2,8 @@
 
 namespace App\Model;
 
-use App\Core\TimestampableEntity;
 use App\Core\Entity;
+use App\Core\TimestampableEntity;
 
 class Comment extends Entity
 {
