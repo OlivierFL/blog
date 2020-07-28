@@ -20,11 +20,17 @@ class Entity
     public function hydrate(array $data): void
     {
         foreach ($data as $key => $value) {
+            $key = $this->formatSnakeCaseToCamelCase($key);
             $method = 'set'.ucfirst($key);
 
             if (method_exists($this, $method)) {
                 $this->{$method}($value);
             }
         }
+    }
+
+    private function formatSnakeCaseToCamelCase($key): string
+    {
+        return lcfirst(str_replace('_', '', ucwords($key, '_')));
     }
 }
