@@ -24,21 +24,35 @@ class Comment extends Entity
     /** @var string */
     private $postId;
 
+    /**
+     * Comment constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->hydrate($data);
     }
 
+    /**
+     * @return string
+     */
     public function getContent(): string
     {
         return $this->content;
     }
 
+    /**
+     * @param string $content
+     */
     public function setContent(string $content): void
     {
         $this->content = $content;
     }
 
+    /**
+     * @return string
+     */
     public function getStatus(): string
     {
         if (null === $this->status) {
@@ -48,26 +62,41 @@ class Comment extends Entity
         return $this->status;
     }
 
+    /**
+     * @param string $status
+     */
     public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
+    /**
+     * @return string
+     */
     public function getUserId(): string
     {
         return $this->userId;
     }
 
+    /**
+     * @param string $userId
+     */
     public function setUserId(string $userId): void
     {
         $this->userId = $userId;
     }
 
+    /**
+     * @return string
+     */
     public function getPostId(): string
     {
         return $this->postId;
     }
 
+    /**
+     * @param string $postId
+     */
     public function setPostId(string $postId): void
     {
         $this->postId = $postId;

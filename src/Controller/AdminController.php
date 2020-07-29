@@ -3,60 +3,95 @@
 namespace App\Controller;
 
 use Core\Controller;
+use Exception;
 
 class AdminController extends Controller
 {
-    public function index()
+    /**
+     * @throws Exception
+     */
+    public function index(): void
     {
-        return $this->render('admin/index.html.twig');
+        $this->render('admin/index.html.twig');
     }
 
-    public function listPosts()
+    /**
+     * @throws Exception
+     */
+    public function listPosts(): void
     {
-        return $this->render('admin/posts.html.twig');
+        $this->render('admin/posts.html.twig');
     }
 
-    public function listComments()
+    /**
+     * @throws Exception
+     */
+    public function listComments(): void
     {
-        return $this->render('admin/comments.html.twig');
+        $this->render('admin/comments.html.twig');
     }
 
-    public function listUsers()
+    /**
+     * @throws Exception
+     */
+    public function listUsers(): void
     {
-        return $this->render('admin/users.html.twig');
+        $this->render('admin/users.html.twig');
     }
 
-    public function showPost(int $id)
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
+    public function showPost(int $id): void
     {
-        return $this->render('admin/post.html.twig', [
+        $this->render('admin/post.html.twig', [
             'post_title' => 'Post '.$id,
         ]);
     }
 
-    public function editPost(int $id)
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
+    public function editPost(int $id): void
     {
-        return $this->render('admin/post_edit.html.twig', [
+        $this->render('admin/post_edit.html.twig', [
             'post_title' => 'Post'.$id,
         ]);
     }
 
-    public function showComment()
+    /**
+     * @throws Exception
+     */
+    public function showComment(): void
     {
-        return $this->render('admin/comment.html.twig');
+        $this->render('admin/comment.html.twig');
     }
 
-    public function editComment()
+    /**
+     * @throws Exception
+     */
+    public function editComment(): void
     {
-        return $this->render('admin/comment_edit.html.twig');
+        $this->render('admin/comment_edit.html.twig');
     }
 
-    public function showUser()
+    /**
+     * @throws Exception
+     */
+    public function showUser(): void
     {
-        return $this->render('admin/user.html.twig');
+        $this->render('admin/user.html.twig');
     }
 
-    public function editUser()
+    /**
+     * @throws Exception
+     */
+    public function editUser(): void
     {
-        return $this->render('admin/user_edit.html.twig');
+        $this->render('admin/user_edit.html.twig');
     }
 }
