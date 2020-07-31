@@ -3,6 +3,7 @@
 namespace Core;
 
 use App\Controller\IndexController;
+use Exception;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
@@ -11,11 +12,17 @@ class Router
 {
     private $dispatcher;
 
+    /**
+     * Router constructor.
+     */
     public function __construct()
     {
         $this->dispatcher = $this->addRoutes();
     }
 
+    /**
+     * @return Dispatcher
+     */
     private function addRoutes(): Dispatcher
     {
         $parsedRoutes = yaml_parse_file(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routes.yaml');
@@ -40,6 +47,7 @@ class Router
      *      2 => an array of "get/post" params if they exists,
      * ]
      * @return mixed
+     * @throws Exception
      */
     private function handleRoute(array $matchedRoute)
     {
@@ -48,7 +56,7 @@ class Router
 
         switch ($matchedRoute[0]) {
             case Dispatcher::NOT_FOUND:
-                return (new IndexController())->notFound();
+                (new IndexController())->notFound();
 
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
@@ -60,11 +68,16 @@ class Router
 
                 break;
             default:
-                return (new IndexController())->notFound();
+                (new IndexController())->notFound();
         }
 
     }
 
+    /**
+     * @param $routeName
+     * @param $params
+     * @return mixed
+     */
     private function getController($routeName, $params)
     {
         /**
@@ -80,12 +93,16 @@ class Router
             $action = $matches[2];
         }
         if (!empty($params) && $params['id']) {
-            return $controller->$action($params['id']);
+            return $controller->{$action}($params['id']);
         }
 
-        return $controller->$action();
+        return $controller->{$action}();
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     private function formatControllerName(string $name): string
     {
         $controller = ucfirst($name) . 'Controller';
@@ -94,6 +111,9 @@ class Router
         return $namespace . $controller;
     }
 
+    /**
+     * @throws Exception
+     */
     public function run(): void
     {
         $httpMethod = $_SERVER['REQUEST_METHOD'];

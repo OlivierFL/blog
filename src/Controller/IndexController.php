@@ -10,13 +10,16 @@ class IndexController extends Controller
     /**
      * @throws Exception
      */
-    public function index()
+    public function index(): void
     {
-        return $this->render('layout/index.html.twig');
+        $this->render('layout/index.html.twig');
     }
 
-    public function notFound()
+    /**
+     * @throws Exception
+     */
+    public function notFound(): void
     {
-        return $this->render('layout/404.html.twig');
+        $this->render('layout/404.html.twig');
     }
 }

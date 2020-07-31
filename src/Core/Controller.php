@@ -17,6 +17,9 @@ class Controller
      */
     protected $twig;
 
+    /**
+     * Controller constructor.
+     */
     public function __construct()
     {
         $this->loader = new FilesystemLoader('templates', getcwd().'/../');
@@ -25,6 +28,9 @@ class Controller
     }
 
     /**
+     * @param string $templateName
+     * @param array  $params
+     *
      * @throws Exception
      */
     protected function render(string $templateName, array $params = []): void
@@ -36,6 +42,9 @@ class Controller
         }
     }
 
+    /**
+     * @param Environment $twig
+     */
     private function setConfig(Environment $twig): void
     {
         $parsedConfigFile = yaml_parse_file(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config'.\DIRECTORY_SEPARATOR.'config.yaml');

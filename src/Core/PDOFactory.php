@@ -9,13 +9,16 @@ class PDOFactory
      */
     private $config;
 
+    /**
+     * PDOFactory constructor.
+     */
     public function __construct()
     {
         $this->config = $this->getConfig();
     }
 
     /**
-     * @throws \Exception
+     * @return \PDO
      */
     public function getMysqlConnexion(): \PDO
     {
@@ -25,6 +28,9 @@ class PDOFactory
         return $db;
     }
 
+    /**
+     * @return mixed
+     */
     private function getConfig()
     {
         return yaml_parse_file(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config'.\DIRECTORY_SEPARATOR.'db-config.yaml');

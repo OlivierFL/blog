@@ -10,17 +10,19 @@ class PostsController extends Controller
     /**
      * @throws Exception
      */
-    public function list()
+    public function list(): void
     {
-        return $this->render('layout/posts.html.twig');
+        $this->render('layout/posts.html.twig');
     }
 
     /**
+     * @param int $id
+     *
      * @throws Exception
      */
-    public function show(int $id)
+    public function show(int $id): void
     {
-        return $this->render('layout/post.html.twig', [
+        $this->render('layout/post.html.twig', [
             'post_title' => 'Post '.$id,
         ]);
     }

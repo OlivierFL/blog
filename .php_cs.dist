@@ -15,6 +15,7 @@ $config = PhpCsFixer\Config::create()
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
         'list_syntax' => ['syntax' => 'long'],
+        'no_superfluous_phpdoc_tags' => false,
     ])
     ->setFinder($finder)
 ;

@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use Core\Controller;
+use Exception;
 
 class UserController extends Controller
 {
-    public function login()
+    /**
+     * @throws Exception
+     */
+    public function login(): void
     {
-        return $this->render('layout/login.html.twig');
+        $this->render('layout/login.html.twig');
     }
 }
