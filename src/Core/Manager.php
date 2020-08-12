@@ -28,43 +28,44 @@ abstract class Manager
 
     /**
      * @param array    $criteria
+     * @param array    $orderBy
      * @param null|int $limit
+     * @param null|int $offset
      *
      * @return mixed
      */
-    public function findBy(array $criteria, int $limit = null)
-    {
-        if (1 === \count($criteria)) {
-            $query = $this->db->prepare('SELECT * FROM '.$this->tableName.
-                ' WHERE :column = :criteria'.
-                ($limit ? (' LIMIT '.$limit) : ''));
-
-            $query->execute([
-                'column' => key($criteria),
-                'criteria' => $criteria,
-            ]);
-
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        $query = $this->db->prepare('SELECT * FROM '.$this->tableName);
-
-        $query->queryString .= ' WHERE ';
+    public function findBy(
+        array $criteria,
+        array $orderBy = [],
+        int $limit = null,
+        int $offset = null
+    ) {
+        $query = $this->db->prepare('SELECT * FROM '.$this->tableName.' WHERE ');
 
         foreach ($criteria as $key => $value) {
-            if (array_key_last($criteria) === $key) {
-                $query->queryString .= ':key = :value';
+            if (array_key_last($criteria) !== $key) {
+                $query->queryString .= $key.' = '.$value.' AND ';
             } else {
-                $query->queryString .= ':key = :value AND ';
+                $query->queryString .= $key.' = '.$value;
             }
-            $query->bindParam('key', $value);
+        }
+
+        $query->queryString .= ' ORDER BY';
+
+        if (empty($orderBy)) {
+            $query->queryString .= ' id ASC';
+        } else {
+            foreach ($orderBy as $key => $value) {
+                $query->queryString .= ' '.$key.' '.$value;
+            }
         }
 
         if ($limit) {
+            if ($offset) {
+                $query->queryString .= ' LIMIT '.$offset.', '.$limit;
+            }
             $query->queryString .= ' LIMIT '.$limit;
         }
-
-        $query->execute();
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
