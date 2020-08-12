@@ -99,8 +99,17 @@ abstract class Manager
     {
     }
 
-    public function delete()
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function delete(string $id): bool
     {
+        $query = $this->db->prepare('DELETE FROM '.$this->tableName.'WHERE id = :id');
+        $query->bindParam(':id', $id);
+
+        return $query->execute();
     }
 
     /**
