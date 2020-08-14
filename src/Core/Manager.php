@@ -41,7 +41,7 @@ abstract class Manager
         int $limit = null,
         int $offset = null
     ) {
-        $query = 'SELECT * FROM '.$this->tableName.' WHERE ';
+        $query = 'SELECT * FROM `'.$this->tableName.'` WHERE ';
 
         foreach ($criteria as $key => $value) {
             if (array_key_last($criteria) !== $key) {
@@ -57,7 +57,7 @@ abstract class Manager
             $query .= ' \'id\' ASC';
         } else {
             foreach ($orderBy as $key => $value) {
-                $query .= ' '.$key.' '.$value;
+                $query .= ' \''.$key.'\' \''.$value.'\'';
             }
         }
 
