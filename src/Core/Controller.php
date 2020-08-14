@@ -38,7 +38,7 @@ class Controller
         try {
             echo $this->twig->render($templateName, $params);
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception('Erreur lors du rendu du template : '.$e->getMessage());
         }
     }
 
