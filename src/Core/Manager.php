@@ -101,10 +101,8 @@ abstract class Manager
      */
     public function create(Entity $entity)
     {
-        $reflectionClass = new ReflectionClass($entity);
-
-        $columns = $this->getColumns($reflectionClass);
-        $values = $this->getValues($reflectionClass, $entity);
+        $columns = $this->getColumns($entity);
+        $values = $this->getValues($entity);
 
         $columns = implode(', ', $columns);
         $values = implode(', ', $values);
@@ -152,46 +150,55 @@ abstract class Manager
     }
 
     /**
-     * @param ReflectionClass $reflectionClass
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
      *
      * @return array
      */
-    private function getColumns(ReflectionClass $reflectionClass): array
+    private function getColumns(Entity $entity): array
     {
         $columns = [];
-        $properties = $reflectionClass->getProperties();
+        $properties = $this->getEntityProperties($entity);
         foreach ($properties as $property) {
-            $property = $this->camelCaseToSnakeCase($property->name);
-            $columns[] = $property;
+            $columns[] = $this->camelCaseToSnakeCase($property->name);
         }
 
         return $columns;
     }
 
     /**
-     * @param ReflectionClass $reflectionClass
-     * @param Entity          $entity
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
      *
      * @return array
      */
-    private function getValues(ReflectionClass $reflectionClass, Entity $entity): array
+    private function getValues(Entity $entity): array
     {
-        $entityGetters = [];
+        $properties = $this->getEntityProperties($entity);
         $values = [];
-
-        $methods = $reflectionClass->getMethods();
-        foreach ($methods as $key => $method) {
-            if (preg_match('/^[g]/', $method->name)) {
-                $entityGetters[] = $method->name;
-            }
-        }
-
-        foreach ($entityGetters as $key => $getter) {
-            if (null !== $entity->{$getter}()) {
-                $values[] = '\''.$entity->{$getter}().'\'';
+        foreach ($properties as $property) {
+            $method = 'get'.ucfirst($property->name);
+            if (method_exists($entity, $method)) {
+                $values[] = '\''.$entity->{$method}().'\'';
             }
         }
 
         return $values;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    private function getEntityProperties(Entity $entity): array
+    {
+        $reflectionClass = new ReflectionClass($entity);
+
+        return $reflectionClass->getProperties();
     }
 }
