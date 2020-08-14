@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use PDO;
+use PDOStatement;
 use ReflectionClass;
 use ReflectionException;
 
@@ -89,10 +90,23 @@ abstract class Manager
     }
 
     /**
-     * @param array $data
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
+     *
+     * @return false|PDOStatement
      */
-    public function create(array $data): void
+    public function create(Entity $entity)
     {
+        $reflectionClass = new ReflectionClass($entity);
+
+        $columns = $this->getColumns($reflectionClass);
+        $values = $this->getValues($reflectionClass, $entity);
+
+        $columns = implode(', ', $columns);
+        $values = implode(', ', $values);
+
+        return $this->db->query(sprintf('INSERT INTO '.$this->tableName.' (%s) VALUES (%s)', $columns, $values));
     }
 
     public function update()
@@ -122,5 +136,59 @@ abstract class Manager
         $managerInstance = (new ReflectionClass($this))->getShortName();
 
         return strtolower(str_replace('Manager', '', $managerInstance));
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return string
+     */
+    private function camelCaseToSnakeCase(string $property): string
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
+    }
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     *
+     * @return array
+     */
+    private function getColumns(ReflectionClass $reflectionClass): array
+    {
+        $columns = [];
+        $properties = $reflectionClass->getProperties();
+        foreach ($properties as $property) {
+            $property = $this->camelCaseToSnakeCase($property->name);
+            $columns[] = $property;
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     * @param Entity          $entity
+     *
+     * @return array
+     */
+    private function getValues(ReflectionClass $reflectionClass, Entity $entity): array
+    {
+        $entityGetters = [];
+        $values = [];
+
+        $methods = $reflectionClass->getMethods();
+        foreach ($methods as $key => $method) {
+            if (preg_match('/^[g]/', $method->name)) {
+                $entityGetters[] = $method->name;
+            }
+        }
+
+        foreach ($entityGetters as $key => $getter) {
+            if (null !== $entity->{$getter}()) {
+                $values[] = '\''.$entity->{$getter}().'\'';
+            }
+        }
+
+        return $values;
     }
 }

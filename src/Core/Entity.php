@@ -8,9 +8,9 @@ class Entity
     private $id;
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -29,7 +29,7 @@ class Entity
     public function hydrate(array $data): void
     {
         foreach ($data as $key => $value) {
-            $key = $this->formatSnakeCaseToCamelCase($key);
+            $key = $this->snakeCaseToCamelCase($key);
             $method = 'set'.ucfirst($key);
 
             if (method_exists($this, $method)) {
@@ -43,7 +43,7 @@ class Entity
      *
      * @return string
      */
-    private function formatSnakeCaseToCamelCase(string $key): string
+    private function snakeCaseToCamelCase(string $key): string
     {
         return lcfirst(str_replace('_', '', ucwords($key, '_')));
     }
