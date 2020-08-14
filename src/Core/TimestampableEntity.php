@@ -20,9 +20,9 @@ trait TimestampableEntity
     }
 
     /**
-     * @param DateTime $createdAt
+     * @param DateTime|string $createdAt
      */
-    public function setCreatedAt(DateTime $createdAt): void
+    public function setCreatedAt($createdAt): void
     {
         $this->createdAt = $createdAt;
     }
@@ -36,9 +36,9 @@ trait TimestampableEntity
     }
 
     /**
-     * @param DateTime $updatedAt
+     * @param DateTime|string $updatedAt
      */
-    public function setUpdatedAt(DateTime $updatedAt): void
+    public function setUpdatedAt($updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }

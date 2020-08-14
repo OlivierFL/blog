@@ -41,32 +41,35 @@ abstract class Manager
         int $limit = null,
         int $offset = null
     ) {
-        $query = $this->db->prepare('SELECT * FROM '.$this->tableName.' WHERE ');
+        $query = 'SELECT * FROM '.$this->tableName.' WHERE ';
 
         foreach ($criteria as $key => $value) {
             if (array_key_last($criteria) !== $key) {
-                $query->queryString .= $key.' = '.$value.' AND ';
+                $query .= '`'.$key.'` = \''.$value.'\' AND ';
             } else {
-                $query->queryString .= $key.' = '.$value;
+                $query .= '`'.$key.'` = \''.$value.'\'';
             }
         }
 
-        $query->queryString .= ' ORDER BY';
+        $query .= ' ORDER BY';
 
         if (empty($orderBy)) {
-            $query->queryString .= ' id ASC';
+            $query .= ' \'id\' ASC';
         } else {
             foreach ($orderBy as $key => $value) {
-                $query->queryString .= ' '.$key.' '.$value;
+                $query .= ' '.$key.' '.$value;
             }
         }
 
         if ($limit) {
             if ($offset) {
-                $query->queryString .= ' LIMIT '.$offset.', '.$limit;
+                $query .= ' LIMIT '.$offset.', '.$limit;
+            } else {
+                $query .= ' LIMIT '.$limit;
             }
-            $query->queryString .= ' LIMIT '.$limit;
         }
+
+        $query = $this->db->query($query);
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -78,7 +81,7 @@ abstract class Manager
      */
     public function findOneBy(array $criteria)
     {
-        return $this->findBy($criteria, 1);
+        return $this->findBy($criteria, [], 1);
     }
 
     /**
