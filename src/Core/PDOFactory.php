@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use PDO;
+
 class PDOFactory
 {
     /**
@@ -18,12 +20,12 @@ class PDOFactory
     }
 
     /**
-     * @return \PDO
+     * @return PDO
      */
-    public function getMysqlConnexion(): \PDO
+    public function getMysqlConnexion(): PDO
     {
-        $db = new \PDO('mysql:host='.$this->config['db-host'].';dbname='.$this->config['db-name'], $this->config['db-user'], $this->config['db-password']);
-        $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $db = new PDO('mysql:host='.$this->config['db-host'].';dbname='.$this->config['db-name'], $this->config['db-user'], $this->config['db-password']);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         return $db;
     }

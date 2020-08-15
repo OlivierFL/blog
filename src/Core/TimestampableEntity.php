@@ -12,33 +12,33 @@ trait TimestampableEntity
     private $updatedAt;
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): string
     {
-        return $this->createdAt;
+        return $this->createdAt->format('Y-m-d H:i:s');
     }
 
     /**
-     * @param DateTime $createdAt
+     * @param DateTime|string $createdAt
      */
-    public function setCreatedAt(DateTime $createdAt): void
+    public function setCreatedAt($createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): string
     {
-        return $this->updatedAt;
+        return $this->updatedAt->format('Y-m-d H:i:s');
     }
 
     /**
-     * @param DateTime $updatedAt
+     * @param DateTime|string $updatedAt
      */
-    public function setUpdatedAt(DateTime $updatedAt): void
+    public function setUpdatedAt($updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
