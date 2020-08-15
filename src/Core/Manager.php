@@ -41,35 +41,19 @@ abstract class Manager
         int $limit = null,
         int $offset = null
     ) {
-        $query = 'SELECT * FROM `'.$this->tableName.'` WHERE ';
+        $params = $this->getQueryParams($criteria);
 
-        foreach ($criteria as $key => $value) {
-            if (array_key_last($criteria) !== $key) {
-                $query .= '`'.$key.'` = \''.$value.'\' AND ';
-            } else {
-                $query .= '`'.$key.'` = \''.$value.'\'';
-            }
+        $clauses = $this->getQueryClauses($orderBy, $limit, $offset);
+
+        $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$clauses);
+
+        $i = 0;
+        foreach ($criteria as $value) {
+            ++$i;
+            $query->bindValue($i, $value);
         }
 
-        $query .= ' ORDER BY';
-
-        if (empty($orderBy)) {
-            $query .= ' \'id\' ASC';
-        } else {
-            foreach ($orderBy as $key => $value) {
-                $query .= ' \''.$key.'\' \''.$value.'\'';
-            }
-        }
-
-        if ($limit) {
-            if ($offset) {
-                $query .= ' LIMIT '.$offset.', '.$limit;
-            } else {
-                $query .= ' LIMIT '.$limit;
-            }
-        }
-
-        $query = $this->db->query($query);
+        $query->execute();
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -135,13 +119,52 @@ abstract class Manager
     }
 
     /**
-     * @param string $property
+     * @param array $criteria
      *
      * @return string
      */
-    private function camelCaseToSnakeCase(string $property): string
+    private function getQueryParams(array $criteria): string
     {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
+        $params = [];
+        foreach ($criteria as $key => $value) {
+            if (array_key_last($criteria) !== $key) {
+                $params[] = '`'.$key.'` = ? AND';
+            } else {
+                $params[] = '`'.$key.'` = ?';
+            }
+        }
+
+        return implode(' ', $params);
+    }
+
+    /**
+     * @param array    $orderBy
+     * @param null|int $limit
+     * @param null|int $offset
+     *
+     * @return string
+     */
+    private function getQueryClauses(array $orderBy, ?int $limit, ?int $offset): string
+    {
+        $queryString = ' ORDER BY';
+
+        if (empty($orderBy)) {
+            $queryString .= ' id ASC';
+        } else {
+            foreach ($orderBy as $key => $value) {
+                $queryString .= ' '.$key.' '.$value;
+            }
+        }
+
+        if ($limit) {
+            if ($offset) {
+                $queryString .= ' LIMIT '.$offset.', '.$limit;
+            } else {
+                $queryString .= ' LIMIT '.$limit;
+            }
+        }
+
+        return $queryString;
     }
 
     /**
@@ -181,5 +204,15 @@ abstract class Manager
         }
 
         return $values;
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return string
+     */
+    private function camelCaseToSnakeCase(string $property): string
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
     }
 }
