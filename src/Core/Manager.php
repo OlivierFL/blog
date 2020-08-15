@@ -43,9 +43,11 @@ abstract class Manager
     ) {
         $params = $this->getQueryParams($criteria);
 
-        $clauses = $this->getQueryClauses($orderBy, $limit, $offset);
+        $queryOrder = $this->getQueryOrder($orderBy);
 
-        $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$clauses);
+        $queryLimit = $this->getLimit($limit, $offset);
+
+        $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$queryOrder.$queryLimit);
 
         $i = 0;
         foreach ($criteria as $value) {
@@ -138,33 +140,43 @@ abstract class Manager
     }
 
     /**
-     * @param array    $orderBy
+     * @param array $orderBy
+     *
+     * @return string
+     */
+    private function getQueryOrder(array $orderBy): string
+    {
+        $order = ' ORDER BY';
+
+        if (empty($orderBy)) {
+            $order .= ' id ASC';
+        } else {
+            foreach ($orderBy as $key => $value) {
+                $order .= ' '.$key.' '.$value;
+            }
+        }
+
+        return $order;
+    }
+
+    /**
      * @param null|int $limit
      * @param null|int $offset
      *
      * @return string
      */
-    private function getQueryClauses(array $orderBy, ?int $limit, ?int $offset): string
+    private function getLimit(?int $limit, ?int $offset): string
     {
-        $queryString = ' ORDER BY';
-
-        if (empty($orderBy)) {
-            $queryString .= ' id ASC';
-        } else {
-            foreach ($orderBy as $key => $value) {
-                $queryString .= ' '.$key.' '.$value;
-            }
-        }
-
+        $queryLimit = ' LIMIT ';
         if ($limit) {
             if ($offset) {
-                $queryString .= ' LIMIT '.$offset.', '.$limit;
+                $queryLimit .= $offset.', '.$limit;
             } else {
-                $queryString .= ' LIMIT '.$limit;
+                $queryLimit .= $limit;
             }
         }
 
-        return $queryString;
+        return $queryLimit;
     }
 
     /**
