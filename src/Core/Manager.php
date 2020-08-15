@@ -76,12 +76,13 @@ abstract class Manager
 
     /**
      * @param array $criteria
+     * @param array $orderBy
      *
      * @return mixed
      */
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria, array $orderBy)
     {
-        return $this->findBy($criteria, [], 1);
+        return $this->findBy($criteria, $orderBy, 1);
     }
 
     /**
@@ -101,27 +102,21 @@ abstract class Manager
      */
     public function create(Entity $entity)
     {
-        $columns = $this->getColumns($entity);
-        $values = $this->getValues($entity);
-
-        $columns = implode(', ', $columns);
-        $values = implode(', ', $values);
+        $columns = implode(', ', $this->getColumns($entity));
+        $values = implode(', ', $this->getValues($entity));
 
         return $this->db->query(sprintf('INSERT INTO '.$this->tableName.' (%s) VALUES (%s)', $columns, $values));
     }
 
-    public function update()
-    {
-    }
-
     /**
-     * @param string $id
+     * @param Entity $entity
      *
      * @return bool
      */
-    public function delete(string $id): bool
+    public function delete(Entity $entity): bool
     {
         $query = $this->db->prepare('DELETE FROM '.$this->tableName.'WHERE id = :id');
+        $id = $entity->getId();
         $query->bindParam(':id', $id);
 
         return $query->execute();
@@ -159,7 +154,7 @@ abstract class Manager
     private function getColumns(Entity $entity): array
     {
         $columns = [];
-        $properties = $this->getEntityProperties($entity);
+        $properties = $entity->getProperties();
         foreach ($properties as $property) {
             $columns[] = $this->camelCaseToSnakeCase($property->name);
         }
@@ -176,7 +171,7 @@ abstract class Manager
      */
     private function getValues(Entity $entity): array
     {
-        $properties = $this->getEntityProperties($entity);
+        $properties = $entity->getProperties();
         $values = [];
         foreach ($properties as $property) {
             $method = 'get'.ucfirst($property->name);
@@ -186,19 +181,5 @@ abstract class Manager
         }
 
         return $values;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws ReflectionException
-     *
-     * @return array
-     */
-    private function getEntityProperties(Entity $entity): array
-    {
-        $reflectionClass = new ReflectionClass($entity);
-
-        return $reflectionClass->getProperties();
     }
 }

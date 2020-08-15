@@ -2,6 +2,9 @@
 
 namespace App\Core;
 
+use ReflectionClass;
+use ReflectionException;
+
 class Entity
 {
     /** @var int */
@@ -36,6 +39,18 @@ class Entity
                 $this->{$method}($value);
             }
         }
+    }
+
+    /**
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function getProperties(): array
+    {
+        $reflectionClass = new ReflectionClass($this);
+
+        return $reflectionClass->getProperties();
     }
 
     /**
