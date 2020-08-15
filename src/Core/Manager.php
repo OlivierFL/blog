@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use Exception;
 use PDO;
 use PDOStatement;
 use ReflectionClass;
@@ -49,11 +50,7 @@ abstract class Manager
 
         $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$queryOrder.$queryLimit);
 
-        $i = 0;
-        foreach ($criteria as $value) {
-            ++$i;
-            $query->bindValue($i, $value);
-        }
+        $query = $this->bindValues($query, $criteria);
 
         $query->execute();
 
@@ -92,6 +89,32 @@ abstract class Manager
         $values = implode(', ', $this->getValues($entity));
 
         return $this->db->query(sprintf('INSERT INTO '.$this->tableName.' (%s) VALUES (%s)', $columns, $values));
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws Exception
+     * @throws ReflectionException
+     *
+     * @return int
+     */
+    public function update(Entity $entity): int
+    {
+        $columns = implode(' = ?, ', $this->getColumns($entity));
+        $columns .= ' = ?';
+
+        $query = $this->db->prepare('UPDATE `'.$this->tableName.'` SET '.$columns.' WHERE id = '.$entity->getId());
+
+        $query = $this->bindValues($query, $this->getValues($entity));
+
+        $query->execute();
+
+        if (0 < $query->rowCount()) {
+            return $query->rowCount().' lignes mises à jour.';
+        }
+
+        throw new Exception('Erreur lors de la mise à jour des données');
     }
 
     /**
@@ -211,11 +234,28 @@ abstract class Manager
         foreach ($properties as $property) {
             $method = 'get'.ucfirst($property->name);
             if (method_exists($entity, $method)) {
-                $values[] = '\''.$entity->{$method}().'\'';
+                $values[] = $entity->{$method}();
             }
         }
 
         return $values;
+    }
+
+    /**
+     * @param PDOStatement $query
+     * @param array        $values
+     *
+     * @return PDOStatement
+     */
+    private function bindValues(PDOStatement $query, array $values): PDOStatement
+    {
+        $i = 0;
+        foreach ($values as $value) {
+            ++$i;
+            $query->bindValue($i, $value);
+        }
+
+        return $query;
     }
 
     /**
