@@ -140,8 +140,8 @@ abstract class Manager
      */
     public function delete(Entity $entity): bool
     {
-        $query = $this->db->prepare('DELETE FROM '.$this->tableName.'WHERE id = :id');
-        $query->bindValue(':id', $entity->getId());
+        $query = $this->db->prepare('DELETE FROM '.$this->tableName.' WHERE id = :id');
+        $query->bindValue(':id', $entity->getId(), PDO::PARAM_INT);
 
         return $query->execute();
     }
