@@ -63,7 +63,7 @@ abstract class Manager
      *
      * @return mixed
      */
-    public function findOneBy(array $criteria, array $orderBy)
+    public function findOneBy(array $criteria, array $orderBy = [])
     {
         return $this->findBy($criteria, $orderBy, 1);
     }
