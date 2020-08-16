@@ -125,8 +125,7 @@ abstract class Manager
     public function delete(Entity $entity): bool
     {
         $query = $this->db->prepare('DELETE FROM '.$this->tableName.'WHERE id = :id');
-        $id = $entity->getId();
-        $query->bindParam(':id', $id);
+        $query->bindValue(':id', $entity->getId());
 
         return $query->execute();
     }
