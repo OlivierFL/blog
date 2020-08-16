@@ -79,6 +79,7 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
+     * @throws Exception
      * @throws ReflectionException
      *
      * @return false|PDOStatement
@@ -86,9 +87,24 @@ abstract class Manager
     public function create(Entity $entity)
     {
         $columns = implode(', ', $this->getColumns($entity));
-        $values = implode(', ', $this->getValues($entity));
+        $values = $this->getValues($entity);
 
-        return $this->db->query(sprintf('INSERT INTO '.$this->tableName.' (%s) VALUES (%s)', $columns, $values));
+        $valuesPlaceholder = [];
+        foreach ($values as $value) {
+            $valuesPlaceholder[] = '?';
+        }
+        $valuesPlaceholder = implode(', ', $valuesPlaceholder);
+
+        $query = $this->db->prepare('INSERT INTO '.$this->tableName.' ('.$columns.') VALUES ('.$valuesPlaceholder.')');
+
+        $query = $this->bindValues($query, $values);
+        $query->execute();
+
+        if (0 < $query->rowCount()) {
+            return $query->rowCount().' ligne(s) insérée(s).';
+        }
+
+        throw new Exception('Erreur lors de la création des données.');
     }
 
     /**
@@ -111,10 +127,10 @@ abstract class Manager
         $query->execute();
 
         if (0 < $query->rowCount()) {
-            return $query->rowCount().' lignes mises à jour.';
+            return $query->rowCount().' ligne(s) mise(s) à jour.';
         }
 
-        throw new Exception('Erreur lors de la mise à jour des données');
+        throw new Exception('Erreur lors de la mise à jour des données.');
     }
 
     /**
