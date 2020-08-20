@@ -46,9 +46,12 @@ abstract class Manager
 
         $queryOrder = $this->getQueryOrder($orderBy);
 
-        $queryLimit = $this->getLimit($limit, $offset);
+        $queryLimit = $this->getLimit($offset ? true : false);
 
         $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$queryOrder.$queryLimit);
+
+        (null === $limit) ?: $criteria[] = $limit;
+        (null === $offset) ?: $criteria[] = $offset;
 
         $query = $this->bindValues($query, $criteria);
 
@@ -79,8 +82,8 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
-     * @throws Exception
      * @throws ReflectionException
+     * @throws Exception
      *
      * @return false|PDOStatement
      */
@@ -110,8 +113,8 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
-     * @throws Exception
      * @throws ReflectionException
+     * @throws Exception
      *
      * @return int
      */
@@ -198,20 +201,17 @@ abstract class Manager
     }
 
     /**
-     * @param null|int $limit
-     * @param null|int $offset
+     * @param bool $offset
      *
      * @return string
      */
-    private function getLimit(?int $limit, ?int $offset): string
+    private function getLimit(bool $offset): string
     {
         $queryLimit = ' LIMIT ';
-        if ($limit) {
-            if ($offset) {
-                $queryLimit .= $offset.', '.$limit;
-            } else {
-                $queryLimit .= $limit;
-            }
+        if ($offset) {
+            $queryLimit .= '?, ?';
+        } else {
+            $queryLimit .= '?';
         }
 
         return $queryLimit;
@@ -267,7 +267,7 @@ abstract class Manager
         $i = 0;
         foreach ($values as $value) {
             ++$i;
-            $query->bindValue($i, $value);
+            $query->bindValue($i, $value, !\is_int($value) ?: PDO::PARAM_INT);
         }
 
         return $query;
