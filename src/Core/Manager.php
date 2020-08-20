@@ -92,11 +92,7 @@ abstract class Manager
         $columns = implode(', ', $this->getColumns($entity));
         $values = $this->getValues($entity);
 
-        $valuesPlaceholder = [];
-        foreach ($values as $value) {
-            $valuesPlaceholder[] = '?';
-        }
-        $valuesPlaceholder = implode(', ', $valuesPlaceholder);
+        $valuesPlaceholder = $this->addPlaceholders($values);
 
         $query = $this->db->prepare('INSERT INTO '.$this->tableName.' ('.$columns.') VALUES ('.$valuesPlaceholder.')');
 
@@ -267,7 +263,7 @@ abstract class Manager
         $i = 0;
         foreach ($values as $value) {
             ++$i;
-            $query->bindValue($i, $value, !\is_int($value) ?: PDO::PARAM_INT);
+            $query->bindValue($i, $value, \is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
         }
 
         return $query;
@@ -281,5 +277,21 @@ abstract class Manager
     private function camelCaseToSnakeCase(string $property): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return string
+     */
+    private function addPlaceholders(array $values): string
+    {
+        $valuesPlaceholder = [];
+        $totalValues = \count($values);
+        for ($i = 0; $i < $totalValues; ++$i) {
+            $valuesPlaceholder[] = '?';
+        }
+
+        return implode(', ', $valuesPlaceholder);
     }
 }
