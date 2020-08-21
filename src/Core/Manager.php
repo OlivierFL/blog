@@ -194,9 +194,7 @@ abstract class Manager
         $order = ' ORDER BY';
 
         if (empty($orderBy)) {
-            $order .= ' id ASC';
-
-            return $order;
+            return $order.' id ASC';
         }
         foreach ($orderBy as $key => $value) {
             if (!\in_array(strtoupper($value), ['ASC', 'DESC'], true)) {
