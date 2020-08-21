@@ -34,6 +34,8 @@ abstract class Manager
      * @param null|int $limit
      * @param null|int $offset
      *
+     * @throws Exception
+     *
      * @return mixed
      */
     public function findBy(
@@ -46,7 +48,7 @@ abstract class Manager
 
         $queryOrder = $this->getQueryOrder($orderBy);
 
-        $queryLimit = $this->getLimit($offset ? true : false);
+        $queryLimit = $limit ? $this->getLimit($offset ? true : false) : null;
 
         $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$queryOrder.$queryLimit);
 
@@ -63,6 +65,8 @@ abstract class Manager
     /**
      * @param array $criteria
      * @param array $orderBy
+     *
+     * @throws Exception
      *
      * @return mixed
      */
@@ -179,6 +183,8 @@ abstract class Manager
     /**
      * @param array $orderBy
      *
+     * @throws Exception
+     *
      * @return string
      */
     private function getQueryOrder(array $orderBy): string
@@ -189,7 +195,11 @@ abstract class Manager
             $order .= ' id ASC';
         } else {
             foreach ($orderBy as $key => $value) {
-                $order .= ' '.$key.' '.$value;
+                if (\in_array(strtoupper($value), ['ASC', 'DESC'], true)) {
+                    $order .= ' '.$key.' '.strtoupper($value);
+                } else {
+                    throw new Exception('Order by: paramètre invalide.');
+                }
             }
         }
 
@@ -270,16 +280,6 @@ abstract class Manager
     }
 
     /**
-     * @param string $property
-     *
-     * @return string
-     */
-    private function camelCaseToSnakeCase(string $property): string
-    {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
-    }
-
-    /**
      * @param array $values
      *
      * @return string
@@ -293,5 +293,15 @@ abstract class Manager
         }
 
         return implode(', ', $valuesPlaceholder);
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return string
+     */
+    private function camelCaseToSnakeCase(string $property): string
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
     }
 }
