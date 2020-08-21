@@ -48,7 +48,9 @@ abstract class Manager
 
         $queryOrder = $this->getQueryOrder($orderBy);
 
-        $queryLimit = $limit ? $this->getLimit($offset ? true : false) : null;
+        if ($limit) {
+            $queryLimit = $this->getLimit($offset ? true : false);
+        }
 
         $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$queryOrder.$queryLimit);
 
@@ -86,8 +88,8 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
-     * @throws ReflectionException
      * @throws Exception
+     * @throws ReflectionException
      *
      * @return false|PDOStatement
      */
@@ -113,8 +115,8 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
-     * @throws ReflectionException
      * @throws Exception
+     * @throws ReflectionException
      *
      * @return int
      */
@@ -193,14 +195,15 @@ abstract class Manager
 
         if (empty($orderBy)) {
             $order .= ' id ASC';
-        } else {
-            foreach ($orderBy as $key => $value) {
-                if (\in_array(strtoupper($value), ['ASC', 'DESC'], true)) {
-                    $order .= ' '.$key.' '.strtoupper($value);
-                } else {
-                    throw new Exception('Order by: paramètre invalide.');
-                }
+
+            return $order;
+        }
+        foreach ($orderBy as $key => $value) {
+            if (!\in_array(strtoupper($value), ['ASC', 'DESC'], true)) {
+                throw new Exception('Order by: paramètre invalide.');
             }
+
+            $order .= ' '.$key.' '.strtoupper($value);
         }
 
         return $order;
