@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use Exception;
 use PDO;
 use PDOStatement;
 use ReflectionClass;
@@ -33,6 +34,8 @@ abstract class Manager
      * @param null|int $limit
      * @param null|int $offset
      *
+     * @throws Exception
+     *
      * @return mixed
      */
     public function findBy(
@@ -45,15 +48,16 @@ abstract class Manager
 
         $queryOrder = $this->getQueryOrder($orderBy);
 
-        $queryLimit = $this->getLimit($limit, $offset);
+        if ($limit) {
+            $queryLimit = $this->getLimit($offset ? true : false);
+        }
 
         $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$queryOrder.$queryLimit);
 
-        $i = 0;
-        foreach ($criteria as $value) {
-            ++$i;
-            $query->bindValue($i, $value);
-        }
+        (null === $limit) ?: $criteria[] = $limit;
+        (null === $offset) ?: $criteria[] = $offset;
+
+        $query = $this->bindValues($query, $criteria);
 
         $query->execute();
 
@@ -64,9 +68,11 @@ abstract class Manager
      * @param array $criteria
      * @param array $orderBy
      *
+     * @throws Exception
+     *
      * @return mixed
      */
-    public function findOneBy(array $criteria, array $orderBy)
+    public function findOneBy(array $criteria, array $orderBy = [])
     {
         return $this->findBy($criteria, $orderBy, 1);
     }
@@ -82,6 +88,7 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
+     * @throws Exception
      * @throws ReflectionException
      *
      * @return false|PDOStatement
@@ -89,9 +96,46 @@ abstract class Manager
     public function create(Entity $entity)
     {
         $columns = implode(', ', $this->getColumns($entity));
-        $values = implode(', ', $this->getValues($entity));
+        $values = $this->getValues($entity);
 
-        return $this->db->query(sprintf('INSERT INTO '.$this->tableName.' (%s) VALUES (%s)', $columns, $values));
+        $valuesPlaceholder = $this->addPlaceholders($values);
+
+        $query = $this->db->prepare('INSERT INTO '.$this->tableName.' ('.$columns.') VALUES ('.$valuesPlaceholder.')');
+
+        $query = $this->bindValues($query, $values);
+        $query->execute();
+
+        if (0 < $query->rowCount()) {
+            return $query->rowCount().' ligne(s) insérée(s).';
+        }
+
+        throw new Exception('Erreur lors de la création des données.');
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws Exception
+     * @throws ReflectionException
+     *
+     * @return int
+     */
+    public function update(Entity $entity): int
+    {
+        $columns = implode(' = ?, ', $this->getColumns($entity));
+        $columns .= ' = ?';
+
+        $query = $this->db->prepare('UPDATE `'.$this->tableName.'` SET '.$columns.' WHERE id = '.$entity->getId());
+
+        $query = $this->bindValues($query, $this->getValues($entity));
+
+        $query->execute();
+
+        if (0 < $query->rowCount()) {
+            return $query->rowCount().' ligne(s) mise(s) à jour.';
+        }
+
+        throw new Exception('Erreur lors de la mise à jour des données.');
     }
 
     /**
@@ -101,9 +145,8 @@ abstract class Manager
      */
     public function delete(Entity $entity): bool
     {
-        $query = $this->db->prepare('DELETE FROM '.$this->tableName.'WHERE id = :id');
-        $id = $entity->getId();
-        $query->bindParam(':id', $id);
+        $query = $this->db->prepare('DELETE FROM '.$this->tableName.' WHERE id = :id');
+        $query->bindValue(':id', $entity->getId(), PDO::PARAM_INT);
 
         return $query->execute();
     }
@@ -142,6 +185,8 @@ abstract class Manager
     /**
      * @param array $orderBy
      *
+     * @throws Exception
+     *
      * @return string
      */
     private function getQueryOrder(array $orderBy): string
@@ -149,31 +194,31 @@ abstract class Manager
         $order = ' ORDER BY';
 
         if (empty($orderBy)) {
-            $order .= ' id ASC';
-        } else {
-            foreach ($orderBy as $key => $value) {
-                $order .= ' '.$key.' '.$value;
+            return $order.' id ASC';
+        }
+        foreach ($orderBy as $key => $value) {
+            if (!\in_array(strtoupper($value), ['ASC', 'DESC'], true)) {
+                throw new Exception('Order by: paramètre invalide.');
             }
+
+            $order .= ' '.$key.' '.strtoupper($value);
         }
 
         return $order;
     }
 
     /**
-     * @param null|int $limit
-     * @param null|int $offset
+     * @param bool $offset
      *
      * @return string
      */
-    private function getLimit(?int $limit, ?int $offset): string
+    private function getLimit(bool $offset): string
     {
         $queryLimit = ' LIMIT ';
-        if ($limit) {
-            if ($offset) {
-                $queryLimit .= $offset.', '.$limit;
-            } else {
-                $queryLimit .= $limit;
-            }
+        if ($offset) {
+            $queryLimit .= '?, ?';
+        } else {
+            $queryLimit .= '?';
         }
 
         return $queryLimit;
@@ -211,11 +256,44 @@ abstract class Manager
         foreach ($properties as $property) {
             $method = 'get'.ucfirst($property->name);
             if (method_exists($entity, $method)) {
-                $values[] = '\''.$entity->{$method}().'\'';
+                $values[] = $entity->{$method}();
             }
         }
 
         return $values;
+    }
+
+    /**
+     * @param PDOStatement $query
+     * @param array        $values
+     *
+     * @return PDOStatement
+     */
+    private function bindValues(PDOStatement $query, array $values): PDOStatement
+    {
+        $i = 0;
+        foreach ($values as $value) {
+            ++$i;
+            $query->bindValue($i, $value, \is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return string
+     */
+    private function addPlaceholders(array $values): string
+    {
+        $valuesPlaceholder = [];
+        $totalValues = \count($values);
+        for ($i = 0; $i < $totalValues; ++$i) {
+            $valuesPlaceholder[] = '?';
+        }
+
+        return implode(', ', $valuesPlaceholder);
     }
 
     /**
