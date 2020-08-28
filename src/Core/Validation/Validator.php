@@ -104,8 +104,6 @@ class Validator
 
         if (null !== $max && $length > $max) {
             $this->addError($key, 'maximum_length', [$max]);
-
-            return $this;
         }
 
         return $this;
