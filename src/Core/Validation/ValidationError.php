@@ -16,15 +16,15 @@ class ValidationError
      * @var array
      */
     private $messages = [
-        'required' => 'The field %s is required',
-        'not_blank' => 'The field %s must not be empty',
-        'unique' => 'The field %s already exists in database',
-        'range' => 'The field %s must be in %d and %d characters',
-        'minimum_length' => 'The field %s must contain at least %d characters',
-        'maximum_length' => 'The field %s must be under %d characters',
-        'datetime' => 'The field %s must be a valid date (\'%s\')',
-        'email' => 'The field %s must be a valid email address',
-        'password' => 'The field %s must contain at least one lower case, one capital, one digit, and one special character',
+        'required' => 'Le champ %s est obligatoire',
+        'not_blank' => 'Le champ %s ne doit pas être vide',
+        'unique' => 'Le champ %s existe déjà',
+        'range' => 'Le champ %s doit comporter de %d à %d caractères',
+        'minimum_length' => 'Le champ %s doit contenir au minimum %d caractères',
+        'maximum_length' => 'Le champ %s doit contenir au maximum %d caractères',
+        'datetime' => 'Le champ %s doit être une date valide (\'%s\')',
+        'email' => 'Le champ %s doit être un email valide',
+        'password' => 'Le champ %s doit contenir au moins une lettre minuscule, une majuscule, un chiffre et un caractère spécial',
     ];
     /**
      * @var array
