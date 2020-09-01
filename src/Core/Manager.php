@@ -152,6 +152,18 @@ abstract class Manager
     }
 
     /**
+     * @param array $criteria
+     *
+     * @throws Exception
+     *
+     * @return bool
+     */
+    public function preventReuse(array $criteria): bool
+    {
+        return empty($this->findOneBy($criteria));
+    }
+
+    /**
      * @throws ReflectionException
      *
      * @return null|string
