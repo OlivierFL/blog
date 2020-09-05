@@ -8,37 +8,56 @@
         <div class="col-md-4">
           <h5>Nom de l'utilisateur</h5>
           <hr class="separator-blue-left">
-          <p>Olivier Floch</p>
+          <p>{{ user.user_name }}</p>
         </div>
-        <div class="col-md-4">
-          <h5>Date d'inscription</h5>
+        <div class="col-md-4 mt-3">
+          <h5>Nom</h5>
           <hr class="separator-blue-left">
-          <p>10/07/2020 à 15:00</p>
+          <p>{{ user.first_name }} {{ user.last_name }}</p>
         </div>
-        <div class="col-md-4">
-          <h5>Date de modification</h5>
+        <div class="col-md-4 mt-3">
+          <h5>Adresse mail</h5>
           <hr class="separator-blue-left">
-          <p>10/07/2020 à 16:30</p>
+          <p>{{ user.email }}</p>
         </div>
       </div>
     </section>
-    <section class="mb-5">
-      <div class="my-5">
-        <h5>Rôle</h5>
-        <hr class="separator-blue-left">
-        <h6 class="text-success">
-          <i class="fas fa-user-shield"></i>
-          admin
-        </h6>
+    <section class="mb-5 my-5">
+      <div class="row">
+        <div class="col-md-4">
+          <h5>Rôle</h5>
+          <hr class="separator-blue-left">
+          {% if user.role == 'admin' %}
+            <h6 class="text-success">
+              <i class="fas fa-user-shield"></i>
+              Admin
+            </h6>
+          {% else %}
+            <h6 class="text-primary">
+              <i class="fas fa-user"></i>
+              Utilisateur
+            </h6>
+          {% endif %}
+        </div>
+        <div class="col-md-4 mt-3">
+          <h5>Date d'inscription</h5>
+          <hr class="separator-blue-left">
+          <p>{{ user.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
+        </div>
+        <div class="col-md-4 mt-3">
+          <h5>Date de modification</h5>
+          <hr class="separator-blue-left">
+          <p>{{ user.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
+        </div>
       </div>
     </section>
     <section class="mb-5 row">
-      <div class="col-md-6">
+      <div class="col-md-6 mt-3">
         <h5>Fichier téléchargé</h5>
         <hr class="separator-blue-left">
         <p>cv.pdf</p>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 mt-3">
         <h5>Photo de profil</h5>
         <hr class="separator-blue-left">
         <img src="/public/img/andy-holmes-webyw4NsFPg-unsplash.jpg" alt="" height="200" width="300">

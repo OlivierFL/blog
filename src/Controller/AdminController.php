@@ -119,11 +119,17 @@ class AdminController extends Controller
     }
 
     /**
+     * @param int $id
+     *
      * @throws Exception
      */
-    public function showUser(): void
+    public function showUser(int $id): void
     {
-        $this->render('admin/user.html.twig');
+        $user = $this->userManager->findOneBy(['id' => $id]);
+
+        $this->render('admin/user.html.twig', [
+            'user' => $user[0],
+        ]);
     }
 
     /**
