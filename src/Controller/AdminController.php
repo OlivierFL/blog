@@ -40,13 +40,8 @@ class AdminController extends Controller
     {
         $users = $this->userManager->getLastThreeUsers();
 
-        $lastThreeUsers = [];
-        foreach ($users as $user) {
-            $lastThreeUsers[] = new User($user);
-        }
-
         $this->render('admin/index.html.twig', [
-            'users' => $lastThreeUsers,
+            'users' => $users,
         ]);
     }
 

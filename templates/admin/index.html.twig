@@ -76,7 +76,7 @@
           <div class="row">
             {% for user in users %}
               <div class="col-6 col-md-3 mb-3">
-                <h5>{{ user.firstName }} {{ user.lastName }}</h5>
+                <h5>{{ user.first_name }} {{ user.last_name }}</h5>
                 {% if user.role == 'admin' %}
                   <p class="text-success"><i class="fas fa-user-shield"></i>&nbsp;Admin</p>
                 {% else %}
