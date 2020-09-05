@@ -2,17 +2,52 @@
 
 namespace App\Controller;
 
+use App\Core\PDOFactory;
+use App\Managers\UserManager;
+use App\Model\User;
 use Core\Controller;
 use Exception;
+use PDO;
+use ReflectionException;
 
 class AdminController extends Controller
 {
+    /**
+     * @var UserManager
+     */
+    private $userManager;
+    /**
+     * @var PDO
+     */
+    private $db;
+
+    /**
+     * AdminController constructor.
+     *
+     * @throws ReflectionException
+     */
+    public function __construct()
+    {
+        $this->db = (new PDOFactory())->getMysqlConnexion();
+        $this->userManager = new UserManager($this->db);
+        Controller::__construct();
+    }
+
     /**
      * @throws Exception
      */
     public function index(): void
     {
-        $this->render('admin/index.html.twig');
+        $users = $this->userManager->getLastThreeUsers();
+
+        $lastThreeUsers = [];
+        foreach ($users as $user) {
+            $lastThreeUsers[] = new User($user);
+        }
+
+        $this->render('admin/index.html.twig', [
+            'users' => $lastThreeUsers,
+        ]);
     }
 
     /**

@@ -74,27 +74,19 @@
           <h4 class="card-title">Utilisateurs</h4>
           <hr class="separator-blue-left mb-4">
           <div class="row">
-            <div class="col-6 col-md-3 mb-3">
-              <h5>Olivier Floch</h5>
-              <p class="text-success"><i class="fas fa-user-shield"></i>&nbsp;admin</p>
-              <a href="/admin/users/edit/1" class="black btn btn-sm btn-edit">
-                <i class="fas fa-edit"></i>
-                Modifier</a>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-              <h5>User 2</h5>
-              <p class="text-primary"><i class="fas fa-user"></i>&nbsp;user</p>
-              <a href="/admin/users/edit/2" class="black btn btn-sm btn-edit">
-                <i class="fas fa-edit"></i>
-                Modifier</a>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-              <h5>User 3</h5>
-              <p class="text-primary"><i class="fas fa-user"></i>&nbsp;user</p>
-              <a href="/admin/users/edit/2" class="black btn btn-sm btn-edit">
-                <i class="fas fa-edit"></i>
-                Modifier</a>
-            </div>
+            {% for user in users %}
+              <div class="col-6 col-md-3 mb-3">
+                <h5>{{ user.firstName }} {{ user.lastName }}</h5>
+                {% if user.role == 'admin' %}
+                  <p class="text-success"><i class="fas fa-user-shield"></i>&nbsp;Admin</p>
+                {% else %}
+                  <p class="text-primary"><i class="fas fa-user"></i>&nbsp;Utilisateur</p>
+                {% endif %}
+                <a href="/admin/users/edit/{{ user.id }}" class="black btn btn-sm btn-edit">
+                  <i class="fas fa-edit"></i>
+                  Modifier</a>
+              </div>
+            {% endfor %}
           </div>
         </div>
       </div>

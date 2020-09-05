@@ -332,6 +332,10 @@ li {
     border-radius: 0;
 }
 
+.table td, .table th {
+    vertical-align: middle;
+}
+
 /* Responsive */
 @media only screen and (max-width: 992px) {
     h1 {
