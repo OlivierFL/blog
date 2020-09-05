@@ -71,7 +71,11 @@ class AdminController extends Controller
      */
     public function listUsers(): void
     {
-        $this->render('admin/users.html.twig');
+        $users = $this->userManager->findAll();
+
+        $this->render('admin/users.html.twig', [
+            'users' => $users,
+        ]);
     }
 
     /**
