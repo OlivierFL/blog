@@ -1,6 +1,5 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-
 {% block admin_body %}
   <div class="container">
     <section class="my-5">
@@ -8,26 +7,58 @@
         <div class="form-row mb-4">
           <div class="form-group col-md-4">
             <label for="username">Nom d'utilisateur</label>
-            <input type="text" class="form-control" id="username" placeholder="username 1">
+            <input type="text"
+                   class="form-control"
+                   id="username"
+                   placeholder="{{ user.user_name }}"
+            >
           </div>
           <div class="form-group col-md-4">
             <label for="last_name">Nom</label>
-            <input type="text" class="form-control" id="last_name" placeholder="Floch">
+            <input type="text"
+                   class="form-control"
+                   id="last_name"
+                   placeholder="{{ user.last_name }}"
+            >
           </div>
           <div class="form-group col-md-4">
             <label for="first_name">Prénom</label>
-            <input type="text" class="form-control" id="first_name" placeholder="Olivier">
+            <input type="text"
+                   class="form-control"
+                   id="first_name"
+                   placeholder="{{ user.first_name }}"
+            >
+          </div>
+        </div>
+        <div class="form-row mb-5">
+          <div class="form-group col-md-4">
+            <label for="email">Adresse mail</label>
+            <input type="email"
+                   class="form-control"
+                   id="email"
+                   placeholder="{{ user.email }}"
+            >
           </div>
         </div>
         <div class="form-group mb-5">
           <label for="role">Rôle</label>
           <div class="form-row">
             <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="role_user" name="role" class="custom-control-input">
-              <label class="custom-control-label" for="role_user">User</label>
+              <input type="radio"
+                     id="role_user"
+                     name="role"
+                     class="custom-control-input"
+                      {% if user.role == 'user' %} checked {% endif %}
+              >
+              <label class="custom-control-label" for="role_user">Utilisateur</label>
             </div>
             <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="role_admin" name="role" class="custom-control-input">
+              <input type="radio"
+                     id="role_admin"
+                     name="role"
+                     class="custom-control-input"
+                      {% if user.role == 'admin' %} checked {% endif %}
+              >
               <label class="custom-control-label" for="role_admin">Admin</label>
             </div>
           </div>

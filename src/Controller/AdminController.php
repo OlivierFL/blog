@@ -133,10 +133,21 @@ class AdminController extends Controller
     }
 
     /**
+     * @param int $id
+     *
      * @throws Exception
      */
-    public function editUser(): void
+    public function editUser(int $id): void
     {
+        if (empty($_POST)) {
+            $user = $this->userManager->findOneBy(['id' => $id]);
+
+            $this->render('admin/user_edit.html.twig', [
+                'user' => $user[0],
+            ]);
+            return;
+        }
+
         $this->render('admin/user_edit.html.twig');
     }
 }

@@ -336,6 +336,14 @@ li {
     vertical-align: middle;
 }
 
+.custom-file-input {
+    cursor: pointer;
+}
+
+.custom-file-label::after {
+    content: "Parcourir";
+}
+
 /* Responsive */
 @media only screen and (max-width: 992px) {
     h1 {
