@@ -4,6 +4,7 @@ namespace Core;
 
 use Exception;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
 class Controller
@@ -22,9 +23,9 @@ class Controller
      */
     public function __construct()
     {
-        $this->loader = new FilesystemLoader('templates', getcwd().'/../');
-        $this->twig = new Environment($this->loader);
-        $this->setConfig($this->twig);
+        $config = $this->getConfig();
+        $this->twig = $this->initTwig($config);
+        $this->setConfig($this->twig, $config);
     }
 
     /**
@@ -43,13 +44,41 @@ class Controller
     }
 
     /**
-     * @param Environment $twig
+     * @return mixed
      */
-    private function setConfig(Environment $twig): void
+    private function getConfig()
     {
-        $parsedConfigFile = yaml_parse_file(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config'.\DIRECTORY_SEPARATOR.'config.yaml');
+        return yaml_parse_file(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config'.\DIRECTORY_SEPARATOR.'config.yaml');
+    }
 
-        foreach ($parsedConfigFile as $key => $config) {
+    /**
+     * @param $config
+     *
+     * @return Environment
+     */
+    private function initTwig($config): Environment
+    {
+        if (\array_key_exists('APP_ENV', $config) && 'dev' === strtolower($config['APP_ENV'])) {
+            $this->loader = new FilesystemLoader('templates', getcwd().'/../');
+            $this->twig = new Environment($this->loader, ['debug' => true]);
+            $this->twig->addExtension(new DebugExtension());
+
+            return $this->twig;
+        }
+
+        $this->loader = new FilesystemLoader('templates', getcwd().'/../');
+        $this->twig = new Environment($this->loader);
+
+        return $this->twig;
+    }
+
+    /**
+     * @param Environment $twig
+     * @param             $configFile
+     */
+    private function setConfig(Environment $twig, $configFile): void
+    {
+        foreach ($configFile as $key => $config) {
             if (\in_array(strtolower($key), ['locale', 'charset'], true)) {
                 $twig->addGlobal(strtolower($key), strtolower($config));
             }
