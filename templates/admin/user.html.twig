@@ -50,18 +50,27 @@
         </div>
       </div>
     </section>
-    <section class="mb-5 row">
-      <div class="col-md-6 mt-3">
-        <h5>Fichier téléchargé</h5>
-        <hr class="separator-blue-left">
-        <p>cv.pdf</p>
-      </div>
-      <div class="col-md-6 mt-3">
-        <h5>Photo de profil</h5>
-        <hr class="separator-blue-left">
-        <img src="/public/img/andy-holmes-webyw4NsFPg-unsplash.jpg" alt="" height="200" width="300">
-      </div>
-    </section>
+    {% if admin is not null %}
+      <section class="mb-5 row">
+        <div class="col mt-3">
+          <h5>Description</h5>
+          <hr class="separator-blue-left">
+          <p>{{ admin.description }}</p>
+        </div>
+      </section>
+      <section class="mb-5 row">
+        <div class="col-md-6 mt-3">
+          <h5>Fichier téléchargé</h5>
+          <hr class="separator-blue-left">
+          <a href="{{ admin.url_cv }}">{{ admin.url_cv }}</a>
+        </div>
+        <div class="col-md-6 mt-3">
+          <h5>Photo de profil</h5>
+          <hr class="separator-blue-left">
+          <img src="{{ admin.url_avatar }}" alt="" height="200" width="300">
+        </div>
+      </section>
+    {% endif %}
     <section class="row justify-content-around justify-content-md-end">
       <a href="/admin/users" class="btn btn-edit mr-md-3 mb-4">
         <i class="fas fa-chevron-left"></i>

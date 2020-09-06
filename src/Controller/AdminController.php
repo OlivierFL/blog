@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Core\PDOFactory;
+use App\Managers\AdminManager;
 use App\Managers\UserManager;
-use App\Model\User;
 use Core\Controller;
 use Exception;
 use PDO;
@@ -16,6 +16,10 @@ class AdminController extends Controller
      * @var UserManager
      */
     private $userManager;
+    /**
+     * @var AdminManager
+     */
+    private $adminManager;
     /**
      * @var PDO
      */
@@ -30,6 +34,7 @@ class AdminController extends Controller
     {
         $this->db = (new PDOFactory())->getMysqlConnexion();
         $this->userManager = new UserManager($this->db);
+        $this->adminManager = new AdminManager($this->db);
         Controller::__construct();
     }
 
@@ -122,8 +127,13 @@ class AdminController extends Controller
     {
         $user = $this->userManager->findOneBy(['id' => $id]);
 
+        if ('admin' === $user[0]['role']) {
+            $admin = $this->adminManager->findOneBy(['user_id' => $id]);
+        }
+
         $this->render('admin/user.html.twig', [
             'user' => $user[0],
+            'admin' => $admin[0] ?? null,
         ]);
     }
 
@@ -137,9 +147,15 @@ class AdminController extends Controller
         if (empty($_POST)) {
             $user = $this->userManager->findOneBy(['id' => $id]);
 
+            if ('admin' === $user[0]['role']) {
+                $admin = $this->adminManager->findOneBy(['user_id' => $id]);
+            }
+
             $this->render('admin/user_edit.html.twig', [
                 'user' => $user[0],
+                'admin' => $admin[0] ?? null,
             ]);
+
             return;
         }
 

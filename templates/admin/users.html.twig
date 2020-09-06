@@ -22,10 +22,17 @@
           <th scope="row">{{ user.id }}</th>
           <td>{{ user.user_name }}</td>
           <td>{{ user.first_name }} {{ user.last_name }}</td>
-          <td class="text-success">
-            <i class="fas fa-user-shield"></i>
-            {{ user.role }}
-          </td>
+          {% if user.role == 'admin' %}
+            <td class="text-success">
+              <i class="fas fa-user-shield"></i>
+              Admin
+            </td>
+          {% else %}
+            <td class="text-primary">
+              <i class="fas fa-user"></i>
+              Utilisateur
+            </td>
+          {% endif %}
           <td>{{ user.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</td>
           <td>
             <a href="/admin/users/{{ user.id }}" class="btn btn-edit">
