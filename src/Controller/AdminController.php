@@ -125,15 +125,11 @@ class AdminController extends Controller
      */
     public function showUser(int $id): void
     {
-        $user = $this->userManager->findOneBy(['id' => $id]);
-
-        if ('admin' === $user[0]['role']) {
-            $admin = $this->adminManager->findOneBy(['user_id' => $id]);
-        }
+        list($user, $admin) = $this->getUser($id);
 
         $this->render('admin/user.html.twig', [
             'user' => $user[0],
-            'admin' => $admin[0] ?? null,
+            'admin' => $admin[0],
         ]);
     }
 
@@ -145,20 +141,34 @@ class AdminController extends Controller
     public function editUser(int $id): void
     {
         if (empty($_POST)) {
-            $user = $this->userManager->findOneBy(['id' => $id]);
-
-            if ('admin' === $user[0]['role']) {
-                $admin = $this->adminManager->findOneBy(['user_id' => $id]);
-            }
+            list($user, $admin) = $this->getUser($id);
 
             $this->render('admin/user_edit.html.twig', [
                 'user' => $user[0],
-                'admin' => $admin[0] ?? null,
+                'admin' => $admin[0],
             ]);
 
             return;
         }
 
         $this->render('admin/user_edit.html.twig');
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    private function getUser(int $id): array
+    {
+        $user = $this->userManager->findOneBy(['id' => $id]);
+
+        if ('admin' === $user[0]['role']) {
+            $admin = $this->adminManager->findOneBy(['user_id' => $id]);
+        }
+
+        return [$user, $admin ?? null];
     }
 }
