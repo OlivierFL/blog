@@ -40,7 +40,7 @@ class ValidationError
      */
     public function __construct(string $key, string $rule, array $attributes = [])
     {
-        $this->key = $key;
+        $this->key = $this->translateKey($key, $this->getTranslations());
         $this->rule = $rule;
         $this->attributes = $attributes;
     }
@@ -49,6 +49,29 @@ class ValidationError
     {
         $params = array_merge([$this->messages[$this->rule], $this->key], $this->attributes);
 
-        return (string) sprintf(...$params);
+        return sprintf(...$params);
+    }
+
+    /**
+     * @return array
+     */
+    private function getTranslations(): array
+    {
+        return yaml_parse_file(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'translations'.\DIRECTORY_SEPARATOR.'french.yaml');
+    }
+
+    /**
+     * @param string $key
+     * @param array  $translations
+     *
+     * @return string
+     */
+    private function translateKey(string $key, array $translations): string
+    {
+        if (\array_key_exists($key, $translations)) {
+            $key = $translations[$key];
+        }
+
+        return $key;
     }
 }
