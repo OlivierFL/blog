@@ -39,7 +39,7 @@ abstract class Manager
      * @return mixed
      */
     public function findBy(
-        array $criteria,
+        array $criteria = [],
         array $orderBy = [],
         int $limit = null,
         int $offset = null
@@ -52,7 +52,7 @@ abstract class Manager
             $queryLimit = $this->getLimit($offset ? true : false);
         }
 
-        $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'` WHERE '.$params.$queryOrder.$queryLimit);
+        $query = $this->db->prepare('SELECT * FROM `'.$this->tableName.'`'.$params.$queryOrder.$queryLimit);
 
         (null === $limit) ?: $criteria[] = $limit;
         (null === $offset) ?: $criteria[] = $offset;
@@ -88,8 +88,8 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
-     * @throws Exception
      * @throws ReflectionException
+     * @throws Exception
      *
      * @return false|PDOStatement
      */
@@ -115,8 +115,8 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
-     * @throws Exception
      * @throws ReflectionException
+     * @throws Exception
      *
      * @return int
      */
@@ -182,6 +182,10 @@ abstract class Manager
      */
     private function getQueryParams(array $criteria): string
     {
+        if (empty($criteria)) {
+            return '';
+        }
+
         $params = [];
         foreach ($criteria as $key => $value) {
             if (array_key_last($criteria) !== $key) {
@@ -191,7 +195,7 @@ abstract class Manager
             }
         }
 
-        return implode(' ', $params);
+        return ' WHERE '.implode(' ', $params);
     }
 
     /**

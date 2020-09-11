@@ -43,7 +43,7 @@ class AdminController extends Controller
      */
     public function index(): void
     {
-        $users = $this->userManager->getLastThreeUsers();
+        $users = $this->userManager->findBy([], ['created_at' => 'DESC'], 3);
 
         $this->render('admin/index.html.twig', [
             'users' => $users,
