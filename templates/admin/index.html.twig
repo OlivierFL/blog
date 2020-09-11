@@ -77,11 +77,9 @@
             {% for user in users %}
               <div class="col-6 col-md-3 mb-3">
                 <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-                {% if user.role == 'admin' %}
-                  <p class="text-success"><i class="fas fa-user-shield"></i>&nbsp;Admin</p>
-                {% else %}
-                  <p class="text-primary"><i class="fas fa-user"></i>&nbsp;Utilisateur</p>
-                {% endif %}
+                <p class="{% if user.role == 'admin' %}text-success{% else %}text-primary{% endif %}"><i
+                          class="fas {% if user.role == 'admin' %}fa-user-shield{% else %}fa-user{% endif %}"></i>&nbsp;{{ user.role|capitalize }}
+                </p>
                 <a href="/admin/users/edit/{{ user.id }}" class="black btn btn-sm btn-edit">
                   <i class="fas fa-edit"></i>
                   Modifier</a>
