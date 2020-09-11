@@ -74,7 +74,7 @@ abstract class Manager
      */
     public function findOneBy(array $criteria, array $orderBy = [])
     {
-        return $this->findBy($criteria, $orderBy, 1);
+        return $this->findBy($criteria, $orderBy, 1)[0];
     }
 
     /**
