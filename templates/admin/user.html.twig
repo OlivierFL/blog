@@ -26,17 +26,10 @@
         <div class="col-md-4">
           <h5>Rôle</h5>
           <hr class="separator-blue-left">
-          {% if user.base_infos.role == 'admin' %}
-            <h6 class="text-success">
-              <i class="fas fa-user-shield"></i>
-              {{ user.base_infos.role }}
-            </h6>
-          {% else %}
-            <h6 class="text-primary">
-              <i class="fas fa-user"></i>
-              {{ user.base_infos.role }}
-            </h6>
-          {% endif %}
+          <h6 class="{% if user.base_infos.role == 'admin' %}text-success{% else %}text-primary{% endif %}">
+            <i class="fas {% if user.base_infos.role == 'admin' %}fa-user-shield{% else %}fa-user{% endif %}"></i>
+            {{ user.base_infos.role }}
+          </h6>
         </div>
         <div class="col-md-4 mt-3">
           <h5>Date d'inscription</h5>
