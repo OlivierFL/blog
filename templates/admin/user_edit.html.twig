@@ -10,7 +10,7 @@
             <input type="text"
                    class="form-control"
                    id="username"
-                   placeholder="{{ user.user_name }}"
+                   placeholder="{{ user.base_infos.user_name }}"
             >
           </div>
           <div class="form-group col-md-4">
@@ -18,7 +18,7 @@
             <input type="text"
                    class="form-control"
                    id="last_name"
-                   placeholder="{{ user.last_name }}"
+                   placeholder="{{ user.base_infos.last_name }}"
             >
           </div>
           <div class="form-group col-md-4">
@@ -26,7 +26,7 @@
             <input type="text"
                    class="form-control"
                    id="first_name"
-                   placeholder="{{ user.first_name }}"
+                   placeholder="{{ user.base_infos.first_name }}"
             >
           </div>
         </div>
@@ -36,7 +36,7 @@
             <input type="email"
                    class="form-control"
                    id="email"
-                   placeholder="{{ user.email }}"
+                   placeholder="{{ user.base_infos.email }}"
             >
           </div>
         </div>
@@ -48,7 +48,7 @@
                      id="role_user"
                      name="role"
                      class="custom-control-input"
-                      {% if user.role == 'user' %} checked {% endif %}
+                      {% if user.base_infos.role == 'user' %} checked {% endif %}
               >
               <label class="custom-control-label" for="role_user">Utilisateur</label>
             </div>
@@ -57,20 +57,20 @@
                      id="role_admin"
                      name="role"
                      class="custom-control-input"
-                      {% if user.role == 'admin' %} checked {% endif %}
+                      {% if user.base_infos.role == 'admin' %} checked {% endif %}
               >
               <label class="custom-control-label" for="role_admin">Admin</label>
             </div>
           </div>
         </div>
-        {% if admin is not null %}
+        {% if user.admin_infos is not null %}
           <div class="form-row mb-5">
             <div class="form-group col">
               <label for="description">Description</label>
               <textarea class="form-control"
                         id="description"
                         rows="6"
-                        placeholder="{{ admin.description }}"
+                        placeholder="{{ user.admin_infos.description }}"
               ></textarea>
             </div>
           </div>

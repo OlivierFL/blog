@@ -125,11 +125,10 @@ class AdminController extends Controller
      */
     public function showUser(int $id): void
     {
-        list($user, $admin) = $this->getUser($id);
+        $user = $this->getUser($id);
 
         $this->render('admin/user.html.twig', [
-            'user' => $user[0],
-            'admin' => $admin[0],
+            'user' => $user,
         ]);
     }
 
@@ -141,11 +140,10 @@ class AdminController extends Controller
     public function editUser(int $id): void
     {
         if (empty($_POST)) {
-            list($user, $admin) = $this->getUser($id);
+            $user = $this->getUser($id);
 
             $this->render('admin/user_edit.html.twig', [
-                'user' => $user[0],
-                'admin' => $admin[0],
+                'user' => $user,
             ]);
 
             return;
@@ -163,12 +161,12 @@ class AdminController extends Controller
      */
     private function getUser(int $id): array
     {
-        $user = $this->userManager->findOneBy(['id' => $id]);
+        $userInfos = $this->userManager->findOneBy(['id' => $id]);
 
-        if ('admin' === $user[0]['role']) {
-            $admin = $this->adminManager->findOneBy(['user_id' => $id]);
+        if ('admin' === $userInfos['role']) {
+            $adminInfos = $this->adminManager->findOneBy(['user_id' => $id]);
         }
 
-        return [$user, $admin ?? null];
+        return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
     }
 }

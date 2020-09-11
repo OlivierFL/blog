@@ -7,17 +7,17 @@
         <div class="col-md-4">
           <h5>Nom de l'utilisateur</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.user_name }}</p>
+          <p>{{ user.base_infos.user_name }}</p>
         </div>
         <div class="col-md-4 mt-3">
           <h5>Nom</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.first_name }} {{ user.last_name }}</p>
+          <p>{{ user.base_infos.first_name }} {{ user.base_infos.last_name }}</p>
         </div>
         <div class="col-md-4 mt-3">
           <h5>Adresse mail</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.email }}</p>
+          <p>{{ user.base_infos.email }}</p>
         </div>
       </div>
     </section>
@@ -26,48 +26,49 @@
         <div class="col-md-4">
           <h5>Rôle</h5>
           <hr class="separator-blue-left">
-          {% if user.role == 'admin' %}
+          {% if user.base_infos.role == 'admin' %}
             <h6 class="text-success">
               <i class="fas fa-user-shield"></i>
-              Admin
+              {{ user.base_infos.role }}
             </h6>
           {% else %}
             <h6 class="text-primary">
               <i class="fas fa-user"></i>
-              Utilisateur
+              {{ user.base_infos.role }}
             </h6>
           {% endif %}
         </div>
         <div class="col-md-4 mt-3">
           <h5>Date d'inscription</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
+          <p>{{ user.base_infos.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
         </div>
         <div class="col-md-4 mt-3">
           <h5>Date de modification</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
+          <p>{{ user.base_infos.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
         </div>
       </div>
     </section>
-    {% if admin is not null %}
+    {% if user.admin_infos is not null %}
       <section class="mb-5 row">
         <div class="col mt-3">
           <h5>Description</h5>
           <hr class="separator-blue-left">
-          <p>{{ admin.description }}</p>
+          <p>{{ user.admin_infos.description }}</p>
         </div>
       </section>
       <section class="mb-5 row">
         <div class="col-md-6 mt-3">
           <h5>Fichier téléchargé</h5>
           <hr class="separator-blue-left">
-          <a href="{{ admin.url_cv }}">{{ admin.url_cv }}</a>
+          <a href="{{ user.admin_infos.url_cv }}">{{ user.admin_infos.url_cv }}</a>
         </div>
         <div class="col-md-6 mt-3">
           <h5>Photo de profil</h5>
           <hr class="separator-blue-left">
-          <img src="{{ admin.url_avatar }}" alt="{{ admin.alt_url_avatar }}" height="200" width="300">
+          <img src="{{ user.admin_infos.url_avatar }}" alt="{{ user.admin_infos.alt_url_avatar }}" height="200"
+               width="300">
         </div>
       </section>
     {% endif %}
@@ -75,10 +76,10 @@
       <a href="/admin/users" class="btn btn-edit mr-md-3 mb-4">
         <i class="fas fa-chevron-left"></i>
         Retour</a>
-      <a href="/admin/users/edit/{{ user.id }}" class="btn btn-edit mr-md-3 mb-4">
+      <a href="/admin/users/edit/{{ user.base_infos.id }}" class="btn btn-edit mr-md-3 mb-4">
         <i class="fas fa-edit"></i>
         Éditer</a>
-      <a href="/admin/users/delete/{{ user.id }}" class="btn btn-danger mb-4">
+      <a href="/admin/users/delete/{{ user.base_infos.id }}" class="btn btn-danger mb-4">
         <i class="fas fa-trash-alt"></i>
         Supprimer</a>
     </section>

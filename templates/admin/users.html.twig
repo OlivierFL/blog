@@ -25,12 +25,12 @@
           {% if user.role == 'admin' %}
             <td class="text-success">
               <i class="fas fa-user-shield"></i>
-              Admin
+              {{ user.role|capitalize }}
             </td>
           {% else %}
             <td class="text-primary">
               <i class="fas fa-user"></i>
-              Utilisateur
+              {{ user.role|capitalize }}
             </td>
           {% endif %}
           <td>{{ user.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</td>
