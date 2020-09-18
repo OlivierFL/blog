@@ -2,44 +2,14 @@
 
 namespace App\Controller;
 
-use App\Core\PDOFactory;
 use App\Core\Validation\ValidatorFactory;
-use App\Managers\AdminManager;
-use App\Managers\UserManager;
 use App\Model\User;
 use Core\Controller;
 use Exception;
-use PDO;
 use ReflectionException;
 
 class AdminController extends Controller
 {
-    /**
-     * @var UserManager
-     */
-    private $userManager;
-    /**
-     * @var AdminManager
-     */
-    private $adminManager;
-    /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
-     * AdminController constructor.
-     *
-     * @throws ReflectionException
-     */
-    public function __construct()
-    {
-        $this->db = (new PDOFactory())->getMysqlConnexion();
-        $this->userManager = new UserManager($this->db);
-        $this->adminManager = new AdminManager($this->db);
-        Controller::__construct();
-    }
-
     /**
      * @throws Exception
      */
@@ -142,12 +112,12 @@ class AdminController extends Controller
      */
     public function editUser(int $id): void
     {
-        $messages = null;
+        $user = $this->getUser($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
 
             if ($validator->isValid()) {
-                $result = $this->updateUser($this->getUser($id));
+                $result = $this->updateUser($user);
 
                 if (false === $result) {
                     throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
@@ -160,26 +130,8 @@ class AdminController extends Controller
 
         $this->render('admin/user_edit.html.twig', [
             'user' => $this->getUser($id),
-            'messages' => $messages,
+            'messages' => $messages ?? null,
         ]);
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws Exception
-     *
-     * @return array
-     */
-    private function getUser(int $id): array
-    {
-        $userInfos = $this->userManager->findOneBy(['id' => $id]);
-
-        if ('admin' === $userInfos['role']) {
-            $adminInfos = $this->adminManager->findOneBy(['user_id' => $id]);
-        }
-
-        return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
     }
 
     /**
