@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Core\PDOFactory;
+use App\Core\Validation\ValidatorFactory;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
+use App\Model\User;
 use Core\Controller;
 use Exception;
 use PDO;
@@ -135,13 +137,13 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
+     * @throws ReflectionException
      * @throws Exception
      */
     public function editUser(int $id): void
     {
+        $user = $this->getUser($id);
         if (empty($_POST)) {
-            $user = $this->getUser($id);
-
             $this->render('admin/user_edit.html.twig', [
                 'user' => $user,
             ]);
@@ -149,7 +151,36 @@ class AdminController extends Controller
             return;
         }
 
-        $this->render('admin/user_edit.html.twig');
+        $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
+
+        if ($validator->isValid()) {
+            foreach ($_POST as $key => $value) {
+                if ($value &&
+                    (\array_key_exists($key, $user['base_infos']) && $value !== $user['base_infos'][$key])
+                ) {
+                    $user['base_infos'][$key] = $value;
+                }
+            }
+            $updatedUser = new User($user['base_infos']);
+            $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+            $result = $this->userManager->update($updatedUser);
+
+            if (false === $result) {
+                throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
+            }
+
+            $this->render('admin/user_edit.html.twig', [
+                'user' => $this->getUser($id),
+                'success' => 'Utilisateur mis à jour',
+            ]);
+
+            return;
+        }
+
+        $this->render('admin/user_edit.html.twig', [
+            'user' => $this->getUser($id),
+            'errors' => $validator->getErrors(),
+        ]);
     }
 
     /**

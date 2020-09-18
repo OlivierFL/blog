@@ -39,12 +39,12 @@ admin:
     methods: GET
   - action: editUser
     path: /users/edit/{id:\d+}
-    methods: GET
+    methods: GET | POST
 user:
   - action: login
     path: /login
     methods: GET
   - action: signup
     path: /signup
-    methods: GET
+    methods: GET | POST
 

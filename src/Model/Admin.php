@@ -9,9 +9,9 @@ class Admin extends User
     /** @var string */
     private $urlAvatar;
     /** @var string */
-    private $altAvatar;
+    private $altUrlAvatar;
     /** @var string */
-    private $urlCV;
+    private $urlCv;
     /** @var string */
     private $userId;
 
@@ -28,15 +28,15 @@ class Admin extends User
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param null|string $description
      */
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -44,15 +44,15 @@ class Admin extends User
     /**
      * @return string
      */
-    public function getUrlAvatar(): string
+    public function getUrlAvatar(): ?string
     {
         return $this->urlAvatar;
     }
 
     /**
-     * @param string $urlAvatar
+     * @param null|string $urlAvatar
      */
-    public function setUrlAvatar(string $urlAvatar): void
+    public function setUrlAvatar(?string $urlAvatar): void
     {
         $this->urlAvatar = $urlAvatar;
     }
@@ -60,33 +60,33 @@ class Admin extends User
     /**
      * @return string
      */
-    public function getAltAvatar(): string
+    public function getAltUrlAvatar(): ?string
     {
-        return $this->altAvatar;
+        return $this->altUrlAvatar;
     }
 
     /**
-     * @param string $altAvatar
+     * @param null|string $altUrlAvatar
      */
-    public function setAltAvatar(string $altAvatar): void
+    public function setAltAvatar(?string $altUrlAvatar): void
     {
-        $this->altAvatar = $altAvatar;
+        $this->altUrlAvatar = $altUrlAvatar;
     }
 
     /**
      * @return string
      */
-    public function getUrlCV(): string
+    public function getUrlCv(): ?string
     {
-        return $this->urlCV;
+        return $this->urlCv;
     }
 
     /**
-     * @param string $urlCV
+     * @param null|string $urlCv
      */
-    public function setUrlCV(string $urlCV): void
+    public function setUrlCV(?string $urlCv): void
     {
-        $this->urlCV = $urlCV;
+        $this->urlCv = $urlCv;
     }
 
     /**

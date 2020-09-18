@@ -8,20 +8,58 @@
   <div class="container">
     <section class="m-60 text-center row justify-content-around">
       <div class="text">
-        <form class="form-signin" method="post">
+        {% if errors %}
+          {% for error in errors %}
+            <p>{{ error.__toString() }}</p>
+          {% endfor %}
+        {% endif %}
+        <form class="form-signin" id="sign-up" method="post" action="/user/signup" autocomplete="on">
           <h1 class="h3 mb-3 font-weight-normal">Inscription</h1>
           <hr class="separator-blue">
           <label for="lastname" class="sr-only">Nom</label>
-          <input type="text" id="lastname" class="form-control mb-3" placeholder="Nom">
+          <input type="text"
+                 id="lastname"
+                 class="form-control mb-3"
+                 placeholder="Nom *"
+                 name="last_name"
+                 required
+          >
           <label for="firstname" class="sr-only">Prénom</label>
-          <input type="text" id="firstname" class="form-control mb-3" placeholder="Prénom">
+          <input type="text"
+                 id="firstname"
+                 class="form-control mb-3"
+                 placeholder="Prénom *"
+                 name="first_name"
+                 required
+          >
           <label for="username" class="sr-only">Nom d'utilisateur</label>
-          <input type="text" id="username" class="form-control mb-3" placeholder="Nom d'utilisateur">
+          <input type="text"
+                 id="username"
+                 class="form-control mb-3"
+                 placeholder="Nom d'utilisateur *"
+                 name="user_name"
+                 required
+          >
           <label for="email" class="sr-only">Adresse email</label>
-          <input type="email" id="email" class="form-control mb-3" placeholder="Adresse email">
+          <input type="email"
+                 id="email"
+                 class="form-control mb-3"
+                 placeholder="Adresse email *"
+                 name="email"
+                 autocomplete="email"
+                 required
+          >
           <label for="password" class="sr-only">Mot de passe</label>
-          <input type="password" id="password" class="form-control mb-3" placeholder="Mot de passe">
-          <button class="btn btn-lg btn-primary btn-block" type="submit">S'inscrire</button>
+          <input type="password"
+                 id="password"
+                 class="form-control mb-3"
+                 placeholder="Mot de passe *"
+                 name="password"
+                 required
+                 autocomplete="new-password"
+          >
+          <small class="text-muted mb-4">Tous les champs marqués d'un * sont obligatoires</small>
+          <button class="btn btn-lg btn-primary btn-block mt-4" type="submit" form="sign-up">S'inscrire</button>
         </form>
       </div>
     </section>

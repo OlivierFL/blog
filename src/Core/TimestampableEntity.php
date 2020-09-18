@@ -16,7 +16,7 @@ trait TimestampableEntity
      */
     public function getCreatedAt(): string
     {
-        return $this->createdAt->format('Y-m-d H:i:s');
+        return $this->createdAt;
     }
 
     /**
@@ -32,7 +32,7 @@ trait TimestampableEntity
      */
     public function getUpdatedAt(): string
     {
-        return $this->updatedAt->format('Y-m-d H:i:s');
+        return $this->updatedAt;
     }
 
     /**

@@ -25,6 +25,7 @@ class ValidationError
         'datetime' => 'Le champ %s doit être une date valide (\'%s\')',
         'email' => 'Le champ %s doit être un email valide',
         'password' => 'Le champ %s doit contenir au moins une lettre minuscule, une majuscule, un chiffre et un caractère spécial',
+        'role' => 'Le %s est incorrect',
     ];
     /**
      * @var array

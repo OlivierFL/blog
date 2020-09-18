@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block body %}
+  {% if signup_success is defined %}
+    <h2>{{ signup_success }}</h2>
+  {% endif %}
   <div class="hero-img">
     <div class="hero-text text-center">
       <h1>Olivier Floch</h1>
