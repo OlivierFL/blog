@@ -148,13 +148,14 @@ class AdminController extends Controller
             $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
 
             if ($validator->isValid()) {
-                $updatedUser = new User($user['base_infos']);
-                $updatedUser->setUserName($_POST['user_name']);
-                $updatedUser->setFirstName($_POST['first_name']);
-                $updatedUser->setLastName($_POST['last_name']);
-                $updatedUser->setEmail($_POST['email']);
-                $updatedUser->setRole($_POST['role']);
-                $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+                $updatedUser = (new User($user['base_infos']))
+                    ->setUserName($_POST['user_name'])
+                    ->setFirstName($_POST['first_name'])
+                    ->setLastName($_POST['last_name'])
+                    ->setEmail($_POST['email'])
+                    ->setRole($_POST['role'])
+                    ->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'))
+                ;
                 $result = $this->userManager->update($updatedUser);
 
                 if (false === $result) {
