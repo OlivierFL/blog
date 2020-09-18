@@ -2,11 +2,9 @@
 
 {% block admin_body %}
   <div class="container">
-    {% if success is defined %}
-      <h2>{{ success }}</h2>
-    {% elseif errors is defined %}
-      {% for error in errors %}
-        <p>{{ error.__toString() }}</p>
+    {% if messages is not empty %}
+      {% for message in messages %}
+        <h2>{{ message }}</h2>
       {% endfor %}
     {% endif %}
     <section class="my-5">
@@ -18,6 +16,7 @@
                    class="form-control"
                    id="user_name"
                    name="user_name"
+                   value="{{ user.base_infos.user_name }}"
                    placeholder="{{ user.base_infos.user_name }}"
             >
           </div>
@@ -27,6 +26,7 @@
                    class="form-control"
                    id="last_name"
                    name="last_name"
+                   value="{{ user.base_infos.last_name }}"
                    placeholder="{{ user.base_infos.last_name }}"
             >
           </div>
@@ -36,6 +36,7 @@
                    class="form-control"
                    id="first_name"
                    name="first_name"
+                   value="{{ user.base_infos.first_name }}"
                    placeholder="{{ user.base_infos.first_name }}"
             >
           </div>
@@ -47,6 +48,7 @@
                    class="form-control"
                    id="email"
                    name="email"
+                   value="{{ user.base_infos.email }}"
                    placeholder="{{ user.base_infos.email }}"
             >
           </div>
@@ -84,7 +86,8 @@
                         id="description"
                         rows="6"
                         placeholder="{{ user.admin_infos.description }}"
-              ></textarea>
+              >{{ user.admin_infos.description }}
+              </textarea>
             </div>
           </div>
           <div class="form-row">

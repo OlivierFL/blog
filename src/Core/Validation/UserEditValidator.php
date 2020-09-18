@@ -21,37 +21,28 @@ final class UserEditValidator extends Validator implements ValidatorInterface
     }
 
     /**
-     * @param int $key
+     * @param string $key
      *
      * @throws \Exception
      */
-    private function addValidations(int $key): void
+    private function addValidations(string $key): void
     {
-        switch ($key) {
-            case 'user_name':
-                $this->length('user_name', 3)
-                    ->unique('user_name')
-                ;
+        if ('user_name' === $key) {
+            $this->length('user_name', 3, 255);
+        }
 
-                break;
-            case 'last_name':
-            case 'first_name':
-                $this->length($key, 1);
+        if ('last_name' === $key || 'first_name' === $key) {
+            $this->length($key, 1, 255);
+        }
 
-                break;
-            case 'email':
-                $this->length('email', 5)
-                    ->email('email')
-                    ->unique('email')
-                ;
+        if ('email' === $key) {
+            $this->length('email', 5, 255)
+                ->email('email')
+            ;
+        }
 
-                break;
-            case 'role':
-                $this->role('role');
-
-                break;
-            default:
-                break;
+        if ('role' === $key) {
+            $this->role('role');
         }
     }
 }

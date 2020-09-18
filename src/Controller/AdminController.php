@@ -14,7 +14,6 @@ use ReflectionException;
 
 class AdminController extends Controller
 {
-    private const USER_EDIT_TEMPLATE = 'admin/user_edit.html.twig';
     /**
      * @var UserManager
      */
@@ -144,34 +143,32 @@ class AdminController extends Controller
     public function editUser(int $id): void
     {
         $user = $this->getUser($id);
-        if (empty($_POST)) {
-            $this->render(self::USER_EDIT_TEMPLATE, [
-                'user' => $user,
-            ]);
+        $messages = null;
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
 
-            return;
-        }
+            if ($validator->isValid()) {
+                $updatedUser = new User($user['base_infos']);
+                $updatedUser->setUserName($_POST['user_name']);
+                $updatedUser->setFirstName($_POST['first_name']);
+                $updatedUser->setLastName($_POST['last_name']);
+                $updatedUser->setEmail($_POST['email']);
+                $updatedUser->setRole($_POST['role']);
+                $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+                $result = $this->userManager->update($updatedUser);
 
-        $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
-
-        if ($validator->isValid()) {
-            $result = $this->updateUser($user);
-
-            if (false === $result) {
-                throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
+                if (false === $result) {
+                    throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
+                }
+                $messages[] = 'Utilisateur mis à jour';
+            } else {
+                $messages = $validator->getErrors();
             }
-
-            $this->render(self::USER_EDIT_TEMPLATE, [
-                'user' => $this->getUser($id),
-                'success' => 'Utilisateur mis à jour',
-            ]);
-
-            return;
         }
 
-        $this->render(self::USER_EDIT_TEMPLATE, [
+        $this->render('admin/user_edit.html.twig', [
             'user' => $this->getUser($id),
-            'errors' => $validator->getErrors(),
+            'messages' => $messages,
         ]);
     }
 
@@ -191,27 +188,5 @@ class AdminController extends Controller
         }
 
         return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
-    }
-
-    /**
-     * @param array $user
-     *
-     * @throws ReflectionException
-     *
-     * @return int
-     */
-    private function updateUser(array $user): int
-    {
-        foreach ($_POST as $key => $value) {
-            if ($value &&
-                (\array_key_exists($key, $user['base_infos']) && $value !== $user['base_infos'][$key])
-            ) {
-                $user['base_infos'][$key] = $value;
-            }
-        }
-        $updatedUser = new User($user['base_infos']);
-        $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
-
-        return $this->userManager->update($updatedUser);
     }
 }
