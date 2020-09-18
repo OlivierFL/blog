@@ -154,16 +154,7 @@ class AdminController extends Controller
         $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
 
         if ($validator->isValid()) {
-            foreach ($_POST as $key => $value) {
-                if ($value &&
-                    (\array_key_exists($key, $user['base_infos']) && $value !== $user['base_infos'][$key])
-                ) {
-                    $user['base_infos'][$key] = $value;
-                }
-            }
-            $updatedUser = new User($user['base_infos']);
-            $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
-            $result = $this->userManager->update($updatedUser);
+            $result = $this->updateUser($user);
 
             if (false === $result) {
                 throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
@@ -199,5 +190,27 @@ class AdminController extends Controller
         }
 
         return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
+    }
+
+    /**
+     * @param array $user
+     *
+     * @throws ReflectionException
+     *
+     * @return int
+     */
+    private function updateUser(array $user): int
+    {
+        foreach ($_POST as $key => $value) {
+            if ($value &&
+                (\array_key_exists($key, $user['base_infos']) && $value !== $user['base_infos'][$key])
+            ) {
+                $user['base_infos'][$key] = $value;
+            }
+        }
+        $updatedUser = new User($user['base_infos']);
+        $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+
+        return $this->userManager->update($updatedUser);
     }
 }
