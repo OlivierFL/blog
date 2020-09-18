@@ -14,6 +14,7 @@ use ReflectionException;
 
 class AdminController extends Controller
 {
+    private const USER_EDIT_TEMPLATE = 'admin/user_edit.html.twig';
     /**
      * @var UserManager
      */
@@ -144,7 +145,7 @@ class AdminController extends Controller
     {
         $user = $this->getUser($id);
         if (empty($_POST)) {
-            $this->render('admin/user_edit.html.twig', [
+            $this->render(self::USER_EDIT_TEMPLATE, [
                 'user' => $user,
             ]);
 
@@ -160,7 +161,7 @@ class AdminController extends Controller
                 throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
             }
 
-            $this->render('admin/user_edit.html.twig', [
+            $this->render(self::USER_EDIT_TEMPLATE, [
                 'user' => $this->getUser($id),
                 'success' => 'Utilisateur mis à jour',
             ]);
@@ -168,7 +169,7 @@ class AdminController extends Controller
             return;
         }
 
-        $this->render('admin/user_edit.html.twig', [
+        $this->render(self::USER_EDIT_TEMPLATE, [
             'user' => $this->getUser($id),
             'errors' => $validator->getErrors(),
         ]);
