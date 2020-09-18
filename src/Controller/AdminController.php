@@ -142,21 +142,12 @@ class AdminController extends Controller
      */
     public function editUser(int $id): void
     {
-        $user = $this->getUser($id);
         $messages = null;
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
 
             if ($validator->isValid()) {
-                $updatedUser = (new User($user['base_infos']))
-                    ->setUserName($_POST['user_name'])
-                    ->setFirstName($_POST['first_name'])
-                    ->setLastName($_POST['last_name'])
-                    ->setEmail($_POST['email'])
-                    ->setRole($_POST['role'])
-                    ->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'))
-                ;
-                $result = $this->userManager->update($updatedUser);
+                $result = $this->updateUser($this->getUser($id));
 
                 if (false === $result) {
                     throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
@@ -189,5 +180,26 @@ class AdminController extends Controller
         }
 
         return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
+    }
+
+    /**
+     * @param $user
+     *
+     * @throws ReflectionException
+     *
+     * @return int
+     */
+    private function updateUser($user): int
+    {
+        $updatedUser = (new User($user['base_infos']))
+            ->setUserName($_POST['user_name'])
+            ->setFirstName($_POST['first_name'])
+            ->setLastName($_POST['last_name'])
+            ->setEmail($_POST['email'])
+            ->setRole($_POST['role'])
+        ;
+        $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+
+        return $this->userManager->update($updatedUser);
     }
 }

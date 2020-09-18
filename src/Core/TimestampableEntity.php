@@ -21,14 +21,10 @@ trait TimestampableEntity
 
     /**
      * @param DateTime|string $createdAt
-     *
-     * @return TimestampableEntity
      */
-    public function setCreatedAt($createdAt): TimestampableEntity
+    public function setCreatedAt($createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**
@@ -41,13 +37,9 @@ trait TimestampableEntity
 
     /**
      * @param DateTime|string $updatedAt
-     *
-     * @return TimestampableEntity
      */
-    public function setUpdatedAt($updatedAt): TimestampableEntity
+    public function setUpdatedAt($updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 }
