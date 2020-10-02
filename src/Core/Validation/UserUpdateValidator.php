@@ -2,10 +2,12 @@
 
 namespace App\Core\Validation;
 
-final class UserEditValidator extends Validator implements ValidatorInterface
+use Exception;
+
+final class UserUpdateValidator extends Validator implements ValidatorInterface
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * @return $this
      */
@@ -23,7 +25,7 @@ final class UserEditValidator extends Validator implements ValidatorInterface
     /**
      * @param string $key
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function addValidations(string $key): void
     {

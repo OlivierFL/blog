@@ -41,7 +41,7 @@ class AdminController extends Controller
     /**
      * @throws Exception
      */
-    public function listUsers(): void
+    public function readUsers(): void
     {
         $users = $this->userManager->findAll();
 
@@ -95,7 +95,7 @@ class AdminController extends Controller
      *
      * @throws Exception
      */
-    public function showUser(int $id): void
+    public function readUser(int $id): void
     {
         $user = $this->getUser($id);
 
@@ -110,27 +110,20 @@ class AdminController extends Controller
      * @throws ReflectionException
      * @throws Exception
      */
-    public function editUser(int $id): void
+    public function updateUser(int $id): void
     {
         $user = $this->getUser($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $validator = ValidatorFactory::create('user_edit', $_POST, $this->userManager);
-
-            if ($validator->isValid()) {
-                $result = $this->updateUser($user);
-
-                if (false === $result) {
-                    throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
-                }
-                $messages[] = 'Utilisateur mis à jour';
-            } else {
-                $messages = $validator->getErrors();
+            try {
+                $result = $this->updateOldUser($user);
+            } catch (ReflectionException $e) {
+                throw $e;
             }
         }
 
         $this->render('admin/user_edit.html.twig', [
             'user' => $this->getUser($id),
-            'messages' => $messages ?? null,
+            'messages' => $result ?? null,
         ]);
     }
 
@@ -138,20 +131,34 @@ class AdminController extends Controller
      * @param $user
      *
      * @throws ReflectionException
+     * @throws Exception
      *
-     * @return int
+     * @return array
      */
-    private function updateUser($user): int
+    private function updateOldUser($user): array
     {
-        $updatedUser = (new User($user['base_infos']))
-            ->setUserName($_POST['user_name'])
-            ->setFirstName($_POST['first_name'])
-            ->setLastName($_POST['last_name'])
-            ->setEmail($_POST['email'])
-            ->setRole($_POST['role'])
-        ;
-        $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+        $validator = ValidatorFactory::create(ValidatorFactory::UPDATE_USER, $_POST, $this->userManager);
 
-        return $this->userManager->update($updatedUser);
+        if ($validator->isValid()) {
+            $updatedUser = (new User($user['base_infos']))
+                ->setUserName($_POST['user_name'])
+                ->setFirstName($_POST['first_name'])
+                ->setLastName($_POST['last_name'])
+                ->setEmail($_POST['email'])
+                ->setRole($_POST['role'])
+        ;
+            $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+
+            $result = $this->userManager->update($updatedUser);
+
+            if (false === $result) {
+                throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
+            }
+            $messages[] = 'Utilisateur mis à jour';
+        } else {
+            $messages = $validator->getErrors();
+        }
+
+        return $messages;
     }
 }

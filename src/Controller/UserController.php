@@ -2,13 +2,10 @@
 
 namespace App\Controller;
 
-use App\Core\PDOFactory;
 use App\Core\Validation\ValidatorFactory;
-use App\Managers\UserManager;
 use App\Model\User;
 use Core\Controller;
 use Exception;
-use ReflectionException;
 
 class UserController extends Controller
 {
@@ -21,43 +18,51 @@ class UserController extends Controller
     }
 
     /**
-     * @throws ReflectionException
      * @throws Exception
      */
     public function signup(): void
     {
-        if (empty($_POST)) {
-            $this->render('layout/signup.html.twig');
-
-            return;
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            try {
+                $messages = $this->createUser($_POST);
+            } catch (Exception $e) {
+                throw $e;
+            }
         }
 
-        $db = (new PDOFactory())->getMysqlConnexion();
-        $userManager = new UserManager($db);
+        $this->render('layout/signup.html.twig', [
+            'messages' => $messages ?? null,
+        ]);
+    }
 
-        $validator = ValidatorFactory::create('sign_up', $_POST, $userManager);
+    /**
+     * @param array $data
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    private function createUser($data): array
+    {
+        $validator = ValidatorFactory::create(ValidatorFactory::SIGN_UP, $_POST, $this->userManager);
 
         if ($validator->isValid()) {
-            $user = new User($_POST);
+            $user = new User($data);
             $user->setCreatedAt((new \DateTime())->format('Y-m-d H:i:s'));
             $user->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
             $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
 
-            $result = $userManager->create($user);
+            $result = $this->userManager->create($user);
 
             if (false === $result) {
                 throw new Exception('Erreur lors de la création de l\'utilisateur');
             }
 
-            $this->render('layout/index.html.twig', [
-                'signup_success' => 'Félicitations ! Vous êtes désormais inscrit et vous pouvez dès à présent poster des commentaires',
-            ]);
-
-            return;
+            $messages[] = 'Félicitations ! Vous êtes désormais inscrit et vous pouvez dès à présent poster des commentaires';
+        } else {
+            $messages = $validator->getErrors();
         }
 
-        $this->render('layout/signup.html.twig', [
-            'errors' => $validator->getErrors(),
-        ]);
+        return $messages;
     }
 }

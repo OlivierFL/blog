@@ -5,8 +5,10 @@
 {% endblock %}
 
 {% block body %}
-  {% if signup_success is defined %}
-    <h2>{{ signup_success }}</h2>
+  {% if messages is not empty %}
+    {% for message in messages %}
+      <h2>{{ message }}</h2>
+    {% endfor %}
   {% endif %}
   <div class="hero-img">
     <div class="hero-text text-center">

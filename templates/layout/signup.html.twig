@@ -8,10 +8,11 @@
   <div class="container">
     <section class="m-60 text-center row justify-content-around">
       <div class="text">
-        {% if errors %}
-          {% for error in errors %}
-            <p>{{ error.__toString() }}</p>
+        {% if messages is not empty %}
+          {% for message in messages %}
+            <h2>{{ message }}</h2>
           {% endfor %}
+          <a href="/" class="btn btn-primary mt-3">Retour à l'accueil</a>
         {% endif %}
         <form class="form-signin" id="sign-up" method="post" action="/user/signup" autocomplete="on">
           <h1 class="h3 mb-3 font-weight-normal">Inscription</h1>

@@ -35,10 +35,14 @@ class Admin extends User
 
     /**
      * @param null|string $description
+     *
+     * @return Admin
      */
-    public function setDescription(?string $description): void
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
     }
 
     /**
@@ -51,10 +55,14 @@ class Admin extends User
 
     /**
      * @param null|string $urlAvatar
+     *
+     * @return Admin
      */
-    public function setUrlAvatar(?string $urlAvatar): void
+    public function setUrlAvatar(?string $urlAvatar): self
     {
         $this->urlAvatar = $urlAvatar;
+
+        return $this;
     }
 
     /**
@@ -67,10 +75,14 @@ class Admin extends User
 
     /**
      * @param null|string $altUrlAvatar
+     *
+     * @return Admin
      */
-    public function setAltAvatar(?string $altUrlAvatar): void
+    public function setAltAvatar(?string $altUrlAvatar): self
     {
         $this->altUrlAvatar = $altUrlAvatar;
+
+        return $this;
     }
 
     /**
@@ -83,10 +95,14 @@ class Admin extends User
 
     /**
      * @param null|string $urlCv
+     *
+     * @return Admin
      */
-    public function setUrlCV(?string $urlCv): void
+    public function setUrlCV(?string $urlCv): self
     {
         $this->urlCv = $urlCv;
+
+        return $this;
     }
 
     /**
@@ -99,9 +115,13 @@ class Admin extends User
 
     /**
      * @param string $userId
+     *
+     * @return Admin
      */
-    public function setUserId(string $userId): void
+    public function setUserId(string $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
     }
 }
