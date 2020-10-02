@@ -2,6 +2,9 @@
 
 namespace Core;
 
+use App\Core\PDOFactory;
+use App\Managers\AdminManager;
+use App\Managers\UserManager;
 use Exception;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -17,15 +20,29 @@ class Controller
      * @var Environment
      */
     protected $twig;
+    /**
+     * @var UserManager
+     */
+    protected UserManager $userManager;
+    /**
+     * @var AdminManager
+     */
+    protected AdminManager $adminManager;
+    private \PDO $db;
 
     /**
      * Controller constructor.
+     *
+     * @throws \ReflectionException
      */
     public function __construct()
     {
         $config = $this->getConfig();
         $this->twig = $this->initTwig($config);
         $this->setConfig($this->twig, $config);
+        $this->db = (new PDOFactory())->getMysqlConnexion();
+        $this->userManager = new UserManager($this->db);
+        $this->adminManager = new AdminManager($this->db);
     }
 
     /**
@@ -41,6 +58,24 @@ class Controller
         } catch (Exception $e) {
             throw new Exception('Erreur lors du rendu du template : '.$e->getMessage());
         }
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    protected function getUser(int $id): array
+    {
+        $userInfos = $this->userManager->findOneBy(['id' => $id]);
+
+        if ('admin' === $userInfos['role']) {
+            $adminInfos = $this->adminManager->findOneBy(['user_id' => $id]);
+        }
+
+        return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
     }
 
     /**

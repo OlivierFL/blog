@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block body %}
+  {% if messages is not empty %}
+    {% for message in messages %}
+      <h2>{{ message }}</h2>
+    {% endfor %}
+  {% endif %}
   <div class="hero-img">
     <div class="hero-text text-center">
       <h1>Olivier Floch</h1>

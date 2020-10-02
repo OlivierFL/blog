@@ -31,20 +31,20 @@ admin:
   - action: editComment
     path: /comments/edit/{id:\d+}
     methods: GET
-  - action: listUsers
+  - action: readUsers
     path: /users
     methods: GET
-  - action: showUser
+  - action: readUser
     path: /users/{id:\d+}
     methods: GET
-  - action: editUser
+  - action: updateUser
     path: /users/edit/{id:\d+}
-    methods: GET
+    methods: GET | POST
 user:
   - action: login
     path: /login
     methods: GET
   - action: signup
     path: /signup
-    methods: GET
+    methods: GET | POST
 

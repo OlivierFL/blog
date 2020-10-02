@@ -2,25 +2,35 @@
 
 namespace App\Core\Validation;
 
-class Validator
+use App\Core\Manager;
+
+abstract class Validator
 {
     /**
      * @var array
      */
-    private $data;
+    protected array $data;
     /**
      * @var string[]
      */
-    private $errors = [];
+    protected array $errors = [];
+    /**
+     * @var Manager
+     */
+    protected Manager $manager;
 
     /**
      * Validator constructor.
      *
      * @param array $data
+     * @param       $manager
      */
-    public function __construct(array $data)
+    public function __construct(array $data, $manager = null)
     {
         $this->data = $data;
+        if ($manager) {
+            $this->manager = $manager;
+        }
     }
 
     /**
@@ -59,15 +69,16 @@ class Validator
 
     /**
      * @param string ...$keys
-     * @param        $manager
+     *
+     * @throws \Exception
      *
      * @return $this
      */
-    public function unique($manager, string ...$keys): self
+    public function unique(string ...$keys): self
     {
         foreach ($keys as $key) {
             $value = $this->getValue($key);
-            if (false === $manager->preventReuse([$key => $value])) {
+            if (false === $this->manager->preventReuse([$key => $value])) {
                 $this->addError($key, 'unique');
             }
         }
@@ -147,6 +158,23 @@ class Validator
 
     /**
      * @param string $key
+     *
+     * @return $this
+     */
+    public function role(string $key): self
+    {
+        $role = $this->getValue($key);
+        if (!\in_array($role, ['user', 'admin'], true)) {
+            $this->addError($key, 'role');
+
+            return $this;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
      * @param string $format
      *
      * @return Validator
@@ -188,7 +216,7 @@ class Validator
      * @param string $rule
      * @param array  $attributes
      */
-    private function addError(string $key, string $rule, array $attributes = []): void
+    public function addError(string $key, string $rule, array $attributes = []): void
     {
         $this->errors[$key] = new ValidationError($key, $rule, $attributes);
     }
@@ -198,7 +226,7 @@ class Validator
      *
      * @return null|mixed
      */
-    private function getValue(string $key)
+    public function getValue(string $key)
     {
         if (\array_key_exists($key, $this->data)) {
             return $this->data[$key];

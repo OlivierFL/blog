@@ -2,42 +2,14 @@
 
 namespace App\Controller;
 
-use App\Core\PDOFactory;
-use App\Managers\AdminManager;
-use App\Managers\UserManager;
+use App\Core\Validation\ValidatorFactory;
+use App\Model\User;
 use Core\Controller;
 use Exception;
-use PDO;
 use ReflectionException;
 
 class AdminController extends Controller
 {
-    /**
-     * @var UserManager
-     */
-    private $userManager;
-    /**
-     * @var AdminManager
-     */
-    private $adminManager;
-    /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
-     * AdminController constructor.
-     *
-     * @throws ReflectionException
-     */
-    public function __construct()
-    {
-        $this->db = (new PDOFactory())->getMysqlConnexion();
-        $this->userManager = new UserManager($this->db);
-        $this->adminManager = new AdminManager($this->db);
-        Controller::__construct();
-    }
-
     /**
      * @throws Exception
      */
@@ -69,7 +41,7 @@ class AdminController extends Controller
     /**
      * @throws Exception
      */
-    public function listUsers(): void
+    public function readUsers(): void
     {
         $users = $this->userManager->findAll();
 
@@ -123,7 +95,7 @@ class AdminController extends Controller
      *
      * @throws Exception
      */
-    public function showUser(int $id): void
+    public function readUser(int $id): void
     {
         $user = $this->getUser($id);
 
@@ -135,38 +107,54 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
+     * @throws ReflectionException
      * @throws Exception
      */
-    public function editUser(int $id): void
+    public function updateUser(int $id): void
     {
-        if (empty($_POST)) {
-            $user = $this->getUser($id);
-
-            $this->render('admin/user_edit.html.twig', [
-                'user' => $user,
-            ]);
-
-            return;
+        $user = $this->getUser($id);
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $result = $this->updateOldUser($user);
         }
 
-        $this->render('admin/user_edit.html.twig');
+        $this->render('admin/user_edit.html.twig', [
+            'user' => $this->getUser($id),
+            'messages' => $result ?? null,
+        ]);
     }
 
     /**
-     * @param int $id
+     * @param $user
      *
+     * @throws ReflectionException
      * @throws Exception
      *
      * @return array
      */
-    private function getUser(int $id): array
+    private function updateOldUser($user): array
     {
-        $userInfos = $this->userManager->findOneBy(['id' => $id]);
+        $validator = ValidatorFactory::create(ValidatorFactory::UPDATE_USER, $_POST, $this->userManager);
 
-        if ('admin' === $userInfos['role']) {
-            $adminInfos = $this->adminManager->findOneBy(['user_id' => $id]);
+        if ($validator->isValid()) {
+            $updatedUser = (new User($user['base_infos']))
+                ->setUserName($_POST['user_name'])
+                ->setFirstName($_POST['first_name'])
+                ->setLastName($_POST['last_name'])
+                ->setEmail($_POST['email'])
+                ->setRole($_POST['role'])
+        ;
+            $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+
+            $result = $this->userManager->update($updatedUser);
+
+            if (false === $result) {
+                throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
+            }
+            $messages[] = 'Utilisateur mis à jour';
+        } else {
+            $messages = $validator->getErrors();
         }
 
-        return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
+        return $messages;
     }
 }

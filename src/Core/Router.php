@@ -31,7 +31,8 @@ class Router
             foreach ($parsedRoutes as $routeGroup => $parsedRoute) {
                 $routes->addGroup($routeGroup === 'index' ? '' : '/' . $routeGroup, static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
                     foreach ($parsedRoute as $route) {
-                        $routes->addRoute($route['methods'], $route['path'], $routeGroup . '.' . $route['action']);
+                        $methods = explode(' | ', $route['methods']);
+                        $routes->addRoute($methods, $route['path'], $routeGroup . '.' . $route['action']);
                     }
                 });
             }

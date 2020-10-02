@@ -46,10 +46,14 @@ class User extends Entity
 
     /**
      * @param string $userName
+     *
+     * @return User
      */
-    public function setUserName(string $userName): void
+    public function setUserName(string $userName): self
     {
         $this->userName = $userName;
+
+        return $this;
     }
 
     /**
@@ -62,10 +66,14 @@ class User extends Entity
 
     /**
      * @param string $firstName
+     *
+     * @return User
      */
-    public function setFirstName(string $firstName): void
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
+
+        return $this;
     }
 
     /**
@@ -78,10 +86,14 @@ class User extends Entity
 
     /**
      * @param string $lastName
+     *
+     * @return User
      */
-    public function setLastName(string $lastName): void
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
     /**
@@ -94,10 +106,14 @@ class User extends Entity
 
     /**
      * @param string $email
+     *
+     * @return User
      */
-    public function setEmail(string $email): void
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
     }
 
     /**
@@ -110,10 +126,14 @@ class User extends Entity
 
     /**
      * @param string $password
+     *
+     * @return User
      */
-    public function setPassword(string $password): void
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -130,9 +150,13 @@ class User extends Entity
 
     /**
      * @param string $role
+     *
+     * @return User
      */
-    public function setRole(string $role): void
+    public function setRole(string $role): self
     {
         $this->role = $role;
+
+        return $this;
     }
 }

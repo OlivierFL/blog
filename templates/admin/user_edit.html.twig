@@ -2,14 +2,21 @@
 
 {% block admin_body %}
   <div class="container">
+    {% if messages is not empty %}
+      {% for message in messages %}
+        <h2>{{ message }}</h2>
+      {% endfor %}
+    {% endif %}
     <section class="my-5">
-      <form id="post_form">
+      <form id="form-user-edit" method="post" action="/admin/users/edit/{{ user.base_infos.id }}">
         <div class="form-row mb-4">
           <div class="form-group col-md-4">
-            <label for="username">Nom d'utilisateur</label>
+            <label for="user_name">Nom d'utilisateur</label>
             <input type="text"
                    class="form-control"
-                   id="username"
+                   id="user_name"
+                   name="user_name"
+                   value="{{ user.base_infos.user_name }}"
                    placeholder="{{ user.base_infos.user_name }}"
             >
           </div>
@@ -18,6 +25,8 @@
             <input type="text"
                    class="form-control"
                    id="last_name"
+                   name="last_name"
+                   value="{{ user.base_infos.last_name }}"
                    placeholder="{{ user.base_infos.last_name }}"
             >
           </div>
@@ -26,6 +35,8 @@
             <input type="text"
                    class="form-control"
                    id="first_name"
+                   name="first_name"
+                   value="{{ user.base_infos.first_name }}"
                    placeholder="{{ user.base_infos.first_name }}"
             >
           </div>
@@ -36,6 +47,8 @@
             <input type="email"
                    class="form-control"
                    id="email"
+                   name="email"
+                   value="{{ user.base_infos.email }}"
                    placeholder="{{ user.base_infos.email }}"
             >
           </div>
@@ -48,6 +61,7 @@
                      id="role_user"
                      name="role"
                      class="custom-control-input"
+                     value="user"
                       {% if user.base_infos.role == 'user' %} checked {% endif %}
               >
               <label class="custom-control-label" for="role_user">Utilisateur</label>
@@ -57,6 +71,7 @@
                      id="role_admin"
                      name="role"
                      class="custom-control-input"
+                     value="admin"
                       {% if user.base_infos.role == 'admin' %} checked {% endif %}
               >
               <label class="custom-control-label" for="role_admin">Admin</label>
@@ -71,7 +86,8 @@
                         id="description"
                         rows="6"
                         placeholder="{{ user.admin_infos.description }}"
-              ></textarea>
+              >{{- user.admin_infos.description -}}
+              </textarea>
             </div>
           </div>
           <div class="form-row">
@@ -94,7 +110,7 @@
             <i class="fas fa-times"></i>
             Annuler
           </a>
-          <button type="submit" class="btn btn-success mb-4">
+          <button type="submit" class="btn btn-success mb-4" form="form-user-edit">
             <i class="fas fa-check"></i>
             Valider
           </button>
