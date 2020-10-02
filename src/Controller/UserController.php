@@ -23,15 +23,11 @@ class UserController extends Controller
     public function signup(): void
     {
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            try {
-                $messages = $this->createUser($_POST);
-            } catch (Exception $e) {
-                throw $e;
-            }
+            $result = $this->createUser($_POST);
         }
 
         $this->render('layout/signup.html.twig', [
-            'messages' => $messages ?? null,
+            'messages' => $result ?? null,
         ]);
     }
 
