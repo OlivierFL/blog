@@ -89,10 +89,10 @@ class UserAdministrator
     public function updateUser($user, $data): array
     {
         $validator = ValidatorFactory::create(ValidatorFactory::UPDATE_USER, $data, $this->userManager);
-        $user = array_merge($user['base_infos'], $data);
+        $user['base_infos'] = array_merge($user['base_infos'], $data);
 
         if ($validator->isValid()) {
-            $updatedUser = new User($user);
+            $updatedUser = new User($user['base_infos']);
             $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
 
             $result = $this->userManager->update($updatedUser);
