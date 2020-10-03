@@ -79,24 +79,20 @@ class UserAdministrator
 
     /**
      * @param $user
+     * @param $data
      *
-     * @throws ReflectionException
      * @throws Exception
+     * @throws ReflectionException
      *
      * @return array
      */
-    public function updateUser($user): array
+    public function updateUser($user, $data): array
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::UPDATE_USER, $_POST, $this->userManager);
+        $validator = ValidatorFactory::create(ValidatorFactory::UPDATE_USER, $data, $this->userManager);
+        $user = array_merge($user['base_infos'], $data);
 
         if ($validator->isValid()) {
-            $updatedUser = (new User($user['base_infos']))
-                ->setUserName($_POST['user_name'])
-                ->setFirstName($_POST['first_name'])
-                ->setLastName($_POST['last_name'])
-                ->setEmail($_POST['email'])
-                ->setRole($_POST['role'])
-            ;
+            $updatedUser = new User($user);
             $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
 
             $result = $this->userManager->update($updatedUser);

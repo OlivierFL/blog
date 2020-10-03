@@ -112,7 +112,7 @@ class AdminController extends Controller
     {
         $user = $this->userAdministrator->getUser($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->userAdministrator->updateUser($user);
+            $result = $this->userAdministrator->updateUser($user, $_POST);
         }
 
         $this->render('admin/user_edit.html.twig', [
