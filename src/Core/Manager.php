@@ -11,20 +11,18 @@ use ReflectionException;
 abstract class Manager
 {
     /** @var PDO */
-    protected $db;
-    /** @var string */
-    protected $tableName;
+    protected PDO $db;
+    /** @var null|string */
+    protected ?string $tableName;
 
     /**
      * Manager constructor.
      *
-     * @param PDO $db
-     *
      * @throws ReflectionException
      */
-    public function __construct(PDO $db)
+    public function __construct()
     {
-        $this->db = $db;
+        $this->db = (new PDOFactory())->getMysqlConnexion();
         $this->tableName = $this->getTableName();
     }
 
