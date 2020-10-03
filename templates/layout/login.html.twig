@@ -7,16 +7,37 @@
 {% block body %}
   <div class="container">
     <section class="m-60 text-center row justify-content-around">
+      {% if messages is not empty %}
+        {% for message in messages %}
+          <h2>{{ message }}</h2>
+        {% endfor %}
+        <a href="/" class="btn btn-primary mt-3">Retour à l'accueil</a>
+      {% endif %}
       <div class="text">
         <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
         <hr class="separator-blue">
         <a href="/user/signup" class="black">Nouvel utilisateur ? Cliquez ici pour vous inscrire</a>
-        <form class="form-signin" method="post">
+        <form class="form-signin" id="login" method="post" action="/user/login" autocomplete="on">
           <label for="email" class="sr-only">Adresse email</label>
-          <input type="email" id="email" class="form-control mb-3" placeholder="Adresse email">
+          <input type="email"
+                 id="email"
+                 class="form-control mb-3"
+                 placeholder="Adresse email *"
+                 name="email"
+                 required
+                 autocomplete="email"
+          >
           <label for="password" class="sr-only">Mot de passe</label>
-          <input type="password" id="password" class="form-control mb-3" placeholder="Mot de passe">
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
+          <input type="password"
+                 id="password"
+                 class="form-control mb-3"
+                 placeholder="Mot de passe *"
+                 name="password"
+                 required
+                 autocomplete="current-password"
+          >
+          <small class="text-muted mb-4">Tous les champs marqués d'un * sont obligatoires</small>
+          <button class="btn btn-lg btn-primary btn-block mt-4" type="submit" form="login">Se connecter</button>
         </form>
       </div>
     </section>

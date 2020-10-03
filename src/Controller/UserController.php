@@ -14,7 +14,15 @@ class UserController extends Controller
      */
     public function login(): void
     {
-        $this->render('layout/login.html.twig');
+        $messages = [];
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $user = $this->authenticateUser();
+        }
+
+        $this->render('layout/login.html.twig', [
+            'user' => $user,
+            'messages' => $messages ?? null,
+        ]);
     }
 
     /**
@@ -60,5 +68,40 @@ class UserController extends Controller
         }
 
         return $messages;
+    }
+
+    private function authenticateUser()
+    {
+        $messages = [];
+        $validator = ValidatorFactory::create(ValidatorFactory::LOGIN, $_POST, $this->userManager);
+
+        if (!$validator->isValid()) {
+            return $validator->getErrors();
+        }
+
+        $data = $this->userManager->findOneBy(['email' => $_POST['email']]);
+
+        if (empty($data)) {
+            $messages[] = 'Aucun utilisateur trouvé pour l\'adresse email : '.$_POST['email'];
+            return $messages;
+        }
+
+        if (false === $this->checkPassword($_POST['password'], $data['password'])) {
+            $messages[] = 'Mot de passe invalide, veuillez réessayer.';
+            return $messages;
+        }
+
+        return $this->getUser($data['id']);
+    }
+
+    /**
+     * @param string $password
+     * @param string $hash
+     *
+     * @return bool
+     */
+    private function checkPassword(string $password, string $hash): bool
+    {
+        return password_verify($password, $hash);
     }
 }
