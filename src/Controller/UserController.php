@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\Validation\ValidatorFactory;
-use App\Model\User;
 use Core\Controller;
 use Exception;
 
@@ -31,7 +29,7 @@ class UserController extends Controller
     public function signup(): void
     {
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->createUser($_POST);
+            $result = $this->userAdministrator->createUser($_POST);
         }
 
         $this->render('layout/signup.html.twig', [

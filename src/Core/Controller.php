@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use App\Core\PDOFactory;
+use App\Core\Service\UserAdministrator;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
 use Exception;
@@ -15,11 +15,11 @@ class Controller
     /**
      * @var FilesystemLoader
      */
-    protected $loader;
+    protected FilesystemLoader $loader;
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
     /**
      * @var UserManager
      */
@@ -28,21 +28,22 @@ class Controller
      * @var AdminManager
      */
     protected AdminManager $adminManager;
-    private \PDO $db;
+    /**
+     * @var UserAdministrator
+     */
+    protected UserAdministrator $userAdministrator;
 
     /**
      * Controller constructor.
-     *
-     * @throws \ReflectionException
      */
     public function __construct()
     {
         $config = $this->getConfig();
         $this->twig = $this->initTwig($config);
         $this->setConfig($this->twig, $config);
-        $this->db = (new PDOFactory())->getMysqlConnexion();
-        $this->userManager = new UserManager($this->db);
-        $this->adminManager = new AdminManager($this->db);
+        $this->userManager = new UserManager();
+        $this->adminManager = new AdminManager();
+        $this->userAdministrator = new UserAdministrator();
     }
 
     /**
@@ -58,24 +59,6 @@ class Controller
         } catch (Exception $e) {
             throw new Exception('Erreur lors du rendu du template : '.$e->getMessage());
         }
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws Exception
-     *
-     * @return array
-     */
-    protected function getUser(int $id): array
-    {
-        $userInfos = $this->userManager->findOneBy(['id' => $id]);
-
-        if ('admin' === $userInfos['role']) {
-            $adminInfos = $this->adminManager->findOneBy(['user_id' => $id]);
-        }
-
-        return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
     }
 
     /**
