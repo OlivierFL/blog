@@ -2,7 +2,9 @@
 
 namespace Core;
 
+use App\Core\Service\Auth;
 use App\Core\Service\UserAdministrator;
+use App\Core\Session;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
 use Exception;
@@ -32,6 +34,14 @@ class Controller
      * @var UserAdministrator
      */
     protected UserAdministrator $userAdministrator;
+    /**
+     * @var Session
+     */
+    protected Session $session;
+    /**
+     * @var Auth
+     */
+    protected Auth $auth;
 
     /**
      * Controller constructor.
@@ -43,6 +53,9 @@ class Controller
         $this->setConfig($this->twig, $config);
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
+        $this->session = new Session($_SESSION);
+        $this->auth = new Auth($this->session);
+        $this->setSession($this->twig, $this->session);
         $this->userAdministrator = new UserAdministrator();
     }
 
@@ -100,6 +113,17 @@ class Controller
             if (\in_array(strtolower($key), ['locale', 'charset'], true)) {
                 $twig->addGlobal(strtolower($key), strtolower($config));
             }
+        }
+    }
+
+    /**
+     * @param Environment $twig
+     * @param Session     $session
+     */
+    private function setSession(Environment $twig, Session $session): void
+    {
+        if ($session->hasSession()) {
+            $twig->addGlobal('session', $session->getSession());
         }
     }
 }

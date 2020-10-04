@@ -78,7 +78,7 @@
             </div>
           </div>
         </div>
-        {% if user.admin_infos is not null %}
+        {% if user.base_infos.role == 'admin' %}
           <div class="form-row mb-5">
             <div class="form-group col">
               <label for="description">Description</label>

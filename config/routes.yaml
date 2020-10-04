@@ -47,4 +47,7 @@ user:
   - action: signup
     path: /signup
     methods: GET | POST
+  - action: logout
+    path: /logout
+    methods: GET
 

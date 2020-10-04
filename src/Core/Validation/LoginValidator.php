@@ -15,10 +15,6 @@ final class LoginValidator extends Validator implements ValidatorInterface
                 ;
         }
 
-        return $this->length('email', 5, 255)
-            ->length('password', 8)
-            ->email('email')
-            ->password('password')
-            ;
+        return $this;
     }
 }

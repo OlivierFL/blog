@@ -9,6 +9,19 @@ use ReflectionException;
 class AdminController extends Controller
 {
     /**
+     * AdminController constructor.
+     *
+     * @throws Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        if ('admin' !== $this->auth->getCurrentUserRole()) {
+            $this->unauthorizedAccess();
+        }
+    }
+
+    /**
      * @throws Exception
      */
     public function index(): void
@@ -119,5 +132,14 @@ class AdminController extends Controller
             'user' => $this->userAdministrator->getUser($id),
             'messages' => $result ?? null,
         ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function unauthorizedAccess(): void
+    {
+        $this->render('layout/forbidden.html.twig');
+        exit();
     }
 }
