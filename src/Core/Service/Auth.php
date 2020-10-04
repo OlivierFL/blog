@@ -17,6 +17,10 @@ class Auth
      * @var Session
      */
     private Session $session;
+    /**
+     * @var UserAdministrator
+     */
+    private UserAdministrator $userAdministrator;
 
     /**
      * Auth constructor.
@@ -26,6 +30,7 @@ class Auth
     public function __construct(Session $session)
     {
         $this->userManager = new UserManager();
+        $this->userAdministrator = new UserAdministrator();
         $this->session = $session;
     }
 
@@ -34,7 +39,7 @@ class Auth
      *
      * @throws Exception
      *
-     * @return mixed|string[]
+     * @return string[]|void
      */
     public function authenticateUser(array $data)
     {
@@ -54,7 +59,8 @@ class Auth
             throw new Exception('Mot de passe invalide, veuillez réessayer.');
         }
 
-        return $user['id'];
+        $authenticatedUser = $this->userAdministrator->getUser($user['id']);
+        $this->session->set('current_user', $authenticatedUser);
     }
 
     /**
@@ -62,7 +68,7 @@ class Auth
      */
     public function getCurrentUserRole()
     {
-        return $this->session->get('user')['base_infos']['role'];
+        return $this->session->get('current_user')['base_infos']['role'];
     }
 
     /**

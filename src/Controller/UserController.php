@@ -15,9 +15,7 @@ class UserController extends Controller
         $messages = [];
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             try {
-                $userId = $this->auth->authenticateUser($_POST);
-                $user = $this->userAdministrator->getUser($userId);
-                $this->session->set('user', $user);
+                $this->auth->authenticateUser($_POST);
                 header('Location: /');
             } catch (Exception $e) {
                 $messages[] = $e->getMessage();
@@ -25,7 +23,6 @@ class UserController extends Controller
         }
 
         $this->render('layout/login.html.twig', [
-            'user' => $user ?? null,
             'messages' => $messages ?? null,
         ]);
     }
@@ -46,7 +43,7 @@ class UserController extends Controller
 
     public function logout(): void
     {
-        $this->session->stop();
+        $this->session->remove('current_user');
         header('Location: /user/login');
     }
 }

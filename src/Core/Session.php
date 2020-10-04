@@ -17,22 +17,22 @@ class Session
     }
 
     /**
-     * @param $name
+     * @param $key
      * @param $value
      */
-    public function set($name, $value): void
+    public function set($key, $value): void
     {
-        $_SESSION[$name] = $value;
+        $_SESSION[$key] = $value;
     }
 
     /**
-     * @param $name
+     * @param $key
      *
      * @return null|mixed
      */
-    public function get($name)
+    public function get($key)
     {
-        return $_SESSION[$name] ?? null;
+        return $_SESSION[$key] ?? null;
     }
 
     /**
@@ -49,6 +49,14 @@ class Session
     public function hasSession(): bool
     {
         return isset($_SESSION) && !empty($_SESSION);
+    }
+
+    /**
+     * @param $key
+     */
+    public function remove($key): void
+    {
+        unset($_SESSION[$key]);
     }
 
     public function stop(): void

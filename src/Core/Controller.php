@@ -55,7 +55,7 @@ class Controller
         $this->adminManager = new AdminManager();
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
-        $this->setSession($this->twig, $this->session);
+        $this->twig->addGlobal('session', $this->session->getSession());
         $this->userAdministrator = new UserAdministrator();
     }
 
@@ -113,17 +113,6 @@ class Controller
             if (\in_array(strtolower($key), ['locale', 'charset'], true)) {
                 $twig->addGlobal(strtolower($key), strtolower($config));
             }
-        }
-    }
-
-    /**
-     * @param Environment $twig
-     * @param Session     $session
-     */
-    private function setSession(Environment $twig, Session $session): void
-    {
-        if ($session->hasSession()) {
-            $twig->addGlobal('session', $session->getSession());
         }
     }
 }

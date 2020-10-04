@@ -17,7 +17,7 @@ class AdminController extends Controller
     {
         parent::__construct();
         if ('admin' !== $this->auth->getCurrentUserRole()) {
-            $this->unauthorizedAccess();
+            throw new Exception('Accès non autorisé !');
         }
     }
 
@@ -132,14 +132,5 @@ class AdminController extends Controller
             'user' => $this->userAdministrator->getUser($id),
             'messages' => $result ?? null,
         ]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function unauthorizedAccess(): void
-    {
-        $this->render('layout/forbidden.html.twig');
-        exit();
     }
 }
