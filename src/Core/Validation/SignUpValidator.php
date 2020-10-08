@@ -2,10 +2,12 @@
 
 namespace App\Core\Validation;
 
+use Exception;
+
 final class SignUpValidator extends Validator implements ValidatorInterface
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * @return $this
      */

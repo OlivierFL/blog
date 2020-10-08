@@ -9,6 +9,19 @@ use ReflectionException;
 class AdminController extends Controller
 {
     /**
+     * AdminController constructor.
+     *
+     * @throws Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        if ('admin' !== $this->auth->getCurrentUserRole()) {
+            throw new Exception('Accès non autorisé !');
+        }
+    }
+
+    /**
      * @throws Exception
      */
     public function index(): void

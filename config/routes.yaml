@@ -43,8 +43,11 @@ admin:
 user:
   - action: login
     path: /login
-    methods: GET
+    methods: GET | POST
   - action: signup
     path: /signup
     methods: GET | POST
+  - action: logout
+    path: /logout
+    methods: GET
 

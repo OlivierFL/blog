@@ -13,12 +13,20 @@
         <li class="nav-item mx-2">
           <a class="nav-link" href="/posts">Articles</a>
         </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link" href="/admin">Admin</a>
-        </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link" href="/user/login">Connexion</a>
-        </li>
+        {% if session.current_user is defined %}
+          {% if session.current_user.base_infos.role == 'admin' %}
+            <li class="nav-item mx-2">
+              <a class="nav-link" href="/admin">Admin</a>
+            </li>
+          {% endif %}
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="/user/logout">Déconnexion</a>
+          </li>
+        {% else %}
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="/user/login">Connexion</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
   </nav>

@@ -10,12 +10,20 @@
         <li>
           <a href="/posts">Articles</a>
         </li>
-        <li>
-          <a href="/admin">Admin</a>
-        </li>
-        <li>
-          <a href="/user/login">Connexion</a>
-        </li>
+        {% if session.current_user is defined %}
+          {% if session.current_user.base_infos.role == 'admin' %}
+            <li>
+              <a class="nav-link" href="/admin">Admin</a>
+            </li>
+          {% endif %}
+          <li>
+            <a href="/user/logout">Déconnexion</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="/user/login">Connexion</a>
+          </li>
+        {% endif %}
       </ul>
     </nav>
     <nav class="col-sm-4 p-3">
