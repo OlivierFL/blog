@@ -133,4 +133,24 @@ class AdminController extends Controller
             'messages' => $result ?? null,
         ]);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function deleteUser(): void
+    {
+        $user = $this->userAdministrator->getUser($_POST['id']);
+
+        try {
+            $this->userAdministrator->deleteUser($user);
+        } catch (Exception $e) {
+            throw new Exception('Erreur lors de la suppression de l\'utilisateur (id:'.$user['base_infos']['id'].') : '.$e->getMessage());
+        }
+
+        $this->render('admin/successful_edit.html.twig', [
+            'messages' => ['Utilisateur supprimé'],
+            'link' => 'users',
+            'link_text' => 'utilisateurs',
+        ]);
+    }
 }
