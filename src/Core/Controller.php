@@ -2,11 +2,11 @@
 
 namespace Core;
 
-use App\Service\Auth;
-use App\Service\UserAdministrator;
 use App\Core\Session;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
+use App\Service\Auth;
+use App\Service\UserAdministrator;
 use Exception;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
