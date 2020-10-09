@@ -2,8 +2,8 @@
 
 namespace Core;
 
-use App\Core\Service\Auth;
-use App\Core\Service\UserAdministrator;
+use App\Service\Auth;
+use App\Service\UserAdministrator;
 use App\Core\Session;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Service;
+namespace App\Service;
 
 use App\Core\PDOFactory;
 use App\Core\Validation\ValidatorFactory;
