@@ -36,9 +36,55 @@ class AdminController extends Controller
     /**
      * @throws Exception
      */
-    public function listPosts(): void
+    public function readPosts(): void
     {
         $this->render('admin/posts.html.twig');
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
+    public function readPost(int $id): void
+    {
+        $this->render('admin/post.html.twig', [
+            'post_title' => 'Post '.$id,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function createPost(): void
+    {
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $result = $this->postAdministrator->create($_POST, $this->session->get('current_user')['admin_infos']['id']);
+        }
+
+        $this->render('admin/post_create.html.twig', [
+            'messages' => $result ?? null,
+        ]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
+    public function updatePost(int $id): void
+    {
+        $this->render('admin/post_edit.html.twig', [
+            'post_title' => 'Post'.$id,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deletePost(): void
+    {
+        $this->render('admin/post_edit.html.twig');
     }
 
     /**
@@ -47,30 +93,6 @@ class AdminController extends Controller
     public function listComments(): void
     {
         $this->render('admin/comments.html.twig');
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws Exception
-     */
-    public function showPost(int $id): void
-    {
-        $this->render('admin/post.html.twig', [
-            'post_title' => 'Post '.$id,
-        ]);
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws Exception
-     */
-    public function editPost(int $id): void
-    {
-        $this->render('admin/post_edit.html.twig', [
-            'post_title' => 'Post'.$id,
-        ]);
     }
 
     /**

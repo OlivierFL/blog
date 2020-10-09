@@ -81,33 +81,33 @@ class Post extends Entity
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getCoverImg(): string
+    public function getCoverImg(): ?string
     {
         return $this->coverImg;
     }
 
     /**
-     * @param string $coverImg
+     * @param null|string $coverImg
      */
-    public function setCoverImg(string $coverImg): void
+    public function setCoverImg(?string $coverImg): void
     {
         $this->coverImg = $coverImg;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getAltCoverImg(): string
+    public function getAltCoverImg(): ?string
     {
         return $this->altCoverImg;
     }
 
     /**
-     * @param string $altCoverImg
+     * @param null|string $altCoverImg
      */
-    public function setAltCoverImg(string $altCoverImg): void
+    public function setAltCoverImg(?string $altCoverImg): void
     {
         $this->altCoverImg = $altCoverImg;
     }

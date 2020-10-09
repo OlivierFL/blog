@@ -3,6 +3,7 @@
 namespace Core;
 
 use App\Core\Service\Auth;
+use App\Core\Service\PostAdministrator;
 use App\Core\Service\UserAdministrator;
 use App\Core\Session;
 use App\Managers\AdminManager;
@@ -35,6 +36,10 @@ class Controller
      */
     protected UserAdministrator $userAdministrator;
     /**
+     * @var PostAdministrator
+     */
+    protected PostAdministrator $postAdministrator;
+    /**
      * @var Session
      */
     protected Session $session;
@@ -57,6 +62,7 @@ class Controller
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
         $this->userAdministrator = new UserAdministrator();
+        $this->postAdministrator = new PostAdministrator();
     }
 
     /**

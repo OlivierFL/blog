@@ -13,15 +13,21 @@ admin:
   - action: index
     path: ''
     methods: GET
-  - action: listPosts
+  - action: readPosts
     path: /posts
     methods: GET
-  - action: showPost
+  - action: readPost
     path: /posts/{id:\d+}
     methods: GET
-  - action: editPost
+  - action: createPost
+    path: /posts/create
+    methods: GET | POST
+  - action: updatePost
     path: /posts/edit/{id:\d+}
-    methods: GET
+    methods: GET | POST
+  - action: deletePost
+    path: /posts/delete
+    methods: POST
   - action: listComments
     path: /comments
     methods: GET
