@@ -1,6 +1,8 @@
 $('button[data-target="#deleteModal"]').click(function (event) {
+    event.preventDefault();
     let id = $(this).data('id');
-    let fullName = $(this).data('full-name');
-    $("#deleteModal .modal-body .user-full-name").text(fullName);
+    let itemInfo = $(this).data('item-info');
+    $("#deleteModal .modal-body .item-info").text(itemInfo);
     $("#deleteModal .modal-footer .idValue").val(id);
+    $('#deleteModal').modal('modal');
 })

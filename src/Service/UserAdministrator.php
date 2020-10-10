@@ -163,36 +163,12 @@ class UserAdministrator
         $user['base_infos']['last_name'] = $anonymousUser;
         $user['base_infos']['email'] = $anonymousUser.'@example.com';
         $user['base_infos']['role'] = 'ROLE_DISABLED';
-        $user['base_infos']['password'] = password_hash($this->randomPassword(20), PASSWORD_DEFAULT);
         $user['base_infos']['updated_at'] = (new \DateTime())->format('Y-m-d H:i:s');
 
         if (null !== $user['admin_infos']) {
-            foreach ($user['admin_infos'] as $key => $adminInfo) {
-                if (!\in_array($key, ['id', 'user_id'], true)) {
-                    $user['admin_infos'][$key] = null;
-                }
-            }
+            unset($user['admin_infos']);
         }
 
         return $user;
-    }
-
-    /**
-     * @param $length
-     *
-     * @throws Exception
-     *
-     * @return string
-     */
-    private function randomPassword($length): string
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!-.[]?*()';
-        $password = '';
-        $characterListLength = mb_strlen($characters, '8bit') - 1;
-        for ($i = 0; $i < $length; ++$i) {
-            $password .= $characters[random_int(0, $characterListLength)];
-        }
-
-        return $password;
     }
 }
