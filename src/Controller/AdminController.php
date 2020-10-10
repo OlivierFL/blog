@@ -59,7 +59,7 @@ class AdminController extends Controller
     public function createPost(): void
     {
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->postAdministrator->create($_POST, $this->session->get('current_user')['admin_infos']['id']);
+            $result = $this->postAdministrator->createPost($_POST);
         }
 
         $this->render('admin/post_create.html.twig', [
@@ -74,8 +74,14 @@ class AdminController extends Controller
      */
     public function updatePost(int $id): void
     {
+        $post = $this->postAdministrator->getPostWithAuthor($id);
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $result = $this->postAdministrator->updatePost($post, $_POST);
+        }
+
         $this->render('admin/post_edit.html.twig', [
-            'post_title' => 'Post'.$id,
+            'post' => $this->postAdministrator->getPostWithAuthor($id),
+            'messages' => $result ?? null,
         ]);
     }
 

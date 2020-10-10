@@ -4,7 +4,7 @@ namespace App\Core\Validation;
 
 use Exception;
 
-class PostCreateValidator extends Validator implements ValidatorInterface
+final class PostCreateValidator extends Validator implements ValidatorInterface
 {
     /**
      * @throws Exception

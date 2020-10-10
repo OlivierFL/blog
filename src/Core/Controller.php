@@ -62,7 +62,7 @@ class Controller
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
         $this->userAdministrator = new UserAdministrator();
-        $this->postAdministrator = new PostAdministrator();
+        $this->postAdministrator = new PostAdministrator($this->session);
     }
 
     /**

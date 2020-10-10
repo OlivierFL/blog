@@ -3,22 +3,45 @@
 
 {% block admin_body %}
   <div class="container">
+    {% if messages is not empty %}
+      {% for message in messages %}
+        <h2>{{ message }}</h2>
+      {% endfor %}
+    {% endif %}
     <section class="my-5">
-      <form id="post_form">
+      <form id="form-post-edit" method="post" action="/admin/posts/edit/{{ post.id }}">
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="author">Auteur</label>
-            <input type="text" class="form-control" id="author" placeholder="Olivier Floch">
+            <input type="text"
+                   class="form-control"
+                   id="author"
+                   name="author"
+                   value="{{ post.first_name|capitalize }} {{ post.last_name|capitalize }}"
+                   placeholder="{{ post.first_name|capitalize }} {{ post.last_name|capitalize }}"
+                   disabled
+            >
           </div>
           <div class="form-group col-md-6">
             <label for="title">Titre</label>
-            <input type="text" class="form-control" id="title" placeholder="Titre du post">
+            <input type="text"
+                   class="form-control"
+                   id="title"
+                   name="title"
+                   value="{{ post.title }}"
+                   placeholder="{{ post.title }}"
+            >
           </div>
         </div>
         <div class="form-group mb-5">
           <label for="content">Contenu</label>
-          <textarea class="form-control" id="title" placeholder="Contenu du post" form="post_form"
-                    name="post_content" rows="4" cols="50"></textarea>
+          <textarea class="form-control"
+                    id="content"
+                    name="content"
+                    rows="8"
+                    cols="50"
+                    placeholder="{{ post.content }}"
+          >{{- post.content -}}</textarea>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
@@ -33,7 +56,7 @@
             <i class="fas fa-times"></i>
             Annuler
           </a>
-          <button type="submit" class="btn btn-success mb-4">
+          <button type="submit" class="btn btn-success mb-4" form="form-post-edit">
             <i class="fas fa-check"></i>
             Valider
           </button>
