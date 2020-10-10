@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Core\Service;
+namespace App\Service;
 
+use App\Core\PDOFactory;
 use App\Core\Validation\ValidatorFactory;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
+use App\Model\Admin;
 use App\Model\User;
 use Exception;
+use PDO;
 use ReflectionException;
 
 class UserAdministrator
@@ -20,6 +23,10 @@ class UserAdministrator
      * @var AdminManager
      */
     private AdminManager $adminManager;
+    /**
+     * @var PDO
+     */
+    private PDO $db;
 
     /**
      * UserAdministrator constructor.
@@ -28,6 +35,7 @@ class UserAdministrator
     {
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
+        $this->db = (new PDOFactory())->getMysqlConnexion();
     }
 
     /**
@@ -81,8 +89,8 @@ class UserAdministrator
      * @param $user
      * @param $data
      *
-     * @throws Exception
      * @throws ReflectionException
+     * @throws Exception
      *
      * @return array
      */
@@ -105,5 +113,62 @@ class UserAdministrator
         }
 
         return $validator->getErrors();
+    }
+
+    /**
+     * @param $user
+     *
+     * @throws ReflectionException
+     * @throws Exception
+     *
+     * @return bool
+     */
+    public function deleteUser($user): bool
+    {
+        $user = $this->anonymizeUser($user);
+
+        $deletedUser = new User($user['base_infos']);
+        if (null !== $user['admin_infos']) {
+            $deletedAdmin = new Admin($user['admin_infos']);
+        }
+
+        try {
+            $this->db->beginTransaction();
+            $this->userManager->update($deletedUser);
+            if (isset($deletedAdmin)) {
+                $this->adminManager->update($deletedAdmin);
+            }
+            $this->db->commit();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $user
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    private function anonymizeUser($user): array
+    {
+        $anonymousUser = 'anonymous'.$user['base_infos']['id'];
+        $user['base_infos']['user_name'] = $anonymousUser;
+        $user['base_infos']['first_name'] = $anonymousUser;
+        $user['base_infos']['last_name'] = $anonymousUser;
+        $user['base_infos']['email'] = $anonymousUser.'@example.com';
+        $user['base_infos']['role'] = 'ROLE_DISABLED';
+        $user['base_infos']['updated_at'] = (new \DateTime())->format('Y-m-d H:i:s');
+
+        if (null !== $user['admin_infos']) {
+            unset($user['admin_infos']);
+        }
+
+        return $user;
     }
 }

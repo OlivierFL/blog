@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Service;
+namespace App\Service;
 
 use App\Core\Session;
 use App\Core\Validation\ValidatorFactory;
@@ -51,7 +51,7 @@ class Auth
 
         $user = $this->userManager->findOneBy(['email' => $data['email']]);
 
-        if (empty($user)) {
+        if (empty($user) || 'ROLE_DISABLED' === $user['role']) {
             throw new Exception('Aucun utilisateur trouvé pour l\'adresse email : '.$data['email']);
         }
 
