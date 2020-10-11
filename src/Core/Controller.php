@@ -3,12 +3,13 @@
 namespace Core;
 
 use App\Core\Service\Auth;
-use App\Core\Service\PostAdministrator;
 use App\Core\Service\UserAdministrator;
 use App\Core\Session;
 use App\Managers\AdminManager;
 use App\Managers\PostManager;
 use App\Managers\UserManager;
+use App\Service\Auth;
+use App\Service\UserAdministrator;
 use Exception;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;

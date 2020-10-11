@@ -46,6 +46,9 @@ admin:
   - action: updateUser
     path: /users/edit/{id:\d+}
     methods: GET | POST
+  - action: deleteUser
+    path: /users/delete
+    methods: POST
 user:
   - action: login
     path: /login
