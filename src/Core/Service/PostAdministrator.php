@@ -21,6 +21,10 @@ class PostAdministrator
      * @var Session
      */
     private Session $session;
+    /**
+     * @var FileUploader
+     */
+    private FileUploader $fileUploader;
 
     /**
      * PostAdministrator constructor.
@@ -32,6 +36,7 @@ class PostAdministrator
         $this->session = $session;
         $this->postManager = new PostManager();
         $this->slugify = new Slugify();
+        $this->fileUploader = new FileUploader();
     }
 
     /**
@@ -58,15 +63,26 @@ class PostAdministrator
     {
         $validator = ValidatorFactory::create('create_post', $data);
         if ($validator->isValid()) {
+            if (isset($_FILES) && 4 !== $_FILES['file']['error']) {
+                try {
+                    $filename = $this->fileUploader->upload($_FILES['file'], FileUploader::IMAGE);
+                    $data['cover_img'] = $filename;
+                } catch (Exception $e) {
+                    throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
+                }
+            }
             $post = new Post($data);
             $post->setCreatedAt((new \DateTime())->format('Y-m-d H:i:s'));
             $post->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
             $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
             $post->setSlug($this->createSlug($data['title']));
+            $post->setAltCoverImg(null !== $post->getCoverImg() ? $post->getSlug() : null);
 
             $result = $this->postManager->create($post);
 
             if (false === $result) {
+                null === $post->getCoverImg() ?: $this->fileUploader->delete($post->getCoverImg());
+
                 throw new Exception('Erreur lors de la création de l\'article');
             }
 
@@ -90,6 +106,14 @@ class PostAdministrator
         $validator = ValidatorFactory::create('update_post', $post);
 
         if ($validator->isValid()) {
+            if (isset($_FILES) && 4 !== $_FILES['file']['error']) {
+                try {
+                    $filename = $this->fileUploader->upload($_FILES['file'], FileUploader::IMAGE);
+                    $data['cover_img'] = $filename;
+                } catch (Exception $e) {
+                    throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
+                }
+            }
             $updatedPost = new Post($post);
             $updatedPost->setAdminId($this->session->get('current_user')['admin_infos']['id']);
             $updatedPost->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
@@ -98,6 +122,8 @@ class PostAdministrator
             $result = $this->postManager->update($updatedPost);
 
             if (false === $result) {
+                null === $updatedPost->getCoverImg() ?: $this->fileUploader->delete($updatedPost->getCoverImg());
+
                 throw new Exception('Erreur lors de la mise à jour de l\'article');
             }
 

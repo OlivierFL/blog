@@ -9,7 +9,11 @@
       <a class="btn btn-primary mt-5" href="/admin/posts">Retour aux articles</a>
     {% endif %}
     <section class="my-5">
-      <form id="form-post-create" method="post" action="/admin/posts/create">
+      <form id="form-post-create"
+            method="post"
+            action="/admin/posts/create"
+            enctype="multipart/form-data"
+      >
         <div class="form-row">
           <div class="form-group col-md-12">
             <label for="title">Titre</label>
@@ -36,7 +40,16 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <div class="custom-file">
-              <input type="file" class="custom-file-input" id="file">
+              <input type="hidden"
+                     name="max_file_size"
+                     value="16777220"
+              >
+              <input type="file"
+                     class="custom-file-input"
+                     id="file"
+                     name="file"
+                     accept="image/*"
+              >
               <label class="custom-file-label" for="file">Téléverser une image de couverture</label>
             </div>
           </div>

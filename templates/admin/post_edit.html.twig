@@ -9,7 +9,11 @@
       {% endfor %}
     {% endif %}
     <section class="my-5">
-      <form id="form-post-edit" method="post" action="/admin/posts/edit/{{ post.id }}">
+      <form id="form-post-edit"
+            method="post"
+            action="/admin/posts/edit/{{ post.id }}"
+            enctype="multipart/form-data"
+      >
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="author">Auteur</label>
@@ -46,7 +50,16 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <div class="custom-file">
-              <input type="file" class="custom-file-input" id="file">
+              <input type="hidden"
+                     name="max_file_size"
+                     value="16777220"
+              >
+              <input type="file"
+                     class="custom-file-input"
+                     id="file"
+                     name="file"
+                     accept="image/*"
+              >
               <label class="custom-file-label" for="file">Téléverser une image de couverture</label>
             </div>
           </div>
