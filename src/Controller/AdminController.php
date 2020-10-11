@@ -27,9 +27,11 @@ class AdminController extends Controller
     public function index(): void
     {
         $users = $this->userManager->findBy([], ['created_at' => 'DESC'], 3);
+        $posts = $this->postManager->findBy([], ['created_at' => 'DESC'], 2);
 
         $this->render('admin/index.html.twig', [
             'users' => $users,
+            'posts' => $posts,
         ]);
     }
 
@@ -38,7 +40,11 @@ class AdminController extends Controller
      */
     public function readPosts(): void
     {
-        $this->render('admin/posts.html.twig');
+        $posts = $this->postManager->findAllWithAuthor();
+
+        $this->render('admin/posts.html.twig', [
+            'posts' => $posts,
+        ]);
     }
 
     /**
@@ -48,8 +54,10 @@ class AdminController extends Controller
      */
     public function readPost(int $id): void
     {
+        $post = $this->postManager->findOneWithAuthor($id);
+
         $this->render('admin/post.html.twig', [
-            'post_title' => 'Post '.$id,
+            'post' => $post,
         ]);
     }
 
@@ -74,13 +82,13 @@ class AdminController extends Controller
      */
     public function updatePost(int $id): void
     {
-        $post = $this->postAdministrator->getPostWithAuthor($id);
+        $post = $this->postManager->findOneWithAuthor($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $result = $this->postAdministrator->updatePost($post, $_POST);
         }
 
         $this->render('admin/post_edit.html.twig', [
-            'post' => $this->postAdministrator->getPostWithAuthor($id),
+            'post' => $this->postManager->findOneWithAuthor($id),
             'messages' => $result ?? null,
         ]);
     }

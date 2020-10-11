@@ -61,6 +61,11 @@
                      accept="image/*"
               >
               <label class="custom-file-label" for="file">Téléverser une image de couverture</label>
+              {% if post.cover_img is not null %}
+                <p class="mt-2">Image actuelle : <a href="/img/{{ post.cover_img }}" class="text-primary"
+                                                    target="_blank">{{ post.cover_img }}</a>
+                </p>
+              {% endif %}
             </div>
           </div>
         </div>

@@ -16,12 +16,12 @@ admin:
   - action: readPosts
     path: /posts
     methods: GET
-  - action: readPost
-    path: /posts/{id:\d+}
-    methods: GET
   - action: createPost
     path: /posts/create
     methods: GET | POST
+  - action: readPost
+    path: /posts/{id:\d+}
+    methods: GET
   - action: updatePost
     path: /posts/edit/{id:\d+}
     methods: GET | POST

@@ -40,18 +40,6 @@ class PostAdministrator
     }
 
     /**
-     * @param int $id
-     *
-     * @throws Exception
-     *
-     * @return array
-     */
-    public function getPostWithAuthor(int $id): array
-    {
-        return $this->postManager->findOneWithAuthor(['id' => $id]);
-    }
-
-    /**
      * @param array $data
      *
      * @throws Exception

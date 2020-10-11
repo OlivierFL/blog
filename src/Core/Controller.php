@@ -7,6 +7,7 @@ use App\Core\Service\PostAdministrator;
 use App\Core\Service\UserAdministrator;
 use App\Core\Session;
 use App\Managers\AdminManager;
+use App\Managers\PostManager;
 use App\Managers\UserManager;
 use Exception;
 use Twig\Environment;
@@ -31,6 +32,10 @@ class Controller
      * @var AdminManager
      */
     protected AdminManager $adminManager;
+    /**
+     * @var PostManager
+     */
+    protected PostManager $postManager;
     /**
      * @var UserAdministrator
      */
@@ -58,6 +63,7 @@ class Controller
         $this->setConfig($this->twig, $config);
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
+        $this->postManager = new PostManager();
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
