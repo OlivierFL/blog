@@ -98,7 +98,19 @@ class AdminController extends Controller
      */
     public function deletePost(): void
     {
-        $this->render('admin/post_edit.html.twig');
+        $post = $this->postManager->findOneBy(['id' => $_POST['id']]);
+
+        try {
+            $this->postAdministrator->deletePost($post);
+        } catch (Exception $e) {
+            throw new Exception('Erreur lors de la suppression de l\'article (id:'.$post['id'].') : '.$e->getMessage());
+        }
+
+        $this->render('admin/successful_edit.html.twig', [
+            'messages' => ['Article supprimé'],
+            'link' => 'posts',
+            'link_text' => 'articles',
+        ]);
     }
 
     /**

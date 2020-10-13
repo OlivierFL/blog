@@ -42,8 +42,8 @@ class PostAdministrator
     /**
      * @param array $data
      *
-     * @throws Exception
      * @throws ReflectionException
+     * @throws Exception
      *
      * @return array
      */
@@ -122,14 +122,32 @@ class PostAdministrator
     }
 
     /**
-     * @param      $title
-     * @param bool $checkSlug
+     * @param array $post
+     *
+     * @throws Exception
+     *
+     * @return bool
+     */
+    public function deletePost(array $post): bool
+    {
+        $deletedPost = new Post($post);
+
+        try {
+            return $this->postManager->delete($deletedPost);
+        } catch (Exception $e) {
+            throw new Exception('Erreur lors de la suppression de l\'article');
+        }
+    }
+
+    /**
+     * @param string $title
+     * @param bool   $checkSlug
      *
      * @throws Exception
      *
      * @return string
      */
-    private function createSlug($title, bool $checkSlug = true): string
+    private function createSlug(string $title, bool $checkSlug = true): string
     {
         $slug = $this->slugify->slugify($title);
 
@@ -144,13 +162,13 @@ class PostAdministrator
     }
 
     /**
-     * @param $slug
+     * @param string $slug
      *
      * @throws Exception
      *
      * @return bool
      */
-    private function checkSlug($slug): bool
+    private function checkSlug(string $slug): bool
     {
         return $this->postManager->preventReuse(['slug' => $slug]);
     }

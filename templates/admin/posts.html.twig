@@ -31,13 +31,21 @@
             <a href="/admin/posts/edit/{{ post.id }}" class="btn btn-edit">
               <i class="fas fa-edit"></i>
               Éditer</a>
-            <a href="/admin/posts/delete/{{ post.id }}" class="btn btn-danger">
+            <button type="button"
+                    class="btn btn-danger"
+                    data-toggle="modal"
+                    data-target="#deleteModal"
+                    data-id="{{ post.id }}"
+                    data-item-info="{{ post.title }}"
+            >
               <i class="fas fa-trash-alt"></i>
-              Supprimer</a>
+              Supprimer
+            </button>
           </td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
   </div>
+  {{ include('admin/_modal.html.twig') }}
 {% endblock %}
