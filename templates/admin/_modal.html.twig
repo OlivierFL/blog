@@ -16,9 +16,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-edit" data-dismiss="modal">Annuler</button>
-        {% if users is defined %}
+        {% if users is defined or user is defined %}
           {{ include('admin/_form_user_delete.html.twig') }}
-        {% elseif posts is defined %}
+        {% elseif posts is defined or post is defined %}
           {{ include('admin/_form_post_delete.html.twig') }}
         {% endif %}
       </div>

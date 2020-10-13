@@ -46,9 +46,17 @@
       <a href="/admin/posts/edit/{{ post.id }}" class="btn btn-edit mr-md-3 mb-4">
         <i class="fas fa-edit"></i>
         Éditer</a>
-      <a href="/admin/posts/delete/{{ post.id }}" class="btn btn-danger mb-4">
+      <button type="button"
+              class="btn btn-danger mr-md-3 mb-4"
+              data-toggle="modal"
+              data-target="#deleteModal"
+              data-id="{{ post.id }}"
+              data-item-info="{{ post.title }}"
+      >
         <i class="fas fa-trash-alt"></i>
-        Supprimer</a>
+        Supprimer
+      </button>
     </section>
   </div>
+  {{ include('admin/_modal.html.twig') }}
 {% endblock %}
