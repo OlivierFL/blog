@@ -64,7 +64,6 @@ class PostAdministrator
             $post->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
             $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
             $post->setSlug($this->createSlug($data['title']));
-            $post->setAltCoverImg(null !== $post->getCoverImg() ? $post->getSlug() : null);
 
             $result = $this->postManager->create($post);
 
@@ -97,7 +96,7 @@ class PostAdministrator
             if (isset($_FILES) && 4 !== $_FILES['file']['error']) {
                 try {
                     $filename = $this->fileUploader->upload($_FILES['file'], FileUploader::IMAGE);
-                    $data['cover_img'] = $filename;
+                    $post['cover_img'] = $filename;
                 } catch (Exception $e) {
                     throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
                 }

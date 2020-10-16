@@ -16,7 +16,7 @@
       >
         <div class="form-row">
           <div class="form-group col-md-12">
-            <label for="title">Titre</label>
+            <label for="title">Titre *</label>
             <input type="text"
                    class="form-control"
                    id="title"
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="form-group mb-5">
-          <label for="content">Contenu</label>
+          <label for="content">Contenu *</label>
           <textarea class="form-control"
                     id="content"
                     name="content"
@@ -37,9 +37,9 @@
                     required
           ></textarea>
         </div>
-        <div class="form-row">
+        <div class="form-row align-items-center">
           <div class="form-group col-md-6">
-            <div class="custom-file">
+            <div class="custom-file mt-md-1">
               <input type="hidden"
                      name="max_file_size"
                      value="16777220"
@@ -52,6 +52,19 @@
               >
               <label class="custom-file-label" for="file">Téléverser une image de couverture</label>
             </div>
+          </div>
+          <div class="form-group col-md-6 mt-4 mt-md-0">
+            <label for="alt_cover_img">Texte alternatif *</label>
+            <input type="text"
+                   class="form-control"
+                   id="alt_cover_img"
+                   placeholder="Texte alternatif"
+                   name="alt_cover_img"
+                   required
+            >
+            <small id="alt_cover_img_help_text" class="form-text text-muted">
+              Le texte alternatif est utilisé lorsque l'image ne peut pas être chargée.
+            </small>
           </div>
         </div>
         <div class="row justify-content-around justify-content-md-end my-5">

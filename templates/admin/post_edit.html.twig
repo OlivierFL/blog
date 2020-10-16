@@ -47,9 +47,9 @@
                     placeholder="{{ post.content }}"
           >{{- post.content -}}</textarea>
         </div>
-        <div class="form-row">
+        <div class="form-row align-items-center">
           <div class="form-group col-md-6">
-            <div class="custom-file">
+            <div class="custom-file mt-md-5">
               <input type="hidden"
                      name="max_file_size"
                      value="16777220"
@@ -62,11 +62,24 @@
               >
               <label class="custom-file-label" for="file">Téléverser une image de couverture</label>
               {% if post.cover_img is not null %}
-                <p class="mt-2">Image actuelle : <a href="/img/{{ post.cover_img }}" class="text-primary"
-                                                    target="_blank">{{ post.cover_img }}</a>
+                <p class="mt-4 mt-2">Image actuelle : <a href="/img/{{ post.cover_img }}" class="text-primary"
+                                                         target="_blank">{{ post.cover_img }}</a>
                 </p>
               {% endif %}
             </div>
+          </div>
+          <div class="form-group col-md-6 mt-4 mt-md-0">
+            <label for="alt_cover_img">Texte alternatif</label>
+            <input type="text"
+                   class="form-control"
+                   id="alt_cover_img"
+                   name="alt_cover_img"
+                   value="{{ post.alt_cover_img }}"
+                   placeholder="{{ post.alt_cover_img }}"
+            >
+            <small id="alt_cover_img_help_text" class="form-text text-muted">
+              Le texte alternatif est utilisé lorsque l'image ne peut pas être chargée.
+            </small>
           </div>
         </div>
         <div class="row justify-content-around justify-content-md-end my-5">
