@@ -100,6 +100,8 @@ class PostAdministrator
         $deletedPost = new Post($post);
 
         try {
+            $this->fileUploader->delete($deletedPost->getCoverImg());
+
             return $this->postManager->delete($deletedPost);
         } catch (Exception $e) {
             throw new Exception('Erreur lors de la suppression de l\'article');

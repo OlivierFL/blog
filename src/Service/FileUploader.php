@@ -26,6 +26,8 @@ class FileUploader
      */
     public function checkFile(array $file, string $type): array
     {
+        $fileToUpload = [];
+
         // Check if file MIME type is valid
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $fileMimeType = finfo_file($finfo, $file['tmp_name']);
@@ -41,16 +43,16 @@ class FileUploader
         }
 
         // Check file size
-        if ($file['size'] > self::UPLOAD_MAX_SIZE) {
+        if ((int) $file['size'] > self::UPLOAD_MAX_SIZE) {
             throw new Exception('Le poids du fichier est supérieur au poids maximal accepté, veuillez réessayer');
         }
 
         // Rename uploaded file
         $tempFilename = explode('.', $file['name']);
-        $file['name'] = round(microtime(true)).'.'.end($tempFilename);
-        $file['tmp_name'] = (string) preg_replace('/^\.+/', '', $file['tmp_name']);
+        $fileToUpload['name'] = round(microtime(true)).'.'.end($tempFilename);
+        $fileToUpload['location'] = (string) preg_replace('/^\.+/', '', $file['tmp_name']);
 
-        return $file;
+        return $fileToUpload;
     }
 
     /**
@@ -62,7 +64,7 @@ class FileUploader
      */
     public function upload(array $file): string
     {
-        if (move_uploaded_file($file['tmp_name'], self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.basename($file['name']))) {
+        if (move_uploaded_file($file['location'], self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.basename($file['name']))) {
             return $file['name'];
         }
 
