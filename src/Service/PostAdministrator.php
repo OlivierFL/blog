@@ -107,40 +107,6 @@ class PostAdministrator
     }
 
     /**
-     * @param string $title
-     * @param bool   $checkSlug
-     *
-     * @throws Exception
-     *
-     * @return string
-     */
-    private function createSlug(string $title, bool $checkSlug = true): string
-    {
-        $slug = $this->slugify->slugify($title);
-
-        if (true === $checkSlug) {
-            $count = 0;
-            while (false === $this->checkSlug($slug)) {
-                $slug = rtrim($slug, '-0123456789').'-'.++$count;
-            }
-        }
-
-        return $slug;
-    }
-
-    /**
-     * @param string $slug
-     *
-     * @throws Exception
-     *
-     * @return bool
-     */
-    private function checkSlug(string $slug): bool
-    {
-        return $this->postManager->preventReuse(['slug' => $slug]);
-    }
-
-    /**
      * @param array $data
      * @param bool  $update
      *
