@@ -20,26 +20,29 @@ trait TimestampableEntity
     }
 
     /**
-     * @param DateTime|string $createdAt
+     * @param null|DateTime|string $createdAt
      */
-    public function setCreatedAt($createdAt): void
+    public function setCreatedAt(?string $createdAt = null): void
     {
+        if (null === $createdAt) {
+            $this->createdAt = (new \DateTime())->format('Y-m-d H:i:s');
+
+            return;
+        }
+
         $this->createdAt = $createdAt;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getUpdatedAt(): string
+    public function getUpdatedAt(): ?string
     {
         return $this->updatedAt;
     }
 
-    /**
-     * @param DateTime|string $updatedAt
-     */
-    public function setUpdatedAt($updatedAt): void
+    public function setUpdatedAt(): void
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = (new \DateTime())->format('Y-m-d H:i:s');
     }
 }

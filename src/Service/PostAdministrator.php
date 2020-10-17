@@ -72,7 +72,7 @@ class PostAdministrator
      */
     public function updatePost(array $post, array $data): array
     {
-        $post = array_merge($post, $data);
+        $post = $this->updatePostWithNewValues($post, $data);
         $validator = ValidatorFactory::create('update_post', $post);
 
         if ($validator->isValid()) {
@@ -124,8 +124,6 @@ class PostAdministrator
             }
         }
         $post = new Post($data);
-        $post->setCreatedAt($post->getCreatedAt() ?? (new \DateTime())->format('Y-m-d H:i:s'));
-        $post->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
         $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
 
         if ($update) {
@@ -140,5 +138,22 @@ class PostAdministrator
 
             throw new Exception('Erreur lors de la création de l\'article');
         }
+    }
+
+    /**
+     * @param array $post
+     * @param array $data
+     *
+     * @return array
+     */
+    private function updatePostWithNewValues(array $post, array $data): array
+    {
+        foreach ($post as $key => $value) {
+            if (isset($data[$key]) && $value !== $data[$key]) {
+                $post[$key] = $data[$key];
+            }
+        }
+
+        return $post;
     }
 }

@@ -69,8 +69,6 @@ class UserAdministrator
 
         if ($validator->isValid()) {
             $user = new User($data);
-            $user->setCreatedAt((new \DateTime())->format('Y-m-d H:i:s'));
-            $user->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
             $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
 
             $result = $this->userManager->create($user);
@@ -101,7 +99,6 @@ class UserAdministrator
 
         if ($validator->isValid()) {
             $updatedUser = new User($user['base_infos']);
-            $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
 
             $result = $this->userManager->update($updatedUser);
 

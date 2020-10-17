@@ -36,6 +36,10 @@ class Post extends Entity
     {
         $this->hydrate($data);
         $this->setSlug();
+        if (!isset($data['created_at'], $data['updated_at'])) {
+            $this->setCreatedAt();
+            $this->setUpdatedAt();
+        }
     }
 
     /**
