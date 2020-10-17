@@ -48,7 +48,7 @@ class FileUploader
         // Rename uploaded file
         $tempFilename = explode('.', $file['name']);
         $file['name'] = round(microtime(true)).'.'.end($tempFilename);
-        $file['temp_name'] = (string) preg_replace('/^\.+/', '', $file['tmp_name']);
+        $file['tmp_name'] = (string) preg_replace('/^\.+/', '', $file['tmp_name']);
 
         return $file;
     }
@@ -62,7 +62,7 @@ class FileUploader
      */
     public function upload(array $file): string
     {
-        if (move_uploaded_file($file['temp_name'], self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.basename($file['name']))) {
+        if (move_uploaded_file($file['tmp_name'], self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.basename($file['name']))) {
             return $file['name'];
         }
 

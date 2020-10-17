@@ -161,7 +161,6 @@ class PostAdministrator
         $post->setCreatedAt($post->getCreatedAt() ?? (new \DateTime())->format('Y-m-d H:i:s'));
         $post->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
         $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
-        $post->setSlug($this->createSlug($data['title']));
 
         if ($update) {
             $result = $this->postManager->update($post);
