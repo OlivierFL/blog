@@ -69,8 +69,6 @@ class UserAdministrator
 
         if ($validator->isValid()) {
             $user = new User($data);
-            $user->setCreatedAt((new \DateTime())->format('Y-m-d H:i:s'));
-            $user->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
             $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
 
             $result = $this->userManager->create($user);
@@ -86,22 +84,21 @@ class UserAdministrator
     }
 
     /**
-     * @param $user
-     * @param $data
+     * @param array $user
+     * @param array $data
      *
-     * @throws ReflectionException
      * @throws Exception
+     * @throws ReflectionException
      *
      * @return array
      */
-    public function updateUser($user, $data): array
+    public function updateUser(array $user, array $data): array
     {
         $validator = ValidatorFactory::create(ValidatorFactory::UPDATE_USER, $data, $this->userManager);
         $user['base_infos'] = array_merge($user['base_infos'], $data);
 
         if ($validator->isValid()) {
             $updatedUser = new User($user['base_infos']);
-            $updatedUser->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
 
             $result = $this->userManager->update($updatedUser);
 
@@ -116,14 +113,14 @@ class UserAdministrator
     }
 
     /**
-     * @param $user
+     * @param array $user
      *
      * @throws ReflectionException
      * @throws Exception
      *
      * @return bool
      */
-    public function deleteUser($user): bool
+    public function deleteUser(array $user): bool
     {
         $user = $this->anonymizeUser($user);
 
@@ -149,13 +146,13 @@ class UserAdministrator
     }
 
     /**
-     * @param $user
+     * @param array $user
      *
      * @throws Exception
      *
      * @return array
      */
-    private function anonymizeUser($user): array
+    private function anonymizeUser(array $user): array
     {
         $anonymousUser = 'anonymous'.$user['base_infos']['id'];
         $user['base_infos']['user_name'] = $anonymousUser;

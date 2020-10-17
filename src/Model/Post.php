@@ -4,6 +4,9 @@ namespace App\Model;
 
 use App\Core\Entity;
 use App\Core\TimestampableEntity;
+use App\Managers\PostManager;
+use Cocur\Slugify\Slugify;
+use Exception;
 
 class Post extends Entity
 {
@@ -26,10 +29,17 @@ class Post extends Entity
      * Post constructor.
      *
      * @param array $data
+     *
+     * @throws Exception
      */
     public function __construct(array $data)
     {
         $this->hydrate($data);
+        $this->setSlug();
+        if (!isset($data['created_at'], $data['updated_at'])) {
+            $this->setCreatedAt();
+            $this->setUpdatedAt();
+        }
     }
 
     /**
@@ -73,41 +83,41 @@ class Post extends Entity
     }
 
     /**
-     * @param string $slug
+     * @throws Exception
      */
-    public function setSlug(string $slug): void
+    public function setSlug(): void
     {
-        $this->slug = $slug;
+        $this->slug = $this->createSlug($this->title);
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getCoverImg(): string
+    public function getCoverImg(): ?string
     {
         return $this->coverImg;
     }
 
     /**
-     * @param string $coverImg
+     * @param null|string $coverImg
      */
-    public function setCoverImg(string $coverImg): void
+    public function setCoverImg(?string $coverImg): void
     {
         $this->coverImg = $coverImg;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getAltCoverImg(): string
+    public function getAltCoverImg(): ?string
     {
         return $this->altCoverImg;
     }
 
     /**
-     * @param string $altCoverImg
+     * @param null|string $altCoverImg
      */
-    public function setAltCoverImg(string $altCoverImg): void
+    public function setAltCoverImg(?string $altCoverImg): void
     {
         $this->altCoverImg = $altCoverImg;
     }
@@ -126,5 +136,36 @@ class Post extends Entity
     public function setAdminId(string $adminId): void
     {
         $this->adminId = $adminId;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @throws Exception
+     *
+     * @return string
+     */
+    private function createSlug(string $title): string
+    {
+        $sluggedTitle = (new Slugify())->slugify($title);
+
+        $count = 0;
+        while (false === $this->checkSlug($sluggedTitle)) {
+            $sluggedTitle = rtrim($sluggedTitle, '-0123456789').'-'.++$count;
+        }
+
+        return $sluggedTitle;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @throws Exception
+     *
+     * @return bool
+     */
+    private function checkSlug(string $slug): bool
+    {
+        return (new PostManager())->preventReuse(['slug' => $slug]);
     }
 }

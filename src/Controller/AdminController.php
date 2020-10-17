@@ -27,18 +27,90 @@ class AdminController extends Controller
     public function index(): void
     {
         $users = $this->userManager->findBy([], ['created_at' => 'DESC'], 3);
+        $posts = $this->postManager->findBy([], ['created_at' => 'DESC'], 2);
 
         $this->render('admin/index.html.twig', [
             'users' => $users,
+            'posts' => $posts,
         ]);
     }
 
     /**
      * @throws Exception
      */
-    public function listPosts(): void
+    public function readPosts(): void
     {
-        $this->render('admin/posts.html.twig');
+        $posts = $this->postManager->findAllWithAuthor();
+
+        $this->render('admin/posts.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
+    public function readPost(int $id): void
+    {
+        $post = $this->postManager->findOneWithAuthor($id);
+
+        $this->render('admin/post.html.twig', [
+            'post' => $post,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function createPost(): void
+    {
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $result = $this->postAdministrator->createPost($_POST);
+        }
+
+        $this->render('admin/post_create.html.twig', [
+            'messages' => $result ?? null,
+        ]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
+    public function updatePost(int $id): void
+    {
+        $post = $this->postManager->findOneWithAuthor($id);
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $result = $this->postAdministrator->updatePost($post, $_POST);
+        }
+
+        $this->render('admin/post_edit.html.twig', [
+            'post' => $this->postManager->findOneWithAuthor($id),
+            'messages' => $result ?? null,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deletePost(): void
+    {
+        $post = $this->postManager->findOneBy(['id' => $_POST['id']]);
+
+        try {
+            $this->postAdministrator->deletePost($post);
+        } catch (Exception $e) {
+            throw new Exception('Erreur lors de la suppression de l\'article (id:'.$post['id'].') : '.$e->getMessage());
+        }
+
+        $this->render('admin/successful_edit.html.twig', [
+            'messages' => ['Article supprimé'],
+            'link' => 'posts',
+            'link_text' => 'articles',
+        ]);
     }
 
     /**
@@ -47,30 +119,6 @@ class AdminController extends Controller
     public function listComments(): void
     {
         $this->render('admin/comments.html.twig');
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws Exception
-     */
-    public function showPost(int $id): void
-    {
-        $this->render('admin/post.html.twig', [
-            'post_title' => 'Post '.$id,
-        ]);
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws Exception
-     */
-    public function editPost(int $id): void
-    {
-        $this->render('admin/post_edit.html.twig', [
-            'post_title' => 'Post'.$id,
-        ]);
     }
 
     /**

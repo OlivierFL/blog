@@ -11,27 +11,15 @@
           <h4 class="card-title">Derniers articles publiés</h4>
           <hr class="separator-blue-left mb-4">
           <ul>
-            <li>
-              <h5>Article 1</h5>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores ex laudantium mollitia.</p>
-              <a href="/admin/posts/edit/1" class="black btn btn-sm btn-edit">
-                <i class="fas fa-edit"></i>
-                Modifier</a>
-              <a href="/admin/posts/delete/3" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash-alt"></i>
-                Supprimer</a>
-            </li>
-            <li>
-              <h5>Article 2</h5>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos laudantium reprehenderit
-                similique!</p>
-              <a href="/admin/posts/edit/2" class="black btn btn-sm btn-edit">
-                <i class="fas fa-edit"></i>
-                Modifier</a>
-              <a href="/admin/posts/delete/3" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash-alt"></i>
-                Supprimer</a>
-            </li>
+            {% for post in posts %}
+              <li>
+                <h5>{{ post.title|capitalize }}</h5>
+                <p>{{ post.content|slice(0, 100) }}...</p>
+                <a href="/admin/posts/edit/{{ post.id }}" class="black btn btn-sm btn-edit">
+                  <i class="fas fa-edit"></i>
+                  Modifier</a>
+              </li>
+            {% endfor %}
           </ul>
         </div>
       </div>
@@ -48,9 +36,6 @@
               <a href="/admin/comments/edit/1" class="black btn btn-sm btn-edit">
                 <i class="fas fa-edit"></i>
                 Modérer</a>
-              <a href="/admin/comments/delete/1" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash-alt"></i>
-                Supprimer</a>
             </li>
             <li>
               <h5>Dans article 1</h5>
@@ -58,9 +43,6 @@
               <a href="/admin/comments/edit/2" class="black btn btn-sm btn-edit">
                 <i class="fas fa-edit"></i>
                 Modérer</a>
-              <a href="/admin/comments/delete/2" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash-alt"></i>
-                Supprimer</a>
             </li>
           </ul>
         </div>

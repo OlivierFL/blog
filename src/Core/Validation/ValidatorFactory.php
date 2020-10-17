@@ -10,6 +10,8 @@ class ValidatorFactory
     public const SIGN_UP = 'sign_up';
     public const LOGIN = 'login';
     public const UPDATE_USER = 'update_user';
+    public const CREATE_POST = 'create_post';
+    public const UPDATE_POST = 'update_post';
 
     /**
      * @var Validator
@@ -34,6 +36,10 @@ class ValidatorFactory
                 return (new LoginValidator($data, $manager))->getValidator();
             case self::UPDATE_USER:
                 return (new UserUpdateValidator($data, $manager))->getValidator();
+            case self::CREATE_POST:
+                return (new PostCreateValidator($data))->getValidator();
+            case self::UPDATE_POST:
+                return (new PostUpdateValidator($data))->getValidator();
             default:
                 break;
         }

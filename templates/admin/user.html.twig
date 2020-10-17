@@ -4,7 +4,7 @@
   <div class="container">
     <section class="my-5">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 mt-3">
           <h5>Nom de l'utilisateur</h5>
           <hr class="separator-blue-left">
           <p>{{ user.base_infos.user_name }}</p>
@@ -23,7 +23,7 @@
     </section>
     <section class="mb-5 my-5">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 mt-3">
           <h5>Rôle</h5>
           <hr class="separator-blue-left">
           <h6 class="{% if user.base_infos.role == 'admin' %}text-success{% else %}text-primary{% endif %}">
@@ -72,9 +72,17 @@
       <a href="/admin/users/edit/{{ user.base_infos.id }}" class="btn btn-edit mr-md-3 mb-4">
         <i class="fas fa-edit"></i>
         Éditer</a>
-      <a href="/admin/users/delete/{{ user.base_infos.id }}" class="btn btn-danger mb-4">
+      <button type="button"
+              class="btn btn-danger mr-md-3 mb-4"
+              data-toggle="modal"
+              data-target="#deleteModal"
+              data-id="{{ user.base_infos.id }}"
+              data-item-info="{{ user.base_infos.first_name }} {{ user.base_infos.last_name }}"
+      >
         <i class="fas fa-trash-alt"></i>
-        Supprimer</a>
+        Supprimer
+      </button>
     </section>
   </div>
+  {{ include('admin/_modal.html.twig') }}
 {% endblock %}

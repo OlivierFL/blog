@@ -3,6 +3,7 @@
 namespace App\Core\Validation;
 
 use App\Core\Manager;
+use Exception;
 
 abstract class Validator
 {
@@ -70,7 +71,7 @@ abstract class Validator
     /**
      * @param string ...$keys
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return $this
      */
@@ -228,10 +229,6 @@ abstract class Validator
      */
     public function getValue(string $key)
     {
-        if (\array_key_exists($key, $this->data)) {
-            return $this->data[$key];
-        }
-
-        return null;
+        return $this->data[$key] ?? null;
     }
 }

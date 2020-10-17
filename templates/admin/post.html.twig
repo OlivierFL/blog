@@ -8,17 +8,17 @@
         <div class="col-md-4">
           <h5>Auteur</h5>
           <hr class="separator-blue-left">
-          <p>Olivier Floch</p>
+          <p>{{ post.first_name|capitalize }} {{ post.last_name|capitalize }}</p>
         </div>
         <div class="col-md-4">
           <h5>Date de création</h5>
           <hr class="separator-blue-left">
-          <p>10/07/2020 à 15:00</p>
+          <p>{{ post.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
         </div>
         <div class="col-md-4">
           <h5>Date de modification</h5>
           <hr class="separator-blue-left">
-          <p>10/07/2020 à 16:30</p>
+          <p>{{ post.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
         </div>
       </div>
     </section>
@@ -26,36 +26,37 @@
       <div class="my-5">
         <h5>Titre de l'article</h5>
         <hr class="separator-blue-left">
-        <h6>Post 1</h6>
+        <h6>{{ post.title|capitalize }}</h6>
       </div>
       <h5>Contenu de l'article</h5>
       <hr class="separator-blue-left">
-      <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, at blanditiis corporis
-        dolore dolores
-        excepturi itaque, mollitia odit, optio quaerat quidem reiciendis totam veniam? A, quo, vel. Ab
-        accusantium adipisci asperiores cumque debitis dolorum ea earum et eveniet, id in iure magnam minima
-        nihil praesentium quam quas quo reiciendis sint suscipit temporibus ut vitae. Alias at doloribus
-        esse
-        exercitationem illo ipsam nisi provident quos rerum. Dicta id natus recusandae sed. Lorem ipsum dolor sit
-        amet, consectetur adipisicing elit. Ab alias animi cupiditate esse et eveniet, expedita modi officiis
-        quibusdam quod sunt temporibus? Ad aliquid amet, blanditiis consequuntur eius enim, illum inventore itaque
-        nam non provident reiciendis reprehenderit, rerum saepe similique.</p>
+      <p class="text-justify">{{ post.content|nl2br }}</p>
     </section>
-    <section class="mb-5">
-      <h5>Image de couverture</h5>
-      <hr class="separator-blue-left">
-      <img src="/public/img/andy-holmes-webyw4NsFPg-unsplash.jpg" alt="" height="200" width="300">
-    </section>
+    {% if post.cover_img is not null %}
+      <section class="mb-5">
+        <h5>Image de couverture</h5>
+        <hr class="separator-blue-left">
+        <img src="/img/{{ post.cover_img }}" alt="{{ post.alt_cover_img }}" height="200" width="300">
+      </section>
+    {% endif %}
     <section class="row justify-content-around justify-content-md-end">
       <a href="/admin/posts" class="btn btn-edit mr-md-3 mb-4">
         <i class="fas fa-chevron-left"></i>
         Retour</a>
-      <a href="/admin/posts/edit/1" class="btn btn-edit mr-md-3 mb-4">
+      <a href="/admin/posts/edit/{{ post.id }}" class="btn btn-edit mr-md-3 mb-4">
         <i class="fas fa-edit"></i>
         Éditer</a>
-      <a href="/admin/posts/delete/1" class="btn btn-danger mb-4">
+      <button type="button"
+              class="btn btn-danger mr-md-3 mb-4"
+              data-toggle="modal"
+              data-target="#deleteModal"
+              data-id="{{ post.id }}"
+              data-item-info="{{ post.title }}"
+      >
         <i class="fas fa-trash-alt"></i>
-        Supprimer</a>
+        Supprimer
+      </button>
     </section>
   </div>
+  {{ include('admin/_modal.html.twig') }}
 {% endblock %}

@@ -4,8 +4,10 @@ namespace Core;
 
 use App\Core\Session;
 use App\Managers\AdminManager;
+use App\Managers\PostManager;
 use App\Managers\UserManager;
 use App\Service\Auth;
+use App\Service\PostAdministrator;
 use App\Service\UserAdministrator;
 use Exception;
 use Twig\Environment;
@@ -31,9 +33,17 @@ class Controller
      */
     protected AdminManager $adminManager;
     /**
+     * @var PostManager
+     */
+    protected PostManager $postManager;
+    /**
      * @var UserAdministrator
      */
     protected UserAdministrator $userAdministrator;
+    /**
+     * @var PostAdministrator
+     */
+    protected PostAdministrator $postAdministrator;
     /**
      * @var Session
      */
@@ -53,10 +63,12 @@ class Controller
         $this->setConfig($this->twig, $config);
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
+        $this->postManager = new PostManager();
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
         $this->userAdministrator = new UserAdministrator();
+        $this->postAdministrator = new PostAdministrator($this->session);
     }
 
     /**

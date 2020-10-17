@@ -1,55 +1,45 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-
 {% block admin_body %}
   <div class="container">
     {% if messages is not empty %}
       {% for message in messages %}
-        <h2>{{ message }}</h2>
+        <h2 class="mt-5">{{ message }}</h2>
       {% endfor %}
+      <a class="btn btn-primary mt-5" href="/admin/posts">Retour aux articles</a>
     {% endif %}
     <section class="my-5">
-      <form id="form-post-edit"
+      <form id="form-post-create"
             method="post"
-            action="/admin/posts/edit/{{ post.id }}"
+            action="/admin/posts/create"
             enctype="multipart/form-data"
       >
         <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="author">Auteur</label>
-            <input type="text"
-                   class="form-control"
-                   id="author"
-                   name="author"
-                   value="{{ post.first_name|capitalize }} {{ post.last_name|capitalize }}"
-                   placeholder="{{ post.first_name|capitalize }} {{ post.last_name|capitalize }}"
-                   disabled
-            >
-          </div>
-          <div class="form-group col-md-6">
-            <label for="title">Titre</label>
+          <div class="form-group col-md-12">
+            <label for="title">Titre *</label>
             <input type="text"
                    class="form-control"
                    id="title"
+                   placeholder="Titre du post"
                    name="title"
-                   value="{{ post.title }}"
-                   placeholder="{{ post.title }}"
+                   required
             >
           </div>
         </div>
         <div class="form-group mb-5">
-          <label for="content">Contenu</label>
+          <label for="content">Contenu *</label>
           <textarea class="form-control"
                     id="content"
                     name="content"
                     rows="8"
                     cols="50"
-                    placeholder="{{ post.content }}"
-          >{{- post.content -}}</textarea>
+                    placeholder="Contenu de l'article"
+                    required
+          ></textarea>
         </div>
         <div class="form-row align-items-center">
           <div class="form-group col-md-6">
-            <div class="custom-file mt-md-5">
+            <div class="custom-file mt-md-1">
               <input type="hidden"
                      name="max_file_size"
                      value="16777220"
@@ -61,21 +51,16 @@
                      accept="image/*"
               >
               <label class="custom-file-label" for="cover_img">Téléverser une image de couverture</label>
-              {% if post.cover_img is not null %}
-                <p class="mt-4 mt-2">Image actuelle : <a href="/img/{{ post.cover_img }}" class="text-primary"
-                                                         target="_blank">{{ post.cover_img }}</a>
-                </p>
-              {% endif %}
             </div>
           </div>
           <div class="form-group col-md-6 mt-4 mt-md-0">
-            <label for="alt_cover_img">Texte alternatif</label>
+            <label for="alt_cover_img">Texte alternatif *</label>
             <input type="text"
                    class="form-control"
                    id="alt_cover_img"
+                   placeholder="Texte alternatif"
                    name="alt_cover_img"
-                   value="{{ post.alt_cover_img }}"
-                   placeholder="{{ post.alt_cover_img }}"
+                   required
             >
             <small id="alt_cover_img_help_text" class="form-text text-muted">
               Le texte alternatif est utilisé lorsque l'image ne peut pas être chargée.
@@ -87,7 +72,7 @@
             <i class="fas fa-times"></i>
             Annuler
           </a>
-          <button type="submit" class="btn btn-success mb-4" form="form-post-edit">
+          <button type="submit" class="btn btn-success mb-4" form="form-post-create">
             <i class="fas fa-check"></i>
             Valider
           </button>

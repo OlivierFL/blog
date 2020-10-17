@@ -34,6 +34,10 @@ class User extends Entity
     public function __construct(array $data)
     {
         $this->hydrate($data);
+        if (!isset($data['created_at'], $data['updated_at'])) {
+            $this->setCreatedAt();
+            $this->setUpdatedAt();
+        }
     }
 
     /**
