@@ -7,43 +7,65 @@ use Exception;
 class FileUploader
 {
     public const IMAGE = 'image';
-    public const FILE = 'file';
     private const UPLOAD_MAX_SIZE = 16777220;
-    private const UPLOAD_DIR = '..'.\DIRECTORY_SEPARATOR.'public'.\DIRECTORY_SEPARATOR.'img';
+    private const UPLOAD_DIR = '..'.\DIRECTORY_SEPARATOR.'public'.\DIRECTORY_SEPARATOR.'uploads';
     private array $imageMimeTypes = [
         'image/jpeg',
         'image/png',
         'image/gif',
     ];
-    private string $fileMimeTypes = 'application/pdf';
+    private array $fileMimeTypes = ['application/pdf'];
 
     /**
      * @param array  $file
-     * @param string $context
+     * @param string $type
+     *
+     * @throws Exception
+     *
+     * @return mixed
+     */
+    public function checkFile(array $file, string $type): array
+    {
+        // Check if file MIME type is valid
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $fileMimeType = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        if (false === $fileMimeType) {
+            throw new Exception('Type de fichier invalide');
+        }
+
+        // Check if file MIME type is accepted
+        if (!\in_array($fileMimeType, self::IMAGE === $type ? $this->imageMimeTypes : $this->fileMimeTypes, true)) {
+            throw new Exception('Type de fichier non accepté');
+        }
+
+        // Check file size
+        if ($file['size'] > self::UPLOAD_MAX_SIZE) {
+            throw new Exception('Le poids du fichier est supérieur au poids maximal accepté, veuillez réessayer');
+        }
+
+        // Rename uploaded file
+        $tempFilename = explode('.', $file['name']);
+        $file['name'] = round(microtime(true)).'.'.end($tempFilename);
+
+        return $file;
+    }
+
+    /**
+     * @param array $file
      *
      * @throws Exception
      *
      * @return string
      */
-    public function upload(array $file, string $context): string
+    public function upload(array $file): string
     {
-        if (self::IMAGE === $context) {
-            try {
-                return $this->uploadImage($file);
-            } catch (Exception $e) {
-                throw new Exception('Erreur lors du téléversement de l\'image');
-            }
+        if (move_uploaded_file($file['tmp_name'], self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.basename($file['name']))) {
+            return $file['name'];
         }
 
-        if (self::FILE === $context) {
-            try {
-                return $this->uploadFile($file);
-            } catch (Exception $e) {
-                throw new Exception('Erreur lors du téléversement du fichier');
-            }
-        }
-
-        throw new Exception('Contexte invalide : '.$context);
+        throw new Exception('Erreur lors de l\'enregistrement de l\'image');
     }
 
     /**
@@ -54,75 +76,5 @@ class FileUploader
     public function delete(string $fileName): bool
     {
         return unlink(self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.$fileName);
-    }
-
-    /**
-     * @param array $file
-     *
-     *@throws Exception
-     *
-     * @return string
-     */
-    private function uploadImage(array $file): string
-    {
-        if (0 === $file['error']) {
-            if (!\in_array($file['type'], $this->imageMimeTypes, true)) {
-                throw new Exception('Type de fichier invalide');
-            }
-
-            try {
-                return $this->uploadToDir($file);
-            } catch (Exception $e) {
-                throw $e;
-            }
-        }
-
-        throw new Exception($file['error']);
-    }
-
-    /**
-     * @param array $file
-     *
-     *@throws Exception
-     *
-     * @return string
-     */
-    private function uploadFile(array $file): string
-    {
-        if (0 === $file['error']) {
-            if ($this->fileMimeTypes !== $file['type']) {
-                throw new Exception('Type de fichier invalide');
-            }
-
-            try {
-                return $this->uploadToDir($file);
-            } catch (Exception $e) {
-                throw $e;
-            }
-        }
-
-        throw new Exception($file['error']);
-    }
-
-    /**
-     * @param array $file
-     *
-     * @throws Exception
-     *
-     * @return string
-     */
-    private function uploadToDir(array $file): string
-    {
-        if ($file['size'] > self::UPLOAD_MAX_SIZE) {
-            throw new Exception('Le poids du fichier est supérieur au poids maximal accepté, veuillez réessayer');
-        }
-        $tempFilename = explode('.', $file['name']);
-        $filename = round(microtime(true)).'.'.end($tempFilename);
-
-        if (move_uploaded_file($file['tmp_name'], self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.basename($filename))) {
-            return $filename;
-        }
-
-        throw new Exception('Erreur lors de l\'enregistrement de l\'image');
     }
 }

@@ -42,7 +42,6 @@ class PostAdministrator
     /**
      * @param array $data
      *
-     * @throws ReflectionException
      * @throws Exception
      *
      * @return array
@@ -51,26 +50,10 @@ class PostAdministrator
     {
         $validator = ValidatorFactory::create('create_post', $data);
         if ($validator->isValid()) {
-            if (isset($_FILES) && 4 !== $_FILES['file']['error']) {
-                try {
-                    $filename = $this->fileUploader->upload($_FILES['file'], FileUploader::IMAGE);
-                    $data['cover_img'] = $filename;
-                } catch (Exception $e) {
-                    throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
-                }
-            }
-            $post = new Post($data);
-            $post->setCreatedAt((new \DateTime())->format('Y-m-d H:i:s'));
-            $post->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
-            $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
-            $post->setSlug($this->createSlug($data['title']));
-
-            $result = $this->postManager->create($post);
-
-            if (false === $result) {
-                null === $post->getCoverImg() ?: $this->fileUploader->delete($post->getCoverImg());
-
-                throw new Exception('Erreur lors de la création de l\'article');
+            try {
+                $this->createOrUpdatePost($data);
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
             }
 
             return ['Nouvel article créé avec succès'];
@@ -93,25 +76,10 @@ class PostAdministrator
         $validator = ValidatorFactory::create('update_post', $post);
 
         if ($validator->isValid()) {
-            if (isset($_FILES) && 4 !== $_FILES['file']['error']) {
-                try {
-                    $filename = $this->fileUploader->upload($_FILES['file'], FileUploader::IMAGE);
-                    $post['cover_img'] = $filename;
-                } catch (Exception $e) {
-                    throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
-                }
-            }
-            $updatedPost = new Post($post);
-            $updatedPost->setAdminId($this->session->get('current_user')['admin_infos']['id']);
-            $updatedPost->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
-            $updatedPost->setSlug($this->createSlug($updatedPost->getTitle(), false));
-
-            $result = $this->postManager->update($updatedPost);
-
-            if (false === $result) {
-                null === $updatedPost->getCoverImg() ?: $this->fileUploader->delete($updatedPost->getCoverImg());
-
-                throw new Exception('Erreur lors de la mise à jour de l\'article');
+            try {
+                $this->createOrUpdatePost($post, true);
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
             }
 
             return ['Article mis à jour'];
@@ -170,5 +138,42 @@ class PostAdministrator
     private function checkSlug(string $slug): bool
     {
         return $this->postManager->preventReuse(['slug' => $slug]);
+    }
+
+    /**
+     * @param array $data
+     * @param bool  $update
+     *
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    private function createOrUpdatePost(array $data, bool $update = false): void
+    {
+        if (isset($_FILES) && 4 !== $_FILES['cover_img']['error']) {
+            try {
+                $file = $this->fileUploader->checkFile($_FILES['cover_img'], FileUploader::IMAGE);
+                $data['cover_img'] = $this->fileUploader->upload($file);
+            } catch (Exception $e) {
+                throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
+            }
+        }
+        $post = new Post($data);
+        $post->setCreatedAt($post->getCreatedAt() ?? (new \DateTime())->format('Y-m-d H:i:s'));
+        $post->setUpdatedAt((new \DateTime())->format('Y-m-d H:i:s'));
+        $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
+        $post->setSlug($this->createSlug($data['title']));
+
+        if ($update) {
+            $result = $this->postManager->update($post);
+        } else {
+            $result = $this->postManager->create($post);
+        }
+
+        if (false === $result) {
+            // If Post creation fails and if an image was uploaded, delete the uploaded post cover image
+            null === $post->getCoverImg() ?: $this->fileUploader->delete($post->getCoverImg());
+
+            throw new Exception('Erreur lors de la création de l\'article');
+        }
     }
 }

@@ -12,9 +12,9 @@ trait TimestampableEntity
     private $updatedAt;
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getCreatedAt(): string
+    public function getCreatedAt(): ?string
     {
         return $this->createdAt;
     }

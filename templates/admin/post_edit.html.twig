@@ -56,11 +56,11 @@
               >
               <input type="file"
                      class="custom-file-input"
-                     id="file"
-                     name="file"
+                     id="cover_img"
+                     name="cover_img"
                      accept="image/*"
               >
-              <label class="custom-file-label" for="file">Téléverser une image de couverture</label>
+              <label class="custom-file-label" for="cover_img">Téléverser une image de couverture</label>
               {% if post.cover_img is not null %}
                 <p class="mt-4 mt-2">Image actuelle : <a href="/img/{{ post.cover_img }}" class="text-primary"
                                                          target="_blank">{{ post.cover_img }}</a>
