@@ -16,33 +16,18 @@
       <h2>Toutes les news</h2>
       <hr class="separator-blue">
       <div class="row justify-content-between">
-        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
-          <a href="/posts/1">
-            <img class="img-fluid img-news" src="img/andy-holmes-webyw4NsFPg-unsplash.jpg" alt="Actualité 1">
-            <div class="hero-text bg-orange p-4">
-              <h3>Post 1</h3>
-              <p>Lire plus</p>
-            </div>
-          </a>
-        </article>
-        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
-          <a href="/posts/2">
-            <img class="img-fluid img-news" src="img/christopher-gower-m_HRfLhgABo-unsplash.jpg" alt="Actualité 2">
-            <div class="hero-text bg-orange p-4">
-              <h3>Post 2</h3>
-              <p>Lire plus</p>
-            </div>
-          </a>
-        </article>
-        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
-          <a href="/posts/3">
-            <img class="img-fluid img-news" src="img/emile-perron-xrVDYZRGdw4-unsplash.jpg" alt="Actualité 3">
-            <div class="hero-text bg-orange p-4">
-              <h3>Post 3</h3>
-              <p>Lire plus</p>
-            </div>
-          </a>
-        </article>
+        {% for post in posts %}
+          <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
+            <a href="/posts/{{ post.slug }}">
+              <img class="img-fluid img-news" src="uploads/{{ post.cover_img }}"
+                   alt="{{ post.alt_cover_img }}">
+              <div class="hero-text bg-orange p-4">
+                <h3>{{ post.title }}</h3>
+                <p>Lire plus</p>
+              </div>
+            </a>
+          </article>
+        {% endfor %}
       </div>
     </section>
     <nav class="mb-5" aria-label="Pagination articles">

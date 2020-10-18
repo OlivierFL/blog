@@ -24,6 +24,22 @@ final class PostManager extends Manager
     }
 
     /**
+     * @param string $slug
+     *
+     * @return array
+     */
+    public function findOneWithAuthorBySlug(string $slug): array
+    {
+        $query = $this->db->prepare('SELECT p.id, p.title, p.content, p.slug, p.cover_img, p.alt_cover_img, p.created_at, p.updated_at, a.id as author_id, u.first_name, u.last_name FROM post p LEFT JOIN admin a on p.admin_id = a.id LEFT JOIN user u on a.user_id = u.id WHERE p.slug = :slug');
+
+        $query->bindParam(':slug', $slug);
+
+        $query->execute();
+
+        return $query->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
+
+    /**
      * @return array
      */
     public function findAllWithAuthor(): array

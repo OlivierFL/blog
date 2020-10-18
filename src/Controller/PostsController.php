@@ -12,18 +12,24 @@ class PostsController extends Controller
      */
     public function list(): void
     {
-        $this->render('layout/posts.html.twig');
+        $posts = $this->postManager->findBy([], ['updated_at' => 'DESC']);
+
+        $this->render('layout/posts.html.twig', [
+            'posts' => $posts,
+        ]);
     }
 
     /**
-     * @param int $id
+     * @param string $slug
      *
      * @throws Exception
      */
-    public function show(int $id): void
+    public function show(string $slug): void
     {
+        $post = $this->postManager->findOneWithAuthorBySlug($slug);
+
         $this->render('layout/post.html.twig', [
-            'post_title' => 'Post '.$id,
+            'post' => $post,
         ]);
     }
 }
