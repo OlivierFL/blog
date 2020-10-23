@@ -179,15 +179,27 @@ li {
     border-radius: 0;
 }
 
+.card-hover:hover {
+    transform: scale(1.01);
+}
+
 .card-header {
     border: none;
 }
 
-.card-body {
-    padding: 0;
+.card-img {
+    border-radius: 0;
 }
 
-.card-img {
+.card img {
+    background: #1c768f;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-footer {
+    background-color: #fafafa;
+    border: none;
     border-radius: 0;
 }
 
