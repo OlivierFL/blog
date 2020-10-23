@@ -65,7 +65,7 @@ class UserAdministrator
      */
     public function createUser(array $data): array
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::SIGN_UP, $_POST, $this->userManager);
+        $validator = ValidatorFactory::create(ValidatorFactory::SIGN_UP_VALIDATOR, $_POST, $this->userManager);
 
         if ($validator->isValid()) {
             $user = new User($data);
@@ -94,7 +94,7 @@ class UserAdministrator
      */
     public function updateUser(array $user, array $data): array
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::UPDATE_USER, $data, $this->userManager);
+        $validator = ValidatorFactory::create(ValidatorFactory::USER_UPDATE_VALIDATOR, $data, $this->userManager);
         $user['base_infos'] = array_merge($user['base_infos'], $data);
 
         if ($validator->isValid()) {

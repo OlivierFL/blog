@@ -48,7 +48,7 @@ class PostAdministrator
      */
     public function createPost(array $data): array
     {
-        $validator = ValidatorFactory::create('create_post', $data);
+        $validator = ValidatorFactory::create(ValidatorFactory::POST_CREATE_VALIDATOR, $data);
         if ($validator->isValid()) {
             try {
                 $this->createOrUpdatePost($data);
@@ -73,7 +73,7 @@ class PostAdministrator
     public function updatePost(array $post, array $data): array
     {
         $post = $this->updatePostWithNewValues($post, $data);
-        $validator = ValidatorFactory::create('update_post', $post);
+        $validator = ValidatorFactory::create(ValidatorFactory::POST_UPDATE_VALIDATOR, $post);
 
         if ($validator->isValid()) {
             try {

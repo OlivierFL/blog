@@ -43,7 +43,7 @@ class Auth
      */
     public function authenticateUser(array $data)
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::LOGIN, $data, $this->userManager);
+        $validator = ValidatorFactory::create(ValidatorFactory::LOGIN_VALIDATOR, $data, $this->userManager);
 
         if (!$validator->isValid()) {
             return $validator->getErrors();
