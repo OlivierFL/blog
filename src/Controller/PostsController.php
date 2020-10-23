@@ -12,7 +12,7 @@ class PostsController extends Controller
      */
     public function list(): void
     {
-        $posts = $this->postManager->findBy([], ['updated_at' => 'DESC']);
+        $posts = $this->postManager->findAllWithAuthor();
 
         $this->render('layout/posts.html.twig', [
             'posts' => $posts,

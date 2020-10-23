@@ -13,7 +13,7 @@ class IndexController extends Controller
     public function index(): void
     {
         $description = $this->adminManager->findOneBy(['id' => 5]);
-        $posts = $this->postManager->findBy([], ['updated_at' => 'DESC'], 3);
+        $posts = $this->postManager->findAllWithAuthor(3);
 
         $this->render('layout/index.html.twig', [
             'description' => $description['description'],
