@@ -1,0 +1,8 @@
+{% for message in get_session_messages() %}
+  <p class="bg-dark text-light p-3 mt-3 mb-0">{{ message }}</p>
+  {% if link_text is not defined %}
+    <a href="/" class="btn btn-primary mt-3">Retour à l'accueil</a>
+  {% else %}
+    <a href="/admin/{{ link }}" class="btn btn-primary mt-3">Retour à la liste des {{ link_text }}</a>
+  {% endif %}
+{% endfor %}

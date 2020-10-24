@@ -68,10 +68,12 @@ class AdminController extends Controller
     {
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $result = $this->postAdministrator->createPost($_POST);
+            $this->addMessage($result);
         }
 
         $this->render('admin/post_create.html.twig', [
-            'messages' => $result ?? null,
+            'link' => 'posts',
+            'link_text' => 'articles',
         ]);
     }
 
@@ -85,11 +87,13 @@ class AdminController extends Controller
         $post = $this->postManager->findOneWithAuthor($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $result = $this->postAdministrator->updatePost($post, $_POST);
+            $this->addMessage($result);
         }
 
         $this->render('admin/post_edit.html.twig', [
             'post' => $this->postManager->findOneWithAuthor($id),
-            'messages' => $result ?? null,
+            'link' => 'posts',
+            'link_text' => 'articles',
         ]);
     }
 
@@ -102,12 +106,12 @@ class AdminController extends Controller
 
         try {
             $this->postAdministrator->deletePost($post);
+            $this->addMessage('Article supprimé');
         } catch (Exception $e) {
             throw new Exception('Erreur lors de la suppression de l\'article (id:'.$post['id'].') : '.$e->getMessage());
         }
 
         $this->render('admin/successful_edit.html.twig', [
-            'messages' => ['Article supprimé'],
             'link' => 'posts',
             'link_text' => 'articles',
         ]);
@@ -174,11 +178,13 @@ class AdminController extends Controller
         $user = $this->userAdministrator->getUser($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $result = $this->userAdministrator->updateUser($user, $_POST);
+            $this->addMessage($result);
         }
 
         $this->render('admin/user_edit.html.twig', [
             'user' => $this->userAdministrator->getUser($id),
-            'messages' => $result ?? null,
+            'link' => 'users',
+            'link_text' => 'utilisateurs',
         ]);
     }
 
@@ -191,12 +197,12 @@ class AdminController extends Controller
 
         try {
             $this->userAdministrator->deleteUser($user);
+            $this->addMessage('Utilisateur supprimé');
         } catch (Exception $e) {
             throw new Exception('Erreur lors de la suppression de l\'utilisateur (id:'.$user['base_infos']['id'].') : '.$e->getMessage());
         }
 
         $this->render('admin/successful_edit.html.twig', [
-            'messages' => ['Utilisateur supprimé'],
             'link' => 'users',
             'link_text' => 'utilisateurs',
         ]);

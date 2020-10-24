@@ -2,12 +2,9 @@
 
 {% block admin_body %}
   <div class="container">
-    {% if messages is not empty %}
-      {% for message in messages %}
-        <h2 class="mt-5">{{ message }}</h2>
-      {% endfor %}
-      <a class="btn btn-primary mt-5" href="/admin/posts">Retour aux articles</a>
-    {% endif %}
+    <div class="text-center">
+      {{ include('messages.html.twig') }}
+    </div>
     <section class="my-5">
       <form id="form-post-create"
             method="post"
