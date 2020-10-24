@@ -9,7 +9,7 @@ class Session
     /**
      * Session constructor.
      *
-     * @param $session
+     * @param array $session
      */
     public function __construct(array $session)
     {
@@ -62,5 +62,32 @@ class Session
     public function stop(): void
     {
         session_destroy();
+    }
+
+    /**
+     * @param array|string $messages
+     */
+    public function addMessages($messages): void
+    {
+        $flashMessages = [];
+        if (\is_array($messages)) {
+            foreach ($messages as $message) {
+                $flashMessages[] = $message;
+            }
+        } else {
+            $flashMessages[] = $messages;
+        }
+        $this->set('messages', $flashMessages);
+    }
+
+    /**
+     * @return null|array
+     */
+    public function getMessages(): ?array
+    {
+        $return = $this->get('messages');
+        $this->remove('messages');
+
+        return $return;
     }
 }

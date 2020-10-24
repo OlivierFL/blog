@@ -1,12 +1,7 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
 {% block admin_body %}
-  {% if messages is not empty %}
-    <div class="text-center mt-5">
-      {% for message in messages %}
-        <h2>{{ message }}</h2>
-      {% endfor %}
-      <a href="/admin/{{ link }}" class="btn btn-primary mt-3">Retour à la liste des {{ link_text }}</a>
-    </div>
-  {% endif %}
+  <div class="text-center mt-5">
+    {{ include('_messages.html.twig') }}
+  </div>
 {% endblock %}

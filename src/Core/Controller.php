@@ -13,6 +13,7 @@ use Exception;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 class Controller
 {
@@ -61,6 +62,7 @@ class Controller
         $config = $this->getConfig();
         $this->twig = $this->initTwig($config);
         $this->setConfig($this->twig, $config);
+        $this->twig->addFunction(new TwigFunction('get_session_messages', [$this, 'getMessages']));
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
         $this->postManager = new PostManager();
@@ -69,6 +71,17 @@ class Controller
         $this->twig->addGlobal('session', $this->session->getSession());
         $this->userAdministrator = new UserAdministrator();
         $this->postAdministrator = new PostAdministrator($this->session);
+    }
+
+    /**
+     * Method used by Twig to display session messages.
+     * This method is added to Twig as TwigFunction in Controller constructor.
+     *
+     * @return null|array
+     */
+    public function getMessages(): ?array
+    {
+        return $this->session->getMessages();
     }
 
     /**
@@ -84,6 +97,16 @@ class Controller
         } catch (Exception $e) {
             throw new Exception('Erreur lors du rendu du template : '.$e->getMessage());
         }
+    }
+
+    /**
+     * Method to add messages in session.
+     *
+     * @param array|string $message
+     */
+    protected function addMessage($message): void
+    {
+        $this->session->addMessages($message);
     }
 
     /**
