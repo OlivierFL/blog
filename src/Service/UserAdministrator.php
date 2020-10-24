@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Core\PDOFactory;
-use App\Core\Validation\ValidatorFactory;
+use App\Core\Validation\Validator;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
 use App\Model\Admin;
@@ -65,7 +65,7 @@ class UserAdministrator
      */
     public function createUser(array $data): array
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::SIGN_UP_VALIDATOR, $_POST, $this->userManager);
+        $validator = (new Validator($data, $this->userManager))->getSignUpValidator();
 
         if ($validator->isValid()) {
             $user = new User($data);
@@ -94,7 +94,7 @@ class UserAdministrator
      */
     public function updateUser(array $user, array $data): array
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::USER_UPDATE_VALIDATOR, $data, $this->userManager);
+        $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
         $user['base_infos'] = array_merge($user['base_infos'], $data);
 
         if ($validator->isValid()) {

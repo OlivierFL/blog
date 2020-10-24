@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Core\Session;
-use App\Core\Validation\ValidatorFactory;
+use App\Core\Validation\Validator;
 use App\Managers\PostManager;
 use App\Model\Post;
 use Cocur\Slugify\Slugify;
@@ -48,7 +48,7 @@ class PostAdministrator
      */
     public function createPost(array $data): array
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::POST_CREATE_VALIDATOR, $data);
+        $validator = (new Validator($data))->getPostCreateValidator();
         if ($validator->isValid()) {
             try {
                 $this->createOrUpdatePost($data);
@@ -73,7 +73,7 @@ class PostAdministrator
     public function updatePost(array $post, array $data): array
     {
         $post = $this->updatePostWithNewValues($post, $data);
-        $validator = ValidatorFactory::create(ValidatorFactory::POST_UPDATE_VALIDATOR, $post);
+        $validator = (new Validator($data))->getPostUpdateValidator();
 
         if ($validator->isValid()) {
             try {
