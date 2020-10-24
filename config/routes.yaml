@@ -7,7 +7,7 @@ posts:
     path: ''
     methods: GET
   - action: show
-    path: /{id:\d+}
+    path: /{id:[a-z0-9-]+}
     methods: GET
 admin:
   - action: index

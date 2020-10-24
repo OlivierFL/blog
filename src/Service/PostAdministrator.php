@@ -100,7 +100,9 @@ class PostAdministrator
         $deletedPost = new Post($post);
 
         try {
-            $this->fileUploader->delete($deletedPost->getCoverImg());
+            if ($deletedPost->getCoverImg()) {
+                $this->fileUploader->delete($deletedPost->getCoverImg());
+            }
 
             return $this->postManager->delete($deletedPost);
         } catch (Exception $e) {

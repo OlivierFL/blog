@@ -5,32 +5,32 @@
 {% endblock %}
 
 {% block body %}
-  <div class="hero-img">
+  <div class="hero-img-post">
     <div class="hero-text text-center">
-      <h1>{{ post_title }}</h1>
+      <h1>{{ post.title }}</h1>
       <hr class="separator-white">
     </div>
+    <img src="/uploads/{{ post.cover_img }}" alt="">
   </div>
   <div class="container">
-    <section class="m-60 text-center">
-      <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, at blanditiis corporis
-        dolore dolores
-        excepturi itaque, mollitia odit, optio quaerat quidem reiciendis totam veniam? A, quo, vel. Ab
-        accusantium adipisci asperiores cumque debitis dolorum ea earum et eveniet, id in iure magnam minima
-        nihil praesentium quam quas quo reiciendis sint suscipit temporibus ut vitae. Alias at doloribus
-        esse
-        exercitationem illo ipsam nisi provident quos rerum. Dicta id natus recusandae sed. Lorem ipsum dolor sit
-        amet, consectetur adipisicing elit. Ab alias animi cupiditate esse et eveniet, expedita modi officiis
-        quibusdam quod sunt temporibus? Ad aliquid amet, blanditiis consequuntur eius enim, illum inventore itaque
-        nam non provident reiciendis reprehenderit, rerum saepe similique.</p>
-      <a class="btn btn-primary mt-5" href="/posts">Retour aux articles</a>
+    <section class="m-60 mb-5 text-center">
+      <p class="text-justify">{{ post.content|nl2br }}</p>
     </section>
-    <section class="mb-5 text-center">
-      <h4>Commentaires</h4>
-      <hr class="separator-blue">
-      {{ include('layout/_comment_form.html.twig') }}
+    <section class="row mb-5 px-3 text-muted justify-content-between">
+      <p>Par {{ post.first_name }} {{ post.last_name }}</p>
+      <p>Article mis à jour le&nbsp;: {{ post.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
     </section>
+    <section class="text-center">
+      <a class="btn btn-primary mb-5" href="/posts">Retour aux articles</a>
+    </section>
+    {% if session.current_user is defined %}
+      <section class="mb-5 text-center">
+        <hr class="separator-blue">
+        {{ include('layout/_comment_form.html.twig') }}
+      </section>
+    {% endif %}
     <section class="m-60">
+      <h4 class="text-center">Commentaires</h4>
       <hr class="separator-blue">
       {{ include('layout/_comments.html.twig') }}
     </section>

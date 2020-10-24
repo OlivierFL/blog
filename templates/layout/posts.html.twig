@@ -5,44 +5,37 @@
 {% endblock %}
 
 {% block body %}
-  <div class="hero-img">
+  <div class="hero-img-post">
     <div class="hero-text text-center">
       <h1>Articles</h1>
       <hr class="separator-white">
     </div>
+    <img src="/img/ilya-pavlov-OqtafYT5kTw-unsplash.jpg" alt="Image illustration page articles du blog">
   </div>
   <div class="container">
     <section class="m-60 mb-5 text-center">
       <h2>Toutes les news</h2>
       <hr class="separator-blue">
-      <div class="row justify-content-between">
-        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
-          <a href="/posts/1">
-            <img class="img-fluid img-news" src="img/andy-holmes-webyw4NsFPg-unsplash.jpg" alt="Actualité 1">
-            <div class="hero-text bg-orange p-4">
-              <h3>Post 1</h3>
-              <p>Lire plus</p>
-            </div>
-          </a>
-        </article>
-        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
-          <a href="/posts/2">
-            <img class="img-fluid img-news" src="img/christopher-gower-m_HRfLhgABo-unsplash.jpg" alt="Actualité 2">
-            <div class="hero-text bg-orange p-4">
-              <h3>Post 2</h3>
-              <p>Lire plus</p>
-            </div>
-          </a>
-        </article>
-        <article class="col-lg-4 col-md-6 p-3 mb-3 articles">
-          <a href="/posts/3">
-            <img class="img-fluid img-news" src="img/emile-perron-xrVDYZRGdw4-unsplash.jpg" alt="Actualité 3">
-            <div class="hero-text bg-orange p-4">
-              <h3>Post 3</h3>
-              <p>Lire plus</p>
-            </div>
-          </a>
-        </article>
+      <div class="row row-cols-1 row-cols-md-3">
+        {% for post in posts %}
+          <div class="col mb-4">
+            <a href="/posts/{{ post.slug }}">
+              <article class="card card-hover h-100">
+                <img class="card-img-top" src="uploads/{{ post.cover_img }}"
+                     alt="{{ post.alt_cover_img }}">
+                <div class="card-body">
+                  <h3 class="card-title black mt-1">{{ post.title }}</h3>
+                  <p class="card-text black">{{ post.content|slice(0,50) }}...</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between mt-auto">
+                  <small class="text-muted">Par {{ post.first_name }} {{ post.last_name }}</small>
+                  <small class="text-muted">Mise à jour
+                    : {{ post.updated_at|date('d\/m\/Y', 'Europe/Paris') }}</small>
+                </div>
+              </article>
+            </a>
+          </div>
+        {% endfor %}
       </div>
     </section>
     <nav class="mb-5" aria-label="Pagination articles">
