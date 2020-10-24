@@ -6,17 +6,12 @@ use App\Core\Session;
 use App\Core\Validation\ValidatorFactory;
 use App\Managers\PostManager;
 use App\Model\Post;
-use Cocur\Slugify\Slugify;
 use Exception;
 use ReflectionException;
 
 class PostAdministrator
 {
     private PostManager $postManager;
-    /**
-     * @var Slugify
-     */
-    private Slugify $slugify;
     /**
      * @var Session
      */
@@ -35,7 +30,6 @@ class PostAdministrator
     {
         $this->session = $session;
         $this->postManager = new PostManager();
-        $this->slugify = new Slugify();
         $this->fileUploader = new FileUploader();
     }
 
@@ -44,9 +38,9 @@ class PostAdministrator
      *
      * @throws Exception
      *
-     * @return array
+     * @return array|string
      */
-    public function createPost(array $data): array
+    public function createPost(array $data)
     {
         $validator = ValidatorFactory::create('create_post', $data);
         if ($validator->isValid()) {
@@ -56,7 +50,7 @@ class PostAdministrator
                 throw new Exception($e->getMessage());
             }
 
-            return ['Nouvel article créé avec succès'];
+            return 'Nouvel article créé avec succès';
         }
 
         return $validator->getErrors();
@@ -68,9 +62,9 @@ class PostAdministrator
      *
      * @throws Exception
      *
-     * @return array
+     * @return array|string
      */
-    public function updatePost(array $post, array $data): array
+    public function updatePost(array $post, array $data)
     {
         $post = $this->updatePostWithNewValues($post, $data);
         $validator = ValidatorFactory::create('update_post', $post);
@@ -82,7 +76,7 @@ class PostAdministrator
                 throw new Exception($e->getMessage());
             }
 
-            return ['Article mis à jour'];
+            return 'Article mis à jour';
         }
 
         return $validator->getErrors();
