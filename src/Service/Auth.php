@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Core\Session;
-use App\Core\Validation\ValidatorFactory;
+use App\Core\Validation\Validator;
 use App\Managers\UserManager;
 use Exception;
 
@@ -43,7 +43,7 @@ class Auth
      */
     public function authenticateUser(array $data)
     {
-        $validator = ValidatorFactory::create(ValidatorFactory::LOGIN, $data, $this->userManager);
+        $validator = (new Validator($data, $this->userManager))->getLoginValidator();
 
         if (!$validator->isValid()) {
             return $validator->getErrors();

@@ -5,230 +5,146 @@ namespace App\Core\Validation;
 use App\Core\Manager;
 use Exception;
 
-abstract class Validator
+class Validator
 {
     /**
-     * @var array
+     * @var ValidatorConstraints
      */
-    protected array $data;
-    /**
-     * @var string[]
-     */
-    protected array $errors = [];
-    /**
-     * @var Manager
-     */
-    protected Manager $manager;
+    private ValidatorConstraints $validator;
+    private array $data;
 
     /**
      * Validator constructor.
      *
-     * @param array $data
-     * @param       $manager
+     * @param              $data
+     * @param null|Manager $manager
      */
-    public function __construct(array $data, $manager = null)
+    public function __construct($data, Manager $manager = null)
     {
         $this->data = $data;
-        if ($manager) {
-            $this->manager = $manager;
-        }
+        $this->validator = new ValidatorConstraints($this->data, $manager);
     }
 
     /**
-     * Check if fields are in the data array.
+     *@throws Exception
      *
-     * @param string ...$keys
-     *
-     * @return $this
+     *@return ValidatorConstraints
      */
-    public function required(string ...$keys): self
+    public function getSignUpValidator(): ValidatorConstraints
     {
-        foreach ($keys as $key) {
-            if (!\array_key_exists($key, $this->data)) {
-                $this->addError($key, 'required', );
-            }
-        }
+        $this->addBaseValidation();
+        $this->addSignUpValidation();
 
-        return $this;
+        return $this->validator;
     }
 
     /**
-     * @param string ...$keys
-     *
-     * @return $this
+     * @return ValidatorConstraints
      */
-    public function notBlank(string ...$keys): self
+    public function getLoginValidator(): ValidatorConstraints
     {
-        foreach ($keys as $key) {
-            if (empty($this->data[$key]) || null === $this->data[$key]) {
-                $this->addError($key, 'not_blank', );
-            }
-        }
-
-        return $this;
+        return $this->getBaseValidator();
     }
 
     /**
-     * @param string ...$keys
-     *
      * @throws Exception
      *
-     * @return $this
+     * @return ValidatorConstraints
      */
-    public function unique(string ...$keys): self
+    public function getUserUpdateValidator(): ValidatorConstraints
     {
-        foreach ($keys as $key) {
-            $value = $this->getValue($key);
-            if (false === $this->manager->preventReuse([$key => $value])) {
-                $this->addError($key, 'unique');
+        foreach ($this->data as $key => $value) {
+            if ($value) {
+                $this->addUserUpdateValidations($key);
             }
         }
 
-        return $this;
+        return $this->validator;
     }
 
     /**
-     * @param string   $key
-     * @param null|int $min
-     * @param null|int $max
-     *
-     * @return $this
+     * @return ValidatorConstraints
      */
-    public function length(string $key, ?int $min, ?int $max = null): self
+    public function getPostCreateValidator(): ValidatorConstraints
     {
-        $length = \strlen($this->getValue($key));
-        if (
-            null !== $min &&
-            null !== $max &&
-            ($length < $min ||
-                $length > $max)
-        ) {
-            $this->addError($key, 'range', [$min, $max]);
+        return $this->getLoginValidator();
+    }
 
-            return $this;
+    /**
+     * @return ValidatorConstraints
+     */
+    public function getPostUpdateValidator(): ValidatorConstraints
+    {
+        foreach ($this->data as $key => $value) {
+            if (!\in_array($key, ['cover_img', 'alt_cover_img'], true)) {
+                $this->validator->required($key)
+                    ->notBlank($key)
+                ;
+            }
         }
 
-        if (null !== $min && $length < $min) {
-            $this->addError($key, 'minimum_length', [$min]);
+        return $this->validator;
+    }
 
-            return $this;
+    /**
+     * @return ValidatorConstraints
+     */
+    private function getBaseValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+
+        return $this->validator;
+    }
+
+    private function addBaseValidation(): void
+    {
+        foreach ($this->data as $key => $value) {
+            $this->validator->required($key)
+                ->notBlank($key)
+            ;
         }
+    }
 
-        if (null !== $max && $length > $max) {
-            $this->addError($key, 'maximum_length', [$max]);
-        }
-
-        return $this;
+    /**
+     * @throws Exception
+     */
+    private function addSignUpValidation(): void
+    {
+        $this->validator->length('email', 5, 255)
+            ->length('first_name', 1, 255)
+            ->length('last_name', 1, 255)
+            ->length('user_name', 3, 255)
+            ->length('password', 8)
+            ->email('email')
+            ->password('password')
+            ->unique('user_name')
+            ->unique('email')
+        ;
     }
 
     /**
      * @param string $key
      *
-     * @return $this
+     * @throws Exception
      */
-    public function email(string $key): self
+    private function addUserUpdateValidations(string $key): void
     {
-        $email = $this->getValue($key);
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->addError($key, 'email');
-
-            return $this;
+        if ('user_name' === $key) {
+            $this->validator->length('user_name', 3, 255);
         }
 
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return $this
-     */
-    public function password(string $key): self
-    {
-        $password = $this->getValue($key);
-
-        if (!preg_match('/.*^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/', $password)) {
-            $this->addError($key, 'password');
-
-            return $this;
+        if ('last_name' === $key || 'first_name' === $key) {
+            $this->validator->length($key, 1, 255);
         }
 
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return $this
-     */
-    public function role(string $key): self
-    {
-        $role = $this->getValue($key);
-        if (!\in_array($role, ['user', 'admin'], true)) {
-            $this->addError($key, 'role');
-
-            return $this;
+        if ('email' === $key) {
+            $this->validator->length('email', 5, 255)
+                ->email('email')
+            ;
         }
 
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param string $format
-     *
-     * @return Validator
-     */
-    public function dateTime(string $key, string $format = 'Y-m-d H:i:s'): self
-    {
-        $date = \DateTime::createFromFormat($format, $this->getValue($key));
-        if (
-            false === $date ||
-            0 < \DateTime::getLastErrors()['error_count'] ||
-            0 < \DateTime::getLastErrors()['warning_count']
-        ) {
-            $this->addError($key, 'datetime', [$format]);
-
-            return $this;
+        if ('role' === $key) {
+            $this->validator->role('role');
         }
-
-        return $this;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getErrors(): array
-    {
-        return $this->errors;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return empty($this->errors);
-    }
-
-    /**
-     * @param string $key
-     * @param string $rule
-     * @param array  $attributes
-     */
-    public function addError(string $key, string $rule, array $attributes = []): void
-    {
-        $this->errors[$key] = new ValidationError($key, $rule, $attributes);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return null|mixed
-     */
-    public function getValue(string $key)
-    {
-        return $this->data[$key] ?? null;
     }
 }
