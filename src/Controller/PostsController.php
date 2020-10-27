@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use App\Exceptions\TwigException;
 use Core\Controller;
-use Exception;
 
 class PostsController extends Controller
 {
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function list(): void
     {
@@ -22,7 +22,7 @@ class PostsController extends Controller
     /**
      * @param string $slug
      *
-     * @throws Exception
+     * @throws TwigException
      */
     public function show(string $slug): void
     {

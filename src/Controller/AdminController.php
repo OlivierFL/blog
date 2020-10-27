@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Exceptions\AccessDeniedException;
+use App\Exceptions\DatabaseException;
+use App\Exceptions\FileUploadException;
+use App\Exceptions\PostException;
+use App\Exceptions\TwigException;
 use Core\Controller;
 use Exception;
 use ReflectionException;
@@ -9,20 +14,20 @@ use ReflectionException;
 class AdminController extends Controller
 {
     /**
-     * AdminController constructor.
-     *
+     * @throws AccessDeniedException
      * @throws Exception
      */
     public function __construct()
     {
         parent::__construct();
         if ('admin' !== $this->auth->getCurrentUserRole()) {
-            throw new Exception('Accès non autorisé !');
+            throw new AccessDeniedException('Accès non autorisé !');
         }
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
+     * @throws DatabaseException
      */
     public function index(): void
     {
@@ -36,7 +41,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function readPosts(): void
     {
@@ -50,7 +55,7 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws Exception
+     * @throws TwigException
      */
     public function readPost(int $id): void
     {
@@ -62,6 +67,7 @@ class AdminController extends Controller
     }
 
     /**
+     * @throws TwigException
      * @throws Exception
      */
     public function createPost(): void
@@ -80,7 +86,11 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws Exception
+     * @throws DatabaseException
+     * @throws ReflectionException
+     * @throws TwigException
+     * @throws FileUploadException
+     * @throws PostException
      */
     public function updatePost(int $id): void
     {
@@ -98,6 +108,8 @@ class AdminController extends Controller
     }
 
     /**
+     * @throws PostException
+     * @throws TwigException
      * @throws Exception
      */
     public function deletePost(): void
@@ -108,7 +120,7 @@ class AdminController extends Controller
             $this->postAdministrator->deletePost($post);
             $this->addMessage('Article supprimé');
         } catch (Exception $e) {
-            throw new Exception('Erreur lors de la suppression de l\'article (id:'.$post['id'].') : '.$e->getMessage());
+            throw PostException::delete($post['id']);
         }
 
         $this->render('admin/successful_edit.html.twig', [
@@ -118,7 +130,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function listComments(): void
     {
@@ -126,7 +138,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function showComment(): void
     {
@@ -134,7 +146,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function editComment(): void
     {
@@ -142,7 +154,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function readUsers(): void
     {
@@ -157,6 +169,7 @@ class AdminController extends Controller
      * @param int $id
      *
      * @throws Exception
+     * @throws TwigException
      */
     public function readUser(int $id): void
     {
@@ -171,6 +184,7 @@ class AdminController extends Controller
      * @param int $id
      *
      * @throws ReflectionException
+     * @throws TwigException
      * @throws Exception
      */
     public function updateUser(int $id): void

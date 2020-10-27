@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Exceptions\DatabaseException;
 use Exception;
 use PDO;
 use PDOStatement;
@@ -32,7 +33,7 @@ abstract class Manager
      * @param null|int $limit
      * @param null|int $offset
      *
-     * @throws Exception
+     * @throws DatabaseException
      *
      * @return mixed
      */
@@ -86,6 +87,7 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
+     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      *
@@ -107,12 +109,13 @@ abstract class Manager
             return $query->rowCount().' ligne(s) insérée(s).';
         }
 
-        throw new Exception('Erreur lors de la création des données.');
+        throw DatabaseException::create();
     }
 
     /**
      * @param Entity $entity
      *
+     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      *
@@ -133,7 +136,7 @@ abstract class Manager
             return $query->rowCount().' ligne(s) mise(s) à jour.';
         }
 
-        throw new Exception('Erreur lors de la mise à jour des données.');
+        throw DatabaseException::update();
     }
 
     /**
@@ -199,7 +202,7 @@ abstract class Manager
     /**
      * @param array $orderBy
      *
-     * @throws Exception
+     * @throws DatabaseException
      *
      * @return string
      */
@@ -212,7 +215,7 @@ abstract class Manager
         }
         foreach ($orderBy as $key => $value) {
             if (!\in_array(strtoupper($value), ['ASC', 'DESC'], true)) {
-                throw new Exception('Order by: paramètre invalide.');
+                throw DatabaseException::invalidParameter('Order by', 'ASC or DESC', $value);
             }
 
             $order .= ' '.$key.' '.strtoupper($value);
