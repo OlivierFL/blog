@@ -12,11 +12,11 @@ class IndexController extends Controller
      */
     public function index(): void
     {
-        $description = $this->adminManager->findOneBy(['id' => 5]);
+        $admin= $this->userAdministrator->getUser(33);
         $posts = $this->postManager->findAllWithAuthor(3);
 
         $this->render('layout/index.html.twig', [
-            'description' => $description['description'],
+            'admin' => $admin,
             'posts' => $posts,
         ]);
     }
