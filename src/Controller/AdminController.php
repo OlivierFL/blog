@@ -7,6 +7,7 @@ use App\Exceptions\DatabaseException;
 use App\Exceptions\FileUploadException;
 use App\Exceptions\PostException;
 use App\Exceptions\TwigException;
+use App\Exceptions\UserException;
 use Core\Controller;
 use Exception;
 use ReflectionException;
@@ -67,8 +68,11 @@ class AdminController extends Controller
     }
 
     /**
+     * @throws DatabaseException
+     * @throws FileUploadException
+     * @throws PostException
+     * @throws ReflectionException
      * @throws TwigException
-     * @throws Exception
      */
     public function createPost(): void
     {
@@ -203,18 +207,16 @@ class AdminController extends Controller
     }
 
     /**
+     * @throws TwigException
+     * @throws UserException
      * @throws Exception
      */
     public function deleteUser(): void
     {
         $user = $this->userAdministrator->getUser($_POST['id']);
 
-        try {
-            $this->userAdministrator->deleteUser($user);
-            $this->addMessage('Utilisateur supprimé');
-        } catch (Exception $e) {
-            throw new Exception('Erreur lors de la suppression de l\'utilisateur (id:'.$user['base_infos']['id'].') : '.$e->getMessage());
-        }
+        $this->userAdministrator->deleteUser($user);
+        $this->addMessage('Utilisateur supprimé');
 
         $this->render('admin/successful_edit.html.twig', [
             'link' => 'users',
