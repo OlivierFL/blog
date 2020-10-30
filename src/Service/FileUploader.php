@@ -7,6 +7,7 @@ use Exception;
 class FileUploader
 {
     public const IMAGE = 'image';
+    public const FILE = 'file';
     private const UPLOAD_MAX_SIZE = 16777220;
     private const UPLOAD_DIR = '..'.\DIRECTORY_SEPARATOR.'public'.\DIRECTORY_SEPARATOR.'uploads';
     private array $imageMimeTypes = [

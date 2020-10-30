@@ -54,7 +54,7 @@ class Validator
     public function getUserUpdateValidator(): ValidatorConstraints
     {
         foreach ($this->data as $key => $value) {
-            if ($value) {
+            if (!\in_array($key, ['url_cv', 'url_avatar'], true)) {
                 $this->addUserUpdateValidations($key);
             }
         }
