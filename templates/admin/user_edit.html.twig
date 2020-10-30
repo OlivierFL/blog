@@ -6,7 +6,11 @@
       {{ include('_messages.html.twig') }}
     </div>
     <section class="my-5">
-      <form id="form-user-edit" method="post" action="/admin/users/edit/{{ user.base_infos.id }}">
+      <form id="form-user-edit"
+            method="post"
+            action="/admin/users/edit/{{ user.base_infos.id }}"
+            enctype="multipart/form-data"
+      >
         <div class="form-row mb-4">
           <div class="form-group col-md-4">
             <label for="user_name">Nom d'utilisateur</label>
@@ -82,6 +86,7 @@
               <label for="description">Description</label>
               <textarea class="form-control"
                         id="description"
+                        name="description"
                         rows="6"
                         placeholder="{{ user.admin_infos.description }}"
               >{{- user.admin_infos.description -}}
@@ -90,16 +95,58 @@
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="file">
-                <label class="custom-file-label" for="file">Téléverser un fichier</label>
+              <div class="custom-file mt-md-5">
+                <input type="hidden"
+                       name="max_file_size"
+                       value="16777220"
+                >
+                <input type="file"
+                       class="custom-file-input"
+                       id="url_cv"
+                       name="url_cv"
+                       accept="application/pdf"
+                >
+                <label class="custom-file-label" for="url_cv">Téléverser un CV</label>
+                {% if user.admin_infos.url_cv is not empty %}
+                  <p class="mt-4 mt-2">CV actuel : <a href="/uploads/{{ user.admin_infos.url_cv }}" class="text-primary"
+                                                      target="_blank">{{ user.admin_infos.url_cv }}</a>
+                  </p>
+                {% endif %}
               </div>
             </div>
             <div class="form-group col-md-6">
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="file">
-                <label class="custom-file-label" for="file">Téléverser une photo de profil</label>
+              <div class="custom-file mt-md-5">
+                <input type="hidden"
+                       name="max_file_size"
+                       value="16777220"
+                >
+                <input type="file"
+                       class="custom-file-input"
+                       id="url_avatar"
+                       name="url_avatar"
+                       accept="image/*"
+                >
+                <label class="custom-file-label" for="url_avatar">Téléverser une image de profil</label>
+                {% if user.admin_infos.url_avatar is not empty %}
+                  <p class="mt-4 mt-2">Image de profil actuelle : <a href="/uploads/{{ user.admin_infos.url_avatar }}"
+                                                                     class="text-primary"
+                                                                     target="_blank">{{ user.admin_infos.url_avatar }}</a>
+                  </p>
+                {% endif %}
               </div>
+            </div>
+            <div class="form-group col-md-6 mt-4 mt-md-0">
+              <label for="alt_url_avatar">Texte alternatif pour l'image de profil</label>
+              <input type="text"
+                     class="form-control"
+                     id="alt_url_avatar"
+                     name="alt_url_avatar"
+                     value="{{ user.admin_infos.alt_utl_avatar }}"
+                     placeholder="{{ user.admin_infos.alt_url_avatar }}"
+              >
+              <small id="alt_url_avatar_help_text" class="form-text text-muted">
+                Le texte alternatif est utilisé lorsque l'image de profil ne peut pas être chargée.
+              </small>
             </div>
           </div>
         {% endif %}
