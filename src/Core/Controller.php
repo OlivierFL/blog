@@ -7,6 +7,7 @@ use App\Managers\AdminManager;
 use App\Managers\PostManager;
 use App\Managers\UserManager;
 use App\Service\Auth;
+use App\Service\CommentAdministrator;
 use App\Service\PostAdministrator;
 use App\Service\UserAdministrator;
 use Exception;
@@ -53,6 +54,10 @@ class Controller
      * @var Auth
      */
     protected Auth $auth;
+    /**
+     * @var CommentAdministrator
+     */
+    protected CommentAdministrator $commentAdministrator;
 
     /**
      * Controller constructor.
@@ -71,6 +76,7 @@ class Controller
         $this->twig->addGlobal('session', $this->session->getSession());
         $this->userAdministrator = new UserAdministrator();
         $this->postAdministrator = new PostAdministrator($this->session);
+        $this->commentAdministrator = new CommentAdministrator($this->session);
     }
 
     /**

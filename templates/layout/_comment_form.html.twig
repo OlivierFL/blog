@@ -1,11 +1,25 @@
 <div class="my-4">
   <h5>Commenter l'article :</h5>
-  <form>
+  <form id="form-comment-create" method="post" action="/comments/create">
     <div class="form-group">
-      <label>
-        <textarea class="form-control" rows="3" cols="30"></textarea>
+      <label for="comment">
+        <textarea class="form-control"
+                  id="content"
+                  name="content"
+                  rows="3"
+                  cols="30"
+                  required
+        ></textarea>
       </label>
+      <input type="hidden"
+             name="post_id"
+             value="{{ post.id }}"
+      >
+      <input type="hidden"
+             name="post_slug"
+             value="{{ post.slug }}"
+      >
     </div>
-    <button type="submit" class="btn btn-primary">Soumettre</button>
+    <button type="submit" class="btn btn-primary" form="form-comment-create">Soumettre</button>
   </form>
 </div>

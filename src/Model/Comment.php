@@ -32,6 +32,10 @@ class Comment extends Entity
     public function __construct(array $data)
     {
         $this->hydrate($data);
+        if (!isset($data['created_at'], $data['updated_at'])) {
+            $this->setCreatedAt();
+            $this->setUpdatedAt();
+        }
     }
 
     /**
@@ -55,11 +59,7 @@ class Comment extends Entity
      */
     public function getStatus(): string
     {
-        if (null === $this->status) {
-            return $this->status = self::STATUS_PENDING;
-        }
-
-        return $this->status;
+        return $this->status ?? ($this->status = self::STATUS_PENDING);
     }
 
     /**
@@ -79,9 +79,9 @@ class Comment extends Entity
     }
 
     /**
-     * @param string $userId
+     * @param null|string $userId
      */
-    public function setUserId(string $userId): void
+    public function setUserId(?string $userId): void
     {
         $this->userId = $userId;
     }
@@ -95,9 +95,9 @@ class Comment extends Entity
     }
 
     /**
-     * @param string $postId
+     * @param null|string $postId
      */
-    public function setPostId(string $postId): void
+    public function setPostId(?string $postId): void
     {
         $this->postId = $postId;
     }

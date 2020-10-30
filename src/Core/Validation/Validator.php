@@ -86,6 +86,11 @@ class Validator
         return $this->validator;
     }
 
+    public function getCommentValidator(): ValidatorConstraints
+    {
+        return $this->getBaseValidator();
+    }
+
     /**
      * @return ValidatorConstraints
      */
