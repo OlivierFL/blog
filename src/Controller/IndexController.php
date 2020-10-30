@@ -12,7 +12,7 @@ class IndexController extends Controller
      */
     public function index(): void
     {
-        $admin= $this->userAdministrator->getUser(33);
+        $admin = $this->userAdministrator->getUser(33);
         $posts = $this->postManager->findAllWithAuthor(3);
 
         $this->render('layout/index.html.twig', [

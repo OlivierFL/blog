@@ -9,18 +9,13 @@
     <div class="hero-text text-center">
       <h1>{{ admin.base_infos.first_name|capitalize }} {{ admin.base_infos.last_name|capitalize }}</h1>
       <hr class="separator-white">
-      <h2>Développeur PHP/Symfony</h2>
+      <h2>{{ admin.admin_infos.description }}</h2>
     </div>
   </div>
   <div class="container">
     <div class="text-center">
       {{ include('_messages.html.twig') }}
     </div>
-    <section class="m-60 text-center">
-      <h2>À propos</h2>
-      <hr class="separator-blue">
-      <p class="text-justify">{{ admin.admin_infos.description|nl2br }}</p>
-    </section>
     <section class="m-60 text-center">
       <h2>Les dernières news</h2>
       <hr class="separator-blue">
