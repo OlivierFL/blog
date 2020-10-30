@@ -10,6 +10,10 @@
       <h1>{{ admin.base_infos.first_name|capitalize }} {{ admin.base_infos.last_name|capitalize }}</h1>
       <hr class="separator-white">
       <h2>{{ admin.admin_infos.description }}</h2>
+      <img class="avatar"
+           src="/uploads/{{ admin.admin_infos.url_avatar }}"
+           alt="{{ admin.admin_infos.alt_url_avatar }}"
+      >
     </div>
   </div>
   <div class="container">
@@ -77,7 +81,7 @@
           <div class="card-body">
             <h3>Télécharger le CV</h3>
             <hr class="separator-blue">
-            <a href="#" class="black">download</a>
+            <a href="/uploads/{{ admin.admin_infos.url_cv }}" class="black">Télécharger</a>
           </div>
         </div>
       </div>
