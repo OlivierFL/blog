@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Oct 28, 2020 at 07:18 AM
+-- Generation Time: Oct 30, 2020 at 03:55 PM
 -- Server version: 8.0.20
 -- PHP Version: 7.4.5
 
@@ -41,7 +41,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `description`, `url_avatar`, `alt_url_avatar`, `url_cv`, `user_id`) VALUES
-(5, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus semper quam, vitae maximus neque cursus ac. Mauris vel velit metus. Duis malesuada convallis mi. Morbi vestibulum porta porttitor. Curabitur eget quam tellus. Aenean id blandit quam. Donec sed mi nisi. Nam molestie, orci in aliquet volutpat, enim nibh hendrerit felis, id gravida odio tellus ut lorem. Vivamus enim enim, hendrerit posuere faucibus sed, suscipit at sem. Sed sed condimentum sem, maximus porttitor est. Vestibulum sit amet hendrerit arcu. Suspendisse dignissim nulla urna, facilisis placerat ligula volutpat eu. Pellentesque nec odio odio. Duis eu euismod ipsum.\r\n\r\nIn hac habitasse platea dictumst. Proin eu scelerisque odio, vitae sodales sem. Sed maximus ultrices imperdiet. Quisque mattis arcu a neque pulvinar congue. Donec auctor orci finibus orci congue hendrerit. Praesent semper pretium augue vel maximus. Integer non nibh nulla. Sed aliquam risus ante, eu aliquet nisl bibendum id. Praesent semper, justo id volutpat rutrum, massa mauris feugiat lacus, sit amet finibus nibh orci et magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas quis suscipit elit. In dignissim hendrerit diam, et bibendum ligula varius eget. Quisque ac sollicitudin magna, vel laoreet est.', NULL, NULL, NULL, 33);
+(5, 'Développeur PHP/Symfony', '1604071800.jpg', 'Olivier Floch développeur PHP/Symfony', '1604071309.pdf', 33);
 
 -- --------------------------------------------------------
 
@@ -108,7 +108,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `user_name`, `first_name`, `last_name`, `email`, `password`, `role`, `created_at`, `updated_at`) VALUES
-(33, 'olivier', 'Olivier', 'Floch', 'olivier.floch@example.com', '$2y$10$tW7iQ1ik0hZt385j.C32neXaIHynXOObQGX.yJBzStu4/0esIJyEq', 'admin', '2020-10-04 12:27:52', '2020-10-28 07:09:30'),
+(33, 'olivier', 'Olivier', 'Floch', 'olivier.floch@example.com', '$2y$10$tW7iQ1ik0hZt385j.C32neXaIHynXOObQGX.yJBzStu4/0esIJyEq', 'admin', '2020-10-04 12:27:52', '2020-10-30 15:54:37'),
 (34, 'user', 'User', 'User', 'user@example.com', '$2y$10$iOIIoT5zT.YPgiWGUqUFBuces7ZkvNMAROmiXGZ9IR5u.eN7DR04.', 'user', '2020-10-04 12:28:53', '2020-10-24 11:54:42'),
 (35, 'anonymous35', 'anonymous35', 'anonymous35', 'anonymous35@example.com', '$2y$10$kr19lm/A4j31TO2Lkn8aT.fXiIwtWAAcXbY6durgkMbD0uCnrgkze', 'ROLE_DISABLED', '2020-10-09 08:31:56', '2020-10-09 09:00:03');
 
