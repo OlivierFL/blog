@@ -72,10 +72,14 @@ class CommentAdministrator
         try {
             $this->commentManager->update($comment);
         } catch (ReflectionException $e) {
-            throw new Exception('Erreu lors la mise à jour du commentaire : '.$comment->getId());
+            throw new Exception('Erreur lors la mise à jour du commentaire : '.$comment->getId());
         }
 
-        return 'Commentaire mis à jour';
+        if (Comment::STATUS_APPROVED === $comment->getStatus()) {
+            return 'Commentaire approuvé';
+        }
+
+        return 'Commentaire non validé';
     }
 
     /**
