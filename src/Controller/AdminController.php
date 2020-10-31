@@ -29,10 +29,12 @@ class AdminController extends Controller
     {
         $users = $this->userManager->findBy([], ['created_at' => 'DESC'], 3);
         $posts = $this->postManager->findBy([], ['created_at' => 'DESC'], 2);
+        $comments = $this->commentManager->findBy(['status' => Comment::STATUS_PENDING], ['created_at' => 'DESC'], 2);
 
         $this->render('admin/index.html.twig', [
             'users' => $users,
             'posts' => $posts,
+            'comments' => $comments,
         ]);
     }
 
