@@ -20,7 +20,7 @@
       {% for comment in comments %}
         <tr>
           <th scope="row">{{ comment.id }}</th>
-          <td>{{ comment.content|slice(0,20) }}...</td>
+          <td>{{ comment.content|slice(0,50) }}...</td>
           <td>{{ comment.first_name }} {{ comment.last_name }}</td>
           <td
                   {% if comment.status == 'En attente de modération' %}
@@ -42,16 +42,10 @@
           </td>
           <td>{{ comment.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</td>
           <td>
-            <a href="/admin/comments/{{ comment.id }}" class="btn btn-edit">
-              <i class="fas fa-eye"></i>
-              Voir
-            </a>
             <a href="/admin/comments/edit/{{ comment.id }}" class="btn btn-edit">
               <i class="fas fa-edit"></i>
-              Éditer</a>
-            <a href="/admin/comments/delete/{{ comment.id }}" class="btn btn-danger">
-              <i class="fas fa-trash-alt"></i>
-              Supprimer</a>
+              Modérer
+            </a>
           </td>
         </tr>
       {% endfor %}

@@ -159,7 +159,7 @@ class AdminController extends Controller
             $this->addMessage($result);
         }
 
-        $this->render('admin/comment_edit.html.twig', [
+        $this->render('admin/comment.html.twig', [
             'comment' => $this->commentManager->findOneWithAuthor($id),
             'link' => 'comments',
             'link_text' => 'commentaires',

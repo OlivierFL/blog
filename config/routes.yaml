@@ -36,11 +36,11 @@ admin:
     path: /comments
     methods: GET
   - action: readComment
-    path: /comments/{id:\d+}
+    path: /comments/edit/{id:\d+}
     methods: GET
   - action: updateComment
     path: /comments/edit/{id:\d+}
-    methods: GET | POST
+    methods: POST
   - action: readUsers
     path: /users
     methods: GET
