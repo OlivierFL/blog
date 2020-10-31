@@ -27,9 +27,11 @@ class PostsController extends Controller
     public function show(string $slug): void
     {
         $post = $this->postManager->findOneWithAuthorBySlug($slug);
+        $comments = $this->commentManager->findAllForPostWithAuthor($post['id']);
 
         $this->render('layout/post.html.twig', [
             'post' => $post,
+            'comments' => $comments,
         ]);
     }
 }

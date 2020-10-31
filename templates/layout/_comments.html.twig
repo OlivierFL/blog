@@ -1,9 +1,21 @@
-<div class="media mb-4">
-  <img class="d-flex mr-3 rounded-circle" src="" alt="">
-  <div class="media-body">
-    <h5 class="mt-0">username 1</h5>
-    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio,
-    vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia
-    congue felis in faucibus.
-  </div>
-</div>
+{% for comment in comments %}
+  {% if comment.status == 'Approuvé' %}
+    <div class="media mb-4 px-3 py-2">
+      <div class="media-body">
+        <h5 class="mt-0">{{ comment.user_name|capitalize }}</h5>
+        <p>{{ comment.content|nl2br }}</p>
+        <small class="text-muted font-italic">Commentaire publié le
+          : {{ comment.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</small>
+      </div>
+    </div>
+  {% else %}
+    <div class="media mb-4 px-3 py-2">
+      <div class="media-body">
+        <h5 class="mt-0">{{ comment.user_name|capitalize }}</h5>
+        <p class="text-danger font-italic">Commentaire modéré par l'administrateur</p>
+        <small class="text-muted font-italic">Commentaire publié le
+          : {{ comment.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</small>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
