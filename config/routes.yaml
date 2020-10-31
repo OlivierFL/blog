@@ -40,7 +40,7 @@ admin:
     methods: GET
   - action: updateComment
     path: /comments/edit/{id:\d+}
-    methods: GET
+    methods: GET | POST
   - action: readUsers
     path: /users
     methods: GET

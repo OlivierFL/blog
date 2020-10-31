@@ -16,7 +16,7 @@ final class CommentManager extends Manager
     {
         $queryLimit = $limit ? ' LIMIT '.$limit : '';
 
-        $query = $this->db->query('SELECT c.id, c.content, c.status, c.created_at, c.updated_at, u.first_name, u.last_name FROM comment c LEFT JOIN user u on c.user_id = u.id ORDER BY c.updated_at DESC'.$queryLimit);
+        $query = $this->db->query('SELECT c.id, c.content, c.status, c.user_id, c.post_id, c.created_at, c.updated_at, u.first_name, u.last_name FROM comment c LEFT JOIN user u on c.user_id = u.id ORDER BY c.updated_at DESC'.$queryLimit);
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -28,7 +28,7 @@ final class CommentManager extends Manager
      */
     public function findOneWithAuthor(int $id): array
     {
-        $query = $this->db->prepare('SELECT c.id, c.content, c.status, c.created_at, c.updated_at, u.first_name, u.last_name FROM comment c LEFT JOIN user u on c.user_id = u.id WHERE c.id = :id');
+        $query = $this->db->prepare('SELECT c.id, c.content, c.status, c.user_id, c.post_id, c.created_at, c.updated_at, u.first_name, u.last_name FROM comment c LEFT JOIN user u on c.user_id = u.id WHERE c.id = :id');
 
         $query->bindParam(':id', $id);
 

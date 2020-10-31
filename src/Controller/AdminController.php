@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\Comment;
 use Core\Controller;
 use Exception;
 use ReflectionException;
@@ -144,11 +145,23 @@ class AdminController extends Controller
     }
 
     /**
+     * @param $id
+     *
      * @throws Exception
      */
-    public function updateComment(): void
+    public function updateComment(int $id): void
     {
-        $this->render('admin/comment_edit.html.twig');
+        $comment = $this->commentManager->findOneWithAuthor($id);
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $result = $this->commentAdministrator->updateComment(new Comment($comment), $_POST);
+            $this->addMessage($result);
+        }
+
+        $this->render('admin/comment_edit.html.twig', [
+            'comment' => $this->commentManager->findOneWithAuthor($id),
+            'link' => 'comments',
+            'link_text' => 'commentaires',
+        ]);
     }
 
     /**

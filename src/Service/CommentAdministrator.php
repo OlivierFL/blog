@@ -43,7 +43,7 @@ class CommentAdministrator
         $validator = (new Validator($data))->getCommentValidator();
 
         if ($validator->isValid()) {
-            $this->createOrUpdateComment($data);
+            $this->create($data);
 
             return 'Votre commentaire a été soumis pour validation, il sera visible dès sa validation par l\'administrateur du site';
         }
@@ -52,22 +52,44 @@ class CommentAdministrator
     }
 
     /**
+     * @param Comment $comment
+     * @param array   $data
+     *
+     * @throws Exception
+     *
+     * @return string
+     */
+    public function updateComment(Comment $comment, array $data): string
+    {
+        if ($data['reject']) {
+            $comment->setStatus(Comment::STATUS_REJECTED);
+        } elseif ($data['approve']) {
+            $comment->setStatus(Comment::STATUS_APPROVED);
+        } else {
+            throw new Exception('Changement de statut invalide');
+        }
+
+        try {
+            $this->commentManager->update($comment);
+        } catch (ReflectionException $e) {
+            throw new Exception('Erreu lors la mise à jour du commentaire : '.$comment->getId());
+        }
+
+        return 'Commentaire mis à jour';
+    }
+
+    /**
      * @param array $data
-     * @param bool  $update
      *
      * @throws ReflectionException
      * @throws Exception
      */
-    private function createOrUpdateComment(array $data, bool $update = false): void
+    private function create(array $data): void
     {
         $comment = new Comment($data);
         $comment->setUserId($this->session->get('current_user')['base_infos']['id']);
 
-        if ($update) {
-            $result = $this->commentManager->update($comment);
-        } else {
-            $result = $this->commentManager->create($comment);
-        }
+        $result = $this->commentManager->create($comment);
 
         if (false === $result) {
             throw new Exception('Erreur lors de la création du commentaire');
