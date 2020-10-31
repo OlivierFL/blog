@@ -4,6 +4,7 @@ namespace Core;
 
 use App\Core\Session;
 use App\Managers\AdminManager;
+use App\Managers\CommentManager;
 use App\Managers\PostManager;
 use App\Managers\UserManager;
 use App\Service\Auth;
@@ -39,6 +40,10 @@ class Controller
      */
     protected PostManager $postManager;
     /**
+     * @var CommentManager
+     */
+    protected CommentManager $commentManager;
+    /**
      * @var UserAdministrator
      */
     protected UserAdministrator $userAdministrator;
@@ -71,6 +76,7 @@ class Controller
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
         $this->postManager = new PostManager();
+        $this->commentManager = new CommentManager();
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());

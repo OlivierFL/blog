@@ -10,11 +10,11 @@ class Comment extends Entity
     use TimestampableEntity;
 
     /** @var string */
-    public const STATUS_PENDING = 'pending';
+    public const STATUS_PENDING = 'En attente de modération';
     /** @var string */
-    public const STATUS_APPROVED = 'approved';
+    public const STATUS_APPROVED = 'Approuvé';
     /** @var string */
-    public const STATUS_REJECTED = 'rejected';
+    public const STATUS_REJECTED = 'Non validé';
     /** @var string */
     private $content;
     /** @var string */

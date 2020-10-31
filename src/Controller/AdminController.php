@@ -120,23 +120,33 @@ class AdminController extends Controller
     /**
      * @throws Exception
      */
-    public function listComments(): void
+    public function readComments(): void
     {
-        $this->render('admin/comments.html.twig');
+        $comments = $this->commentManager->findAllWithAuthor();
+
+        $this->render('admin/comments.html.twig', [
+            'comments' => $comments,
+        ]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
+    public function readComment(int $id): void
+    {
+        $comment = $this->commentManager->findOneWithAuthor($id);
+
+        $this->render('admin/comment.html.twig', [
+            'comment' => $comment,
+        ]);
     }
 
     /**
      * @throws Exception
      */
-    public function showComment(): void
-    {
-        $this->render('admin/comment.html.twig');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function editComment(): void
+    public function updateComment(): void
     {
         $this->render('admin/comment_edit.html.twig');
     }

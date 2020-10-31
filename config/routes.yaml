@@ -32,13 +32,13 @@ admin:
   - action: deletePost
     path: /posts/delete
     methods: POST
-  - action: listComments
+  - action: readComments
     path: /comments
     methods: GET
-  - action: showComment
+  - action: readComment
     path: /comments/{id:\d+}
     methods: GET
-  - action: editComment
+  - action: updateComment
     path: /comments/edit/{id:\d+}
     methods: GET
   - action: readUsers
