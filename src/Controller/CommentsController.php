@@ -12,12 +12,18 @@ class CommentsController extends Controller
      */
     public function create(): void
     {
-        $url = $_SERVER['HTTP_REFERER'];
+        $slug = $_POST['post_slug'];
         $result = $this->commentAdministrator->createComment($_POST);
 
         $this->addMessage($result);
 
-        header('Location: '.$url);
+        if (preg_match('/[a-z0-9-]+/', $slug)) {
+            header('Location: /posts/'.$slug);
+            die();
+        }
+
+        $slug = null;
+        header('Location: /');
         die();
     }
 }
