@@ -210,6 +210,7 @@ li {
 /* Pagination */
 .page-link {
     color: #1c768f;
+    line-height: 1;
 }
 
 .page-link:hover {
@@ -299,13 +300,6 @@ li {
 .articles:hover {
     transform: scale(1.05);
 }
-
-/* Pagination */
-.page-link {
-    line-height: 1;
-}
-
-/* End Pagination*/
 
 .bg-orange {
     background-color: rgba(28, 118, 143, 0.51);
