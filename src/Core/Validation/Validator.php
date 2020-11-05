@@ -87,6 +87,19 @@ class Validator
     }
 
     /**
+     * @throws Exception
+     *
+     * @return ValidatorConstraints
+     */
+    public function getContactValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+        $this->addContactValidation();
+
+        return $this->validator;
+    }
+
+    /**
      * @return ValidatorConstraints
      */
     private function getBaseValidator(): ValidatorConstraints
@@ -146,5 +159,18 @@ class Validator
         if ('role' === $key) {
             $this->validator->role('role');
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addContactValidation(): void
+    {
+        $this->validator->length('last_name', 1, 255)
+            ->length('first_name', 1, 255)
+            ->length('from', 5, 255)
+            ->length('subject', 1, 78)
+            ->email('from')
+        ;
     }
 }
