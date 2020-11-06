@@ -3,14 +3,17 @@
 namespace Core;
 
 use App\Core\Session;
+use App\Exceptions\TwigException;
 use App\Managers\AdminManager;
 use App\Managers\PostManager;
 use App\Managers\UserManager;
 use App\Service\Auth;
 use App\Service\PostAdministrator;
 use App\Service\UserAdministrator;
-use Exception;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
@@ -88,14 +91,18 @@ class Controller
      * @param string $templateName
      * @param array  $params
      *
-     * @throws Exception
+     * @throws TwigException
      */
-    protected function render(string $templateName, array $params = []): void
+    public function render(string $templateName, array $params = []): void
     {
         try {
             echo $this->twig->render($templateName, $params);
-        } catch (Exception $e) {
-            throw new Exception('Erreur lors du rendu du template : '.$e->getMessage());
+        } catch (LoaderError $e) {
+            throw new TwigException(TwigException::LOADER_ERROR_MESSAGE.$e->getMessage());
+        } catch (SyntaxError $e) {
+            throw new TwigException(TwigException::SYNTAX_ERROR_MESSAGE.$e->getMessage());
+        } catch (RuntimeError $e) {
+            throw new TwigException(TwigException::RUNTIME_ERROR_MESSAGE.$e->getMessage());
         }
     }
 

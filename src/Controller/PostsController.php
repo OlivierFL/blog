@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Paginator;
+use App\Exceptions\TwigException;
 use Core\Controller;
 use Exception;
 
@@ -26,6 +27,7 @@ class PostsController extends Controller
      * @param null|int $page
      *
      * @throws Exception
+     * @throws TwigException
      */
     public function list(?int $page = 1): void
     {
@@ -43,7 +45,7 @@ class PostsController extends Controller
     /**
      * @param string $slug
      *
-     * @throws Exception
+     * @throws TwigException
      */
     public function show(string $slug): void
     {

@@ -4,6 +4,10 @@ namespace App\Service;
 
 use App\Core\Session;
 use App\Core\Validation\Validator;
+use App\Exceptions\DatabaseException;
+use App\Exceptions\FileDeleteException;
+use App\Exceptions\FileUploadException;
+use App\Exceptions\PostException;
 use App\Managers\PostManager;
 use App\Model\Post;
 use Exception;
@@ -11,6 +15,9 @@ use ReflectionException;
 
 class PostAdministrator
 {
+    /**
+     * @var PostManager
+     */
     private PostManager $postManager;
     /**
      * @var Session
@@ -36,7 +43,10 @@ class PostAdministrator
     /**
      * @param array $data
      *
-     * @throws Exception
+     * @throws DatabaseException
+     * @throws FileUploadException
+     * @throws PostException
+     * @throws ReflectionException
      *
      * @return array|string
      */
@@ -44,11 +54,7 @@ class PostAdministrator
     {
         $validator = (new Validator($data))->getPostCreateValidator();
         if ($validator->isValid()) {
-            try {
-                $this->createOrUpdatePost($data);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $this->createOrUpdatePost($data);
 
             return 'Nouvel article créé avec succès';
         }
@@ -60,7 +66,10 @@ class PostAdministrator
      * @param array $post
      * @param array $data
      *
-     * @throws Exception
+     * @throws DatabaseException
+     * @throws FileUploadException
+     * @throws PostException
+     * @throws ReflectionException
      *
      * @return array|string
      */
@@ -70,11 +79,7 @@ class PostAdministrator
         $validator = (new Validator($data))->getPostUpdateValidator();
 
         if ($validator->isValid()) {
-            try {
-                $this->createOrUpdatePost($post, true);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $this->createOrUpdatePost($post, true);
 
             return 'Article mis à jour';
         }
@@ -86,6 +91,7 @@ class PostAdministrator
      * @param array $post
      *
      * @throws Exception
+     * @throws FileDeleteException
      *
      * @return bool
      */
@@ -93,33 +99,28 @@ class PostAdministrator
     {
         $deletedPost = new Post($post);
 
-        try {
-            if ($deletedPost->getCoverImg()) {
-                $this->fileUploader->delete($deletedPost->getCoverImg());
-            }
-
-            return $this->postManager->delete($deletedPost);
-        } catch (Exception $e) {
-            throw new Exception('Erreur lors de la suppression de l\'article');
+        if ($deletedPost->getCoverImg()) {
+            $this->fileUploader->delete($deletedPost->getCoverImg());
         }
+
+        return $this->postManager->delete($deletedPost);
     }
 
     /**
      * @param array $data
      * @param bool  $update
      *
+     * @throws PostException
      * @throws ReflectionException
+     * @throws DatabaseException
+     * @throws FileUploadException
      * @throws Exception
      */
     private function createOrUpdatePost(array $data, bool $update = false): void
     {
         if (isset($_FILES) && 4 !== $_FILES['cover_img']['error']) {
-            try {
-                $file = $this->fileUploader->checkFile($_FILES['cover_img'], FileUploader::IMAGE);
-                $data['cover_img'] = $this->fileUploader->upload($file);
-            } catch (Exception $e) {
-                throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
-            }
+            $file = $this->fileUploader->checkFile($_FILES['cover_img'], FileUploader::IMAGE);
+            $data['cover_img'] = $this->fileUploader->upload($file);
         }
         $post = new Post($data);
         $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
@@ -134,7 +135,11 @@ class PostAdministrator
             // If Post creation fails and if an image was uploaded, delete the uploaded post cover image
             null === $post->getCoverImg() ?: $this->fileUploader->delete($post->getCoverImg());
 
-            throw new Exception('Erreur lors de la création de l\'article');
+            if (true === $update) {
+                throw PostException::update($post->getId());
+            }
+
+            throw PostException::create();
         }
     }
 
