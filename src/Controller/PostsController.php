@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Exceptions\TwigException;
+use App\Managers\CommentManager;
+use App\Managers\PostManager;
 use App\Service\Paginator;
 use Core\Controller;
 
@@ -12,6 +14,14 @@ class PostsController extends Controller
      * @var Paginator
      */
     private Paginator $paginator;
+    /**
+     * @var PostManager
+     */
+    private PostManager $postManager;
+    /**
+     * @var CommentManager
+     */
+    private CommentManager $commentManager;
 
     /**
      * PostsController constructor.
@@ -20,6 +30,8 @@ class PostsController extends Controller
     {
         parent::__construct();
         $this->paginator = new Paginator();
+        $this->postManager = new PostManager();
+        $this->commentManager = new CommentManager();
     }
 
     /**

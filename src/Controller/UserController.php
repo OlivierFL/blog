@@ -5,11 +5,23 @@ namespace App\Controller;
 use App\Exceptions\InvalidPasswordException;
 use App\Exceptions\TwigException;
 use App\Exceptions\UserNotFoundException;
+use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
 
 class UserController extends Controller
 {
+    /**
+     * @var UserAdministrator
+     */
+    private UserAdministrator $userAdministrator;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userAdministrator = new UserAdministrator($this->session);
+    }
+
     /**
      * @throws TwigException
      * @throws Exception

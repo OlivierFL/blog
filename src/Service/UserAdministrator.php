@@ -21,7 +21,6 @@ class UserAdministrator
      * @var UserManager
      */
     private UserManager $userManager;
-
     /**
      * @var AdminManager
      */

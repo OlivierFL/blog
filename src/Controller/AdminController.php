@@ -8,13 +8,44 @@ use App\Exceptions\FileUploadException;
 use App\Exceptions\PostException;
 use App\Exceptions\TwigException;
 use App\Exceptions\UserException;
+use App\Managers\CommentManager;
+use App\Managers\PostManager;
+use App\Managers\UserManager;
 use App\Model\Comment;
+use App\Service\CommentAdministrator;
+use App\Service\PostAdministrator;
+use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
 use ReflectionException;
 
 class AdminController extends Controller
 {
+    /**
+     * @var CommentAdministrator
+     */
+    protected CommentAdministrator $commentAdministrator;
+    /**
+     * @var CommentManager
+     */
+    protected CommentManager $commentManager;
+    /**
+     * @var UserManager
+     */
+    private UserManager $userManager;
+    /**
+     * @var PostAdministrator
+     */
+    private PostAdministrator $postAdministrator;
+    /**
+     * @var PostManager
+     */
+    private PostManager $postManager;
+    /**
+     * @var UserAdministrator
+     */
+    private UserAdministrator $userAdministrator;
+
     /**
      * @throws AccessDeniedException
      * @throws Exception
@@ -25,6 +56,12 @@ class AdminController extends Controller
         if ('admin' !== $this->auth->getCurrentUserRole()) {
             throw new AccessDeniedException('Accès non autorisé !');
         }
+        $this->userManager = new UserManager();
+        $this->userAdministrator = new UserAdministrator($this->session);
+        $this->postManager = new PostManager();
+        $this->postAdministrator = new PostAdministrator($this->session);
+        $this->commentManager = new CommentManager();
+        $this->commentAdministrator = new CommentAdministrator($this->session);
     }
 
     /**

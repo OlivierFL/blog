@@ -2,11 +2,23 @@
 
 namespace App\Controller;
 
+use App\Service\CommentAdministrator;
 use Core\Controller;
 use ReflectionException;
 
 class CommentsController extends Controller
 {
+    /**
+     * @var CommentAdministrator
+     */
+    private CommentAdministrator $commentAdministrator;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->commentAdministrator = new CommentAdministrator($this->session);
+    }
+
     /**
      * @throws ReflectionException
      */
