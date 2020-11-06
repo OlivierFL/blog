@@ -7,13 +7,13 @@
 {% block body %}
   <div class="hero-img">
     <div class="hero-text text-center">
-      <h1>{{ admin.base_infos.first_name|capitalize }} {{ admin.base_infos.last_name|capitalize }}</h1>
-      <hr class="separator-white">
-      <h2>{{ admin.admin_infos.description }}</h2>
       <img class="avatar"
            src="/uploads/{{ admin.admin_infos.url_avatar }}"
            alt="{{ admin.admin_infos.alt_url_avatar }}"
       >
+      <h1>{{ admin.base_infos.first_name|capitalize }} {{ admin.base_infos.last_name|capitalize }}</h1>
+      <hr class="separator-white">
+      <h2>{{ admin.admin_infos.description }}</h2>
     </div>
   </div>
   <div class="container">
