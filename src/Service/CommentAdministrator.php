@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Core\Session;
 use App\Core\Validation\Validator;
+use App\Exceptions\CommentException;
+use App\Exceptions\DatabaseException;
 use App\Managers\CommentManager;
 use App\Model\Comment;
 use Exception;
@@ -34,6 +36,8 @@ class CommentAdministrator
     /**
      * @param array $data
      *
+     * @throws CommentException
+     * @throws DatabaseException
      * @throws ReflectionException
      */
     public function createComment(array $data): void
@@ -71,13 +75,13 @@ class CommentAdministrator
 
                 break;
             default:
-                throw new Exception('Changement de statut invalide');
+                throw CommentException::invalidStatus($comment->getId());
         }
 
         try {
             $this->commentManager->update($comment);
-        } catch (ReflectionException $e) {
-            throw new Exception('Erreur lors la mise à jour du commentaire : '.$comment->getId());
+        } catch (DatabaseException | ReflectionException $e) {
+            throw CommentException::update($comment->getId());
         }
 
         if (Comment::STATUS_APPROVED === $comment->getStatus()) {
@@ -92,8 +96,9 @@ class CommentAdministrator
     /**
      * @param array $data
      *
+     * @throws CommentException
      * @throws ReflectionException
-     * @throws Exception
+     * @throws DatabaseException
      */
     private function create(array $data): void
     {
@@ -103,7 +108,7 @@ class CommentAdministrator
         $result = $this->commentManager->create($comment);
 
         if (false === $result) {
-            throw new Exception('Erreur lors de la création du commentaire');
+            throw CommentException::create();
         }
     }
 }
