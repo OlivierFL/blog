@@ -2,10 +2,9 @@
 
 namespace App\Controller;
 
-use App\Service\Paginator;
 use App\Exceptions\TwigException;
+use App\Service\Paginator;
 use Core\Controller;
-use Exception;
 
 class PostsController extends Controller
 {
@@ -26,7 +25,6 @@ class PostsController extends Controller
     /**
      * @param null|int $page
      *
-     * @throws Exception
      * @throws TwigException
      */
     public function list(?int $page = 1): void
