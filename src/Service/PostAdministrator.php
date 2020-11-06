@@ -50,7 +50,7 @@ class PostAdministrator
      */
     public function createPost(array $data): void
     {
-        $validator = (new Validator($data))->getPostCreateValidator();
+        $validator = (new Validator($data))->getBaseValidator();
         if ($validator->isValid()) {
             $this->createOrUpdatePost($data);
 

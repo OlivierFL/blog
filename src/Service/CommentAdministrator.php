@@ -38,7 +38,7 @@ class CommentAdministrator
      */
     public function createComment(array $data): void
     {
-        $validator = (new Validator($data))->getCommentValidator();
+        $validator = (new Validator($data))->getBaseValidator();
 
         if ($validator->isValid()) {
             $this->create($data);

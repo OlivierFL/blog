@@ -26,6 +26,16 @@ class Validator
     }
 
     /**
+     * @return ValidatorConstraints
+     */
+    public function getBaseValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+
+        return $this->validator;
+    }
+
+    /**
      *@throws Exception
      *
      *@return ValidatorConstraints
@@ -36,14 +46,6 @@ class Validator
         $this->addSignUpValidation();
 
         return $this->validator;
-    }
-
-    /**
-     * @return ValidatorConstraints
-     */
-    public function getLoginValidator(): ValidatorConstraints
-    {
-        return $this->getBaseValidator();
     }
 
     /**
@@ -65,14 +67,6 @@ class Validator
     /**
      * @return ValidatorConstraints
      */
-    public function getPostCreateValidator(): ValidatorConstraints
-    {
-        return $this->getLoginValidator();
-    }
-
-    /**
-     * @return ValidatorConstraints
-     */
     public function getPostUpdateValidator(): ValidatorConstraints
     {
         foreach ($this->data as $key => $value) {
@@ -82,21 +76,6 @@ class Validator
                 ;
             }
         }
-
-        return $this->validator;
-    }
-
-    public function getCommentValidator(): ValidatorConstraints
-    {
-        return $this->getPostCreateValidator();
-    }
-
-    /**
-     * @return ValidatorConstraints
-     */
-    private function getBaseValidator(): ValidatorConstraints
-    {
-        $this->addBaseValidation();
 
         return $this->validator;
     }

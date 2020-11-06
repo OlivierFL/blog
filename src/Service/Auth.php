@@ -47,7 +47,7 @@ class Auth
      */
     public function authenticateUser(array $data)
     {
-        $validator = (new Validator($data, $this->userManager))->getLoginValidator();
+        $validator = (new Validator($data, $this->userManager))->getBaseValidator();
 
         if (!$validator->isValid()) {
             return $validator->getErrors();
