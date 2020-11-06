@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Model\Comment;
 use App\Exceptions\AccessDeniedException;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\FileUploadException;
 use App\Exceptions\PostException;
 use App\Exceptions\TwigException;
 use App\Exceptions\UserException;
+use App\Model\Comment;
 use Core\Controller;
 use Exception;
 use ReflectionException;
@@ -113,7 +113,6 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws PostException
      * @throws TwigException
      * @throws Exception
      */
@@ -121,11 +120,7 @@ class AdminController extends Controller
     {
         $post = $this->postManager->findOneBy(['id' => $_POST['id']]);
 
-        try {
-            $this->postAdministrator->deletePost($post);
-        } catch (Exception $e) {
-            throw PostException::delete($post['id']);
-        }
+        $this->postAdministrator->deletePost($post);
 
         $this->render('admin/successful_edit.html.twig', [
             'link' => 'posts',
@@ -161,9 +156,9 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws TwigException
      * @param $id
      *
+     * @throws TwigException
      * @throws Exception
      */
     public function updateComment(int $id): void
@@ -237,13 +232,7 @@ class AdminController extends Controller
     {
         $user = $this->userAdministrator->getUser($_POST['id']);
 
-        try {
-            $this->userAdministrator->deleteUser($user);
-        } catch (Exception $e) {
-            throw new Exception('Erreur lors de la suppression de l\'utilisateur (id:'.$user['base_infos']['id'].') : '.$e->getMessage());
-        }
         $this->userAdministrator->deleteUser($user);
-        $this->addMessage('Utilisateur supprimé');
 
         $this->render('admin/successful_edit.html.twig', [
             'link' => 'users',

@@ -47,8 +47,6 @@ class PostAdministrator
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
-     *
-     * @return array|string
      */
     public function createPost(array $data): void
     {
@@ -72,8 +70,6 @@ class PostAdministrator
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
-     *
-     * @return array|string
      * @throws Exception
      */
     public function updatePost(array $post, array $data): void
@@ -95,10 +91,9 @@ class PostAdministrator
     /**
      * @param array $post
      *
-     * @throws Exception
      * @throws FileDeleteException
-     *
-     * @return bool
+     * @throws PostException
+     * @throws Exception
      */
     public function deletePost(array $post): void
     {
@@ -108,15 +103,13 @@ class PostAdministrator
             $this->fileUploader->delete($deletedPost->getCoverImg());
         }
 
-        return $this->postManager->delete($deletedPost);
+        try {
             $this->postManager->delete($deletedPost);
-
-            $this->session->addMessages('Article supprimé');
-
-            return;
         } catch (Exception $e) {
-            throw new Exception('Erreur lors de la suppression de l\'article');
+            throw PostException::delete($deletedPost->getId());
         }
+
+        $this->session->addMessages('Article supprimé');
     }
 
     /**
