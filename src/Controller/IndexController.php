@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Exceptions\TwigException;
 use Core\Controller;
 use Exception;
 
 class IndexController extends Controller
 {
     /**
+     * @throws TwigException
      * @throws Exception
      */
     public function index(): void
@@ -22,10 +24,10 @@ class IndexController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function notFound(): void
     {
-        $this->render('layout/404.html.twig');
+        $this->render('layout/errors/404.html.twig');
     }
 }

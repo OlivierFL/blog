@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Core\PDOFactory;
 use App\Core\Validation\Validator;
+use App\Exceptions\DatabaseException;
+use App\Exceptions\UserException;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
 use App\Model\Admin;
@@ -61,9 +63,9 @@ class UserAdministrator
      *
      * @throws Exception
      *
-     * @return array
+     * @return array|string
      */
-    public function createUser(array $data): array
+    public function createUser(array $data)
     {
         $validator = (new Validator($data, $this->userManager))->getSignUpValidator();
 
@@ -74,10 +76,10 @@ class UserAdministrator
             $result = $this->userManager->create($user);
 
             if (false === $result) {
-                throw new Exception('Erreur lors de la création de l\'utilisateur');
+                throw UserException::create($user->getId());
             }
 
-            return ['Félicitations ! Vous êtes désormais inscrit et vous pouvez dès à présent poster des commentaires'];
+            return 'Félicitations ! Vous êtes désormais inscrit et vous pouvez dès à présent poster des commentaires';
         }
 
         return $validator->getErrors();
@@ -87,12 +89,14 @@ class UserAdministrator
      * @param array $user
      * @param array $data
      *
+     * @throws DatabaseException
+     * @throws UserException
      * @throws Exception
      * @throws ReflectionException
      *
-     * @return array
+     * @return array|string
      */
-    public function updateUser(array $user, array $data): array
+    public function updateUser(array $user, array $data)
     {
         $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
         $user['base_infos'] = array_merge($user['base_infos'], $data);
@@ -103,10 +107,10 @@ class UserAdministrator
             $result = $this->userManager->update($updatedUser);
 
             if (false === $result) {
-                throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
+                throw UserException::update($updatedUser->getId());
             }
 
-            return ['Utilisateur mis à jour'];
+            return 'Utilisateur mis à jour';
         }
 
         return $validator->getErrors();
@@ -115,7 +119,7 @@ class UserAdministrator
     /**
      * @param array $user
      *
-     * @throws ReflectionException
+     * @throws UserException
      * @throws Exception
      *
      * @return bool
@@ -139,7 +143,7 @@ class UserAdministrator
         } catch (Exception $e) {
             $this->db->rollBack();
 
-            throw $e;
+            throw UserException::delete($deletedUser->getId());
         }
 
         return true;
