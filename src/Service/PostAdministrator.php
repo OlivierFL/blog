@@ -37,10 +37,8 @@ class PostAdministrator
      * @param array $data
      *
      * @throws Exception
-     *
-     * @return array|string
      */
-    public function createPost(array $data)
+    public function createPost(array $data): void
     {
         $validator = (new Validator($data))->getPostCreateValidator();
         if ($validator->isValid()) {
@@ -50,10 +48,12 @@ class PostAdministrator
                 throw new Exception($e->getMessage());
             }
 
-            return 'Nouvel article créé avec succès';
+            $this->session->addMessages('Nouvel article créé avec succès');
+
+            return;
         }
 
-        return $validator->getErrors();
+        $this->session->addMessages($validator->getErrors());
     }
 
     /**
@@ -61,10 +61,8 @@ class PostAdministrator
      * @param array $data
      *
      * @throws Exception
-     *
-     * @return array|string
      */
-    public function updatePost(array $post, array $data)
+    public function updatePost(array $post, array $data): void
     {
         $post = $this->updatePostWithNewValues($post, $data);
         $validator = (new Validator($data))->getPostUpdateValidator();
@@ -76,20 +74,20 @@ class PostAdministrator
                 throw new Exception($e->getMessage());
             }
 
-            return 'Article mis à jour';
+            $this->session->addMessages('Article mis à jour');
+
+            return;
         }
 
-        return $validator->getErrors();
+        $this->session->addMessages($validator->getErrors());
     }
 
     /**
      * @param array $post
      *
      * @throws Exception
-     *
-     * @return bool
      */
-    public function deletePost(array $post): bool
+    public function deletePost(array $post): void
     {
         $deletedPost = new Post($post);
 
@@ -98,7 +96,11 @@ class PostAdministrator
                 $this->fileUploader->delete($deletedPost->getCoverImg());
             }
 
-            return $this->postManager->delete($deletedPost);
+            $this->postManager->delete($deletedPost);
+
+            $this->session->addMessages('Article supprimé');
+
+            return;
         } catch (Exception $e) {
             throw new Exception('Erreur lors de la suppression de l\'article');
         }

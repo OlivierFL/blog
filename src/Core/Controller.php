@@ -80,7 +80,7 @@ class Controller
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
-        $this->userAdministrator = new UserAdministrator();
+        $this->userAdministrator = new UserAdministrator($this->session);
         $this->postAdministrator = new PostAdministrator($this->session);
         $this->commentAdministrator = new CommentAdministrator($this->session);
     }

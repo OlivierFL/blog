@@ -70,8 +70,7 @@ class AdminController extends Controller
     public function createPost(): void
     {
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->postAdministrator->createPost($_POST);
-            $this->addMessage($result);
+            $this->postAdministrator->createPost($_POST);
         }
 
         $this->render('admin/post_create.html.twig', [
@@ -89,8 +88,7 @@ class AdminController extends Controller
     {
         $post = $this->postManager->findOneWithAuthor($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->postAdministrator->updatePost($post, $_POST);
-            $this->addMessage($result);
+            $this->postAdministrator->updatePost($post, $_POST);
         }
 
         $this->render('admin/post_edit.html.twig', [
@@ -109,7 +107,6 @@ class AdminController extends Controller
 
         try {
             $this->postAdministrator->deletePost($post);
-            $this->addMessage('Article supprimé');
         } catch (Exception $e) {
             throw new Exception('Erreur lors de la suppression de l\'article (id:'.$post['id'].') : '.$e->getMessage());
         }
@@ -155,8 +152,7 @@ class AdminController extends Controller
     {
         $comment = $this->commentManager->findOneWithAuthor($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->commentAdministrator->updateComment(new Comment($comment), $_POST);
-            $this->addMessage($result);
+            $this->commentAdministrator->updateComment(new Comment($comment), $_POST);
         }
 
         $this->render('admin/comment.html.twig', [
@@ -202,8 +198,7 @@ class AdminController extends Controller
     {
         $user = $this->userAdministrator->getUser($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->userAdministrator->updateUser($user, $_POST);
-            $this->addMessage($result);
+            $this->userAdministrator->updateUser($user, $_POST);
         }
 
         $this->render('admin/user_edit.html.twig', [
@@ -222,7 +217,6 @@ class AdminController extends Controller
 
         try {
             $this->userAdministrator->deleteUser($user);
-            $this->addMessage('Utilisateur supprimé');
         } catch (Exception $e) {
             throw new Exception('Erreur lors de la suppression de l\'utilisateur (id:'.$user['base_infos']['id'].') : '.$e->getMessage());
         }

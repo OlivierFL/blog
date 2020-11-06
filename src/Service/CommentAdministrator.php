@@ -35,20 +35,20 @@ class CommentAdministrator
      * @param array $data
      *
      * @throws ReflectionException
-     *
-     * @return array|string
      */
-    public function createComment(array $data)
+    public function createComment(array $data): void
     {
         $validator = (new Validator($data))->getCommentValidator();
 
         if ($validator->isValid()) {
             $this->create($data);
 
-            return 'Votre commentaire a été soumis pour validation, il sera visible dès sa validation par l\'administrateur du site';
+            $this->session->addMessages('Votre commentaire a été soumis pour validation, il sera visible dès sa validation par l\'administrateur du site');
+
+            return;
         }
 
-        return $validator->getErrors();
+        $this->session->addMessages($validator->getErrors());
     }
 
     /**
@@ -56,10 +56,8 @@ class CommentAdministrator
      * @param array   $data
      *
      * @throws Exception
-     *
-     * @return string
      */
-    public function updateComment(Comment $comment, array $data): string
+    public function updateComment(Comment $comment, array $data): void
     {
         if ($data['reject']) {
             $comment->setStatus(Comment::STATUS_REJECTED);
@@ -76,10 +74,12 @@ class CommentAdministrator
         }
 
         if (Comment::STATUS_APPROVED === $comment->getStatus()) {
-            return 'Commentaire approuvé';
+            $this->session->addMessages('Commentaire approuvé');
+
+            return;
         }
 
-        return 'Commentaire non validé';
+        $this->session->addMessages('Commentaire non validé');
     }
 
     /**

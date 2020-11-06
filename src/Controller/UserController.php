@@ -15,7 +15,6 @@ class UserController extends Controller
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             try {
                 $this->auth->authenticateUser($_POST);
-                $this->addMessage('Connexion réussie');
                 header('Location: /');
             } catch (Exception $e) {
                 $this->addMessage($e->getMessage());
@@ -31,8 +30,7 @@ class UserController extends Controller
     public function signup(): void
     {
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->userAdministrator->createUser($_POST);
-            $this->addMessage($result);
+            $this->userAdministrator->createUser($_POST);
         }
 
         $this->render('layout/signup.html.twig');

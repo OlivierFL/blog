@@ -13,16 +13,13 @@ class CommentsController extends Controller
     public function create(): void
     {
         $slug = $_POST['post_slug'];
-        $result = $this->commentAdministrator->createComment($_POST);
-
-        $this->addMessage($result);
+        $this->commentAdministrator->createComment($_POST);
 
         if (preg_match('/[a-z0-9-]+/', $slug)) {
             header('Location: /posts/'.$slug);
             die();
         }
 
-        $slug = null;
         header('Location: /');
         die();
     }
