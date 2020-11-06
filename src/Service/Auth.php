@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Core\Session;
 use App\Core\Validation\Validator;
+use App\Exceptions\InvalidPasswordException;
+use App\Exceptions\UserNotFoundException;
 use App\Managers\UserManager;
 use Exception;
 
@@ -37,6 +39,8 @@ class Auth
     /**
      * @param array $data
      *
+     * @throws InvalidPasswordException
+     * @throws UserNotFoundException
      * @throws Exception
      *
      * @return string[]|void
@@ -52,11 +56,11 @@ class Auth
         $user = $this->userManager->findOneBy(['email' => $data['email']]);
 
         if (empty($user) || 'ROLE_DISABLED' === $user['role']) {
-            throw new Exception('Aucun utilisateur trouvé pour l\'adresse email : '.$data['email']);
+            throw new UserNotFoundException('Aucun utilisateur trouvé pour l\'adresse email : '.$data['email']);
         }
 
         if (false === $this->checkPassword($data['password'], $user['password'])) {
-            throw new Exception('Mot de passe invalide, veuillez réessayer.');
+            throw new InvalidPasswordException('Mot de passe invalide, veuillez réessayer.');
         }
 
         $authenticatedUser = $this->userAdministrator->getUser($user['id']);

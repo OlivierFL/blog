@@ -210,6 +210,7 @@ li {
 /* Pagination */
 .page-link {
     color: #1c768f;
+    line-height: 1;
 }
 
 .page-link:hover {
@@ -269,6 +270,10 @@ li {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.2);
+}
+
+.hero-img.error {
+    height: 30vh;
 }
 
 .img-news {

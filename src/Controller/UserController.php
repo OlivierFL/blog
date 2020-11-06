@@ -2,12 +2,16 @@
 
 namespace App\Controller;
 
+use App\Exceptions\InvalidPasswordException;
+use App\Exceptions\TwigException;
+use App\Exceptions\UserNotFoundException;
 use Core\Controller;
 use Exception;
 
 class UserController extends Controller
 {
     /**
+     * @throws TwigException
      * @throws Exception
      */
     public function login(): void
@@ -16,7 +20,7 @@ class UserController extends Controller
             try {
                 $this->auth->authenticateUser($_POST);
                 header('Location: /');
-            } catch (Exception $e) {
+            } catch (UserNotFoundException | InvalidPasswordException $e) {
                 $this->addMessage($e->getMessage());
             }
         }

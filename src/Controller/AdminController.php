@@ -3,6 +3,12 @@
 namespace App\Controller;
 
 use App\Model\Comment;
+use App\Exceptions\AccessDeniedException;
+use App\Exceptions\DatabaseException;
+use App\Exceptions\FileUploadException;
+use App\Exceptions\PostException;
+use App\Exceptions\TwigException;
+use App\Exceptions\UserException;
 use Core\Controller;
 use Exception;
 use ReflectionException;
@@ -10,20 +16,20 @@ use ReflectionException;
 class AdminController extends Controller
 {
     /**
-     * AdminController constructor.
-     *
+     * @throws AccessDeniedException
      * @throws Exception
      */
     public function __construct()
     {
         parent::__construct();
         if ('admin' !== $this->auth->getCurrentUserRole()) {
-            throw new Exception('Accès non autorisé !');
+            throw new AccessDeniedException('Accès non autorisé !');
         }
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
+     * @throws DatabaseException
      */
     public function index(): void
     {
@@ -39,7 +45,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function readPosts(): void
     {
@@ -53,7 +59,7 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws Exception
+     * @throws TwigException
      */
     public function readPost(int $id): void
     {
@@ -65,7 +71,11 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws DatabaseException
+     * @throws FileUploadException
+     * @throws PostException
+     * @throws ReflectionException
+     * @throws TwigException
      */
     public function createPost(): void
     {
@@ -82,7 +92,11 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws Exception
+     * @throws DatabaseException
+     * @throws ReflectionException
+     * @throws TwigException
+     * @throws FileUploadException
+     * @throws PostException
      */
     public function updatePost(int $id): void
     {
@@ -99,6 +113,8 @@ class AdminController extends Controller
     }
 
     /**
+     * @throws PostException
+     * @throws TwigException
      * @throws Exception
      */
     public function deletePost(): void
@@ -108,7 +124,7 @@ class AdminController extends Controller
         try {
             $this->postAdministrator->deletePost($post);
         } catch (Exception $e) {
-            throw new Exception('Erreur lors de la suppression de l\'article (id:'.$post['id'].') : '.$e->getMessage());
+            throw PostException::delete($post['id']);
         }
 
         $this->render('admin/successful_edit.html.twig', [
@@ -118,7 +134,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function readComments(): void
     {
@@ -133,6 +149,7 @@ class AdminController extends Controller
      * @param int $id
      *
      * @throws Exception
+     * @throws TwigException
      */
     public function readComment(int $id): void
     {
@@ -144,6 +161,7 @@ class AdminController extends Controller
     }
 
     /**
+     * @throws TwigException
      * @param $id
      *
      * @throws Exception
@@ -163,7 +181,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws TwigException
      */
     public function readUsers(): void
     {
@@ -178,6 +196,7 @@ class AdminController extends Controller
      * @param int $id
      *
      * @throws Exception
+     * @throws TwigException
      */
     public function readUser(int $id): void
     {
@@ -192,6 +211,7 @@ class AdminController extends Controller
      * @param int $id
      *
      * @throws ReflectionException
+     * @throws TwigException
      * @throws Exception
      */
     public function updateUser(int $id): void
@@ -209,6 +229,8 @@ class AdminController extends Controller
     }
 
     /**
+     * @throws TwigException
+     * @throws UserException
      * @throws Exception
      */
     public function deleteUser(): void
@@ -220,6 +242,8 @@ class AdminController extends Controller
         } catch (Exception $e) {
             throw new Exception('Erreur lors de la suppression de l\'utilisateur (id:'.$user['base_infos']['id'].') : '.$e->getMessage());
         }
+        $this->userAdministrator->deleteUser($user);
+        $this->addMessage('Utilisateur supprimé');
 
         $this->render('admin/successful_edit.html.twig', [
             'link' => 'users',

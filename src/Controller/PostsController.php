@@ -2,27 +2,48 @@
 
 namespace App\Controller;
 
+use App\Exceptions\TwigException;
+use App\Service\Paginator;
 use Core\Controller;
-use Exception;
 
 class PostsController extends Controller
 {
     /**
-     * @throws Exception
+     * @var Paginator
      */
-    public function list(): void
+    private Paginator $paginator;
+
+    /**
+     * PostsController constructor.
+     */
+    public function __construct()
     {
-        $posts = $this->postManager->findAllWithAuthor();
+        parent::__construct();
+        $this->paginator = new Paginator();
+    }
+
+    /**
+     * @param null|int $page
+     *
+     * @throws TwigException
+     */
+    public function list(?int $page = 1): void
+    {
+        $posts = $this->paginator->getPostsPaginated($page);
 
         $this->render('layout/posts.html.twig', [
             'posts' => $posts,
+            'previous' => $posts['previous_page'],
+            'next' => $posts['next_page'],
+            'page' => $page,
+            'max_pages' => $posts['max_pages'],
         ]);
     }
 
     /**
      * @param string $slug
      *
-     * @throws Exception
+     * @throws TwigException
      */
     public function show(string $slug): void
     {

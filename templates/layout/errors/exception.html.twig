@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <div class="hero-img">
+  <div class="hero-img error">
     <div class="hero-text text-center">
-      <h1>Page non trouvée</h1>
+      <h1>Erreur !</h1>
       <hr class="separator-white">
     </div>
   </div>
   <div class="container pb-3">
     <section class="m-60 text-center">
-      <h2>La page demandée n'a pas été trouvée</h2>
+      <h2>{{ error }}</h2>
       <hr class="separator-blue">
-      <a href="/index" class="btn btn-primary">Retour à l'accueil</a>
     </section>
   </div>
 {% endblock %}
