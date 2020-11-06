@@ -59,12 +59,19 @@ class CommentAdministrator
      */
     public function updateComment(Comment $comment, array $data): void
     {
-        if ($data['reject']) {
-            $comment->setStatus(Comment::STATUS_REJECTED);
-        } elseif ($data['approve']) {
-            $comment->setStatus(Comment::STATUS_APPROVED);
-        } else {
-            throw new Exception('Changement de statut invalide');
+        switch ($data) {
+            case $data['reject']:
+                $comment->setStatus(Comment::STATUS_REJECTED);
+                $message = 'Commentaire approuvé';
+
+                break;
+            case $data['approve']:
+                $comment->setStatus(Comment::STATUS_APPROVED);
+                $message = 'Commentaire non validé';
+
+                break;
+            default:
+                throw new Exception('Changement de statut invalide');
         }
 
         try {
@@ -74,12 +81,12 @@ class CommentAdministrator
         }
 
         if (Comment::STATUS_APPROVED === $comment->getStatus()) {
-            $this->session->addMessages('Commentaire approuvé');
+            $this->session->addMessages($message);
 
             return;
         }
 
-        $this->session->addMessages('Commentaire non validé');
+        $this->session->addMessages($message);
     }
 
     /**
