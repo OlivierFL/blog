@@ -10,6 +10,7 @@
       <tr>
         <th scope="col">Comment ID</th>
         <th scope="col">Commentaire</th>
+        <th scope="col">Article</th>
         <th scope="col">Auteur</th>
         <th scope="col">Statut</th>
         <th scope="col">Dernière modification</th>
@@ -21,6 +22,9 @@
         <tr>
           <th scope="row">{{ comment.id }}</th>
           <td>{{ comment.content|slice(0,50) }}...</td>
+          <td>
+            <a href="/admin/posts/{{ comment.post_id }}" class="text-primary">{{ comment.post_id }}</a>
+          </td>
           <td>{{ comment.first_name }} {{ comment.last_name }}</td>
           <td
                   {% if comment.status == 'En attente de modération' %}

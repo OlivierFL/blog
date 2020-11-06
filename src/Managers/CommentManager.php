@@ -29,7 +29,7 @@ final class CommentManager extends Manager
      */
     public function findOneWithAuthor(int $id): array
     {
-        $query = $this->db->prepare('SELECT c.id, c.content, c.status, c.user_id, c.post_id, c.created_at, c.updated_at, u.first_name, u.last_name FROM comment c LEFT JOIN user u on c.user_id = u.id WHERE c.id = :id');
+        $query = $this->db->prepare('SELECT c.id, c.content, c.status, c.user_id, c.post_id, c.created_at, c.updated_at, u.first_name, u.last_name, p.title as post_title, p.content as post_content FROM comment c LEFT JOIN user u on c.user_id = u.id LEFT JOIN post p on p.id = c.post_id WHERE c.id = :id');
 
         $query->bindParam(':id', $id);
 
