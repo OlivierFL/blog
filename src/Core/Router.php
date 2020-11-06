@@ -100,7 +100,11 @@ class Router
         if ($matches[2]) {
             $action = $matches[2];
         }
-        if (!empty($params) && $params['id']) {
+        if (!empty($params)) {
+            if ($params['page']) {
+                return $controller->{$action}($params['page']);
+            }
+
             return $controller->{$action}($params['id']);
         }
 

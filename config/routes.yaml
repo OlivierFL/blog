@@ -4,7 +4,7 @@ index:
     methods: GET
 posts:
   - action: list
-    path: ''
+    path: '[/{page:[\d+]}]'
     methods: GET
   - action: show
     path: /{id:[a-z0-9-]+}

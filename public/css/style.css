@@ -210,6 +210,7 @@ li {
 /* Pagination */
 .page-link {
     color: #1c768f;
+    line-height: 1;
 }
 
 .page-link:hover {
