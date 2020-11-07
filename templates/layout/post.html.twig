@@ -7,21 +7,21 @@
 {% block body %}
   <div class="hero-img-post">
     <div class="hero-text text-center">
-      <h1>{{ post.title }}</h1>
+      <h1>{{ post.0.title }}</h1>
       <hr class="separator-white">
     </div>
-    <img src="/uploads/{{ post.cover_img }}" alt="">
+    <img src="/uploads/{{ post.0.cover_img }}" alt="{{ post.0.alt_cover_img }}">
   </div>
   <div class="container">
     <div class="text-center">
       {{ include('_messages.html.twig') }}
     </div>
     <section class="m-60 mb-5 text-center">
-      <p class="text-justify">{{ post.content|nl2br }}</p>
+      <p class="text-justify">{{ post.0.content|nl2br }}</p>
     </section>
     <section class="row mb-5 px-3 text-muted justify-content-between">
-      <p>Par {{ post.first_name }} {{ post.last_name }}</p>
-      <p>Article mis à jour le&nbsp;: {{ post.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
+      <p>Par {{ post.0.author|capitalize }}</p>
+      <p>Article mis à jour le&nbsp;: {{ post.0.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
     </section>
     <section class="text-center">
       <a class="btn btn-primary mb-5" href="/posts">Retour aux articles</a>

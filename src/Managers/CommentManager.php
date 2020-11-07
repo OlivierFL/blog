@@ -3,7 +3,6 @@
 namespace App\Managers;
 
 use App\Core\Manager;
-use App\Model\Comment;
 use PDO;
 
 final class CommentManager extends Manager
@@ -36,21 +35,5 @@ final class CommentManager extends Manager
         $query->execute();
 
         return $query->fetchAll(PDO::FETCH_ASSOC)[0];
-    }
-
-    /**
-     * @param string $postId
-     *
-     * @return array
-     */
-    public function findAllForPostWithAuthor(string $postId): array
-    {
-        $query = $this->db->prepare('SELECT c.id, c.content, c.status, c.user_id, c.post_id, c.created_at, c.updated_at, u.user_name FROM comment c LEFT JOIN user u on c.user_id = u.id WHERE c.post_id = :post_id AND c.status != "'.Comment::STATUS_PENDING.'" ORDER BY c.updated_at DESC');
-
-        $query->bindParam(':post_id', $postId);
-
-        $query->execute();
-
-        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 }

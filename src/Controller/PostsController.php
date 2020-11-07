@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Exceptions\TwigException;
-use App\Managers\CommentManager;
 use App\Managers\PostManager;
 use App\Service\Paginator;
 use Core\Controller;
@@ -18,10 +17,6 @@ class PostsController extends Controller
      * @var PostManager
      */
     private PostManager $postManager;
-    /**
-     * @var CommentManager
-     */
-    private CommentManager $commentManager;
 
     /**
      * PostsController constructor.
@@ -31,7 +26,6 @@ class PostsController extends Controller
         parent::__construct();
         $this->paginator = new Paginator();
         $this->postManager = new PostManager();
-        $this->commentManager = new CommentManager();
     }
 
     /**
@@ -59,12 +53,10 @@ class PostsController extends Controller
      */
     public function show(string $slug): void
     {
-        $post = $this->postManager->findOneWithAuthorBySlug($slug);
-        $comments = $this->commentManager->findAllForPostWithAuthor($post['id']);
+        $post = $this->postManager->findOneWithAuthorAndCommentsBySlug($slug);
 
         $this->render('layout/post.html.twig', [
             'post' => $post,
-            'comments' => $comments,
         ]);
     }
 }

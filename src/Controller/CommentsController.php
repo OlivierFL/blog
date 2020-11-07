@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Exceptions\CommentException;
+use App\Exceptions\DatabaseException;
 use App\Service\CommentAdministrator;
 use Core\Controller;
 use ReflectionException;
@@ -21,6 +23,8 @@ class CommentsController extends Controller
 
     /**
      * @throws ReflectionException
+     * @throws CommentException
+     * @throws DatabaseException
      */
     public function create(): void
     {

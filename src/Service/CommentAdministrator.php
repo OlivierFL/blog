@@ -64,14 +64,14 @@ class CommentAdministrator
     public function updateComment(Comment $comment, array $data): void
     {
         switch ($data) {
-            case $data['reject']:
+            case 'reject' === array_key_first($data):
                 $comment->setStatus(Comment::STATUS_REJECTED);
-                $message = 'Commentaire approuvé';
+                $message = 'Commentaire non validé';
 
                 break;
-            case $data['approve']:
+            case 'approve' === array_key_first($data):
                 $comment->setStatus(Comment::STATUS_APPROVED);
-                $message = 'Commentaire non validé';
+                $message = 'Commentaire approuvé';
 
                 break;
             default:
