@@ -113,8 +113,12 @@ class Validator
             ->length('email', 5, 255)
             ->email('email')
             ->role('role')
-            ->length('description', 1, 255)
-            ->length('alt_url_avatar', 1, 255)
+        ;
+
+        if ('admin' === $this->data['role']) {
+            $this->validator->length('description', 1, 255)
+                ->length('alt_url_avatar', 1, 255)
             ;
+        }
     }
 }
