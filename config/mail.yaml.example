@@ -1,5 +1,8 @@
 SMTP_SERVER:
-SMTP_PORT:
+SMTP_PORT: 465
+# Email address used to send contact email
 SENDER_EMAIL:
+# Username to connect to SMTP server
 USERNAME:
+# Password to connect to SMTP server
 PASSWORD:
