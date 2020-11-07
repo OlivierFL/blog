@@ -9,6 +9,10 @@ posts:
   - action: show
     path: /{id:[a-z0-9-]+}
     methods: GET
+comments:
+  - action: create
+    path: /create
+    methods: POST
 admin:
   - action: index
     path: ''
@@ -28,15 +32,15 @@ admin:
   - action: deletePost
     path: /posts/delete
     methods: POST
-  - action: listComments
+  - action: readComments
     path: /comments
     methods: GET
-  - action: showComment
-    path: /comments/{id:\d+}
-    methods: GET
-  - action: editComment
+  - action: readComment
     path: /comments/edit/{id:\d+}
     methods: GET
+  - action: updateComment
+    path: /comments/edit/{id:\d+}
+    methods: POST
   - action: readUsers
     path: /users
     methods: GET

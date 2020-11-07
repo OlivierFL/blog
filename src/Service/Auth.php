@@ -32,8 +32,8 @@ class Auth
     public function __construct(Session $session)
     {
         $this->userManager = new UserManager();
-        $this->userAdministrator = new UserAdministrator();
         $this->session = $session;
+        $this->userAdministrator = new UserAdministrator($this->session);
     }
 
     /**
@@ -47,7 +47,7 @@ class Auth
      */
     public function authenticateUser(array $data)
     {
-        $validator = (new Validator($data, $this->userManager))->getLoginValidator();
+        $validator = (new Validator($data, $this->userManager))->getBaseValidator();
 
         if (!$validator->isValid()) {
             return $validator->getErrors();
@@ -65,6 +65,7 @@ class Auth
 
         $authenticatedUser = $this->userAdministrator->getUser($user['id']);
         $this->session->set('current_user', $authenticatedUser);
+        $this->session->addMessages('Connexion réussie');
     }
 
     /**

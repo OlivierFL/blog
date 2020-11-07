@@ -21,7 +21,7 @@ class PostException extends Exception
      */
     public static function update(string $postId): self
     {
-        return new self('Erreur lors de la suppression de l\'article : '.$postId);
+        return new self('Erreur lors de la mise à jour de l\'article : '.$postId);
     }
 
     /**

@@ -3,11 +3,32 @@
 namespace App\Controller;
 
 use App\Exceptions\TwigException;
+use App\Managers\PostManager;
+use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
 
 class IndexController extends Controller
 {
+    /**
+     * @var PostManager
+     */
+    protected PostManager $postManager;
+    /**
+     * @var UserAdministrator
+     */
+    protected UserAdministrator $userAdministrator;
+
+    /**
+     * IndexController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->postManager = new PostManager();
+        $this->userAdministrator = new UserAdministrator($this->session);
+    }
+
     /**
      * @throws TwigException
      * @throws Exception

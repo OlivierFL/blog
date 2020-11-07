@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Core\PDOFactory;
+use App\Core\Session;
 use App\Core\Validation\Validator;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\UserException;
@@ -20,7 +21,6 @@ class UserAdministrator
      * @var UserManager
      */
     private UserManager $userManager;
-
     /**
      * @var AdminManager
      */
@@ -29,15 +29,22 @@ class UserAdministrator
      * @var PDO
      */
     private PDO $db;
+    /**
+     * @var Session
+     */
+    private Session $session;
 
     /**
      * UserAdministrator constructor.
+     *
+     * @param Session $session
      */
-    public function __construct()
+    public function __construct(Session $session)
     {
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
         $this->db = (new PDOFactory())->getMysqlConnexion();
+        $this->session = $session;
     }
 
     /**
@@ -62,10 +69,8 @@ class UserAdministrator
      * @param array $data
      *
      * @throws Exception
-     *
-     * @return array|string
      */
-    public function createUser(array $data)
+    public function createUser(array $data): void
     {
         $validator = (new Validator($data, $this->userManager))->getSignUpValidator();
 
@@ -79,10 +84,12 @@ class UserAdministrator
                 throw UserException::create($user->getId());
             }
 
-            return 'Félicitations ! Vous êtes désormais inscrit et vous pouvez dès à présent poster des commentaires';
+            $this->session->addMessages('Félicitations ! Vous êtes désormais inscrit et vous pouvez dès à présent poster des commentaires');
+
+            return;
         }
 
-        return $validator->getErrors();
+        $this->session->addMessages($validator->getErrors());
     }
 
     /**
@@ -93,10 +100,8 @@ class UserAdministrator
      * @throws UserException
      * @throws Exception
      * @throws ReflectionException
-     *
-     * @return array|string
      */
-    public function updateUser(array $user, array $data)
+    public function updateUser(array $user, array $data): void
     {
         $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
         $user['base_infos'] = array_merge($user['base_infos'], $data);
@@ -110,10 +115,12 @@ class UserAdministrator
                 throw UserException::update($updatedUser->getId());
             }
 
-            return 'Utilisateur mis à jour';
+            $this->session->addMessages('Utilisateur mis à jour');
+
+            return;
         }
 
-        return $validator->getErrors();
+        $this->session->addMessages($validator->getErrors());
     }
 
     /**
@@ -121,10 +128,8 @@ class UserAdministrator
      *
      * @throws UserException
      * @throws Exception
-     *
-     * @return bool
      */
-    public function deleteUser(array $user): bool
+    public function deleteUser(array $user): void
     {
         $user = $this->anonymizeUser($user);
 
@@ -146,7 +151,7 @@ class UserAdministrator
             throw UserException::delete($deletedUser->getId());
         }
 
-        return true;
+        $this->session->addMessages('Utilisateur supprimé');
     }
 
     /**

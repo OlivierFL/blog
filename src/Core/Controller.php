@@ -4,12 +4,7 @@ namespace Core;
 
 use App\Core\Session;
 use App\Exceptions\TwigException;
-use App\Managers\AdminManager;
-use App\Managers\PostManager;
-use App\Managers\UserManager;
 use App\Service\Auth;
-use App\Service\PostAdministrator;
-use App\Service\UserAdministrator;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -29,26 +24,6 @@ class Controller
      */
     protected Environment $twig;
     /**
-     * @var UserManager
-     */
-    protected UserManager $userManager;
-    /**
-     * @var AdminManager
-     */
-    protected AdminManager $adminManager;
-    /**
-     * @var PostManager
-     */
-    protected PostManager $postManager;
-    /**
-     * @var UserAdministrator
-     */
-    protected UserAdministrator $userAdministrator;
-    /**
-     * @var PostAdministrator
-     */
-    protected PostAdministrator $postAdministrator;
-    /**
      * @var Session
      */
     protected Session $session;
@@ -66,14 +41,9 @@ class Controller
         $this->twig = $this->initTwig($config);
         $this->setConfig($this->twig, $config);
         $this->twig->addFunction(new TwigFunction('get_session_messages', [$this, 'getMessages']));
-        $this->userManager = new UserManager();
-        $this->adminManager = new AdminManager();
-        $this->postManager = new PostManager();
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
-        $this->userAdministrator = new UserAdministrator();
-        $this->postAdministrator = new PostAdministrator($this->session);
     }
 
     /**

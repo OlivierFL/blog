@@ -47,19 +47,19 @@ class PostAdministrator
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
-     *
-     * @return array|string
      */
-    public function createPost(array $data)
+    public function createPost(array $data): void
     {
-        $validator = (new Validator($data))->getPostCreateValidator();
+        $validator = (new Validator($data))->getBaseValidator();
         if ($validator->isValid()) {
             $this->createOrUpdatePost($data);
 
-            return 'Nouvel article créé avec succès';
+            $this->session->addMessages('Nouvel article créé avec succès');
+
+            return;
         }
 
-        return $validator->getErrors();
+        $this->session->addMessages($validator->getErrors());
     }
 
     /**
@@ -70,10 +70,9 @@ class PostAdministrator
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
-     *
-     * @return array|string
+     * @throws Exception
      */
-    public function updatePost(array $post, array $data)
+    public function updatePost(array $post, array $data): void
     {
         $post = $this->updatePostWithNewValues($post, $data);
         $validator = (new Validator($data))->getPostUpdateValidator();
@@ -81,21 +80,22 @@ class PostAdministrator
         if ($validator->isValid()) {
             $this->createOrUpdatePost($post, true);
 
-            return 'Article mis à jour';
+            $this->session->addMessages('Article mis à jour');
+
+            return;
         }
 
-        return $validator->getErrors();
+        $this->session->addMessages($validator->getErrors());
     }
 
     /**
      * @param array $post
      *
-     * @throws Exception
      * @throws FileDeleteException
-     *
-     * @return bool
+     * @throws PostException
+     * @throws Exception
      */
-    public function deletePost(array $post): bool
+    public function deletePost(array $post): void
     {
         $deletedPost = new Post($post);
 
@@ -103,7 +103,13 @@ class PostAdministrator
             $this->fileUploader->delete($deletedPost->getCoverImg());
         }
 
-        return $this->postManager->delete($deletedPost);
+        try {
+            $this->postManager->delete($deletedPost);
+        } catch (Exception $e) {
+            throw PostException::delete($deletedPost->getId());
+        }
+
+        $this->session->addMessages('Article supprimé');
     }
 
     /**
