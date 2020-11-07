@@ -6,6 +6,7 @@ use App\Controller\IndexController;
 use Exception;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use Throwable;
 use function FastRoute\simpleDispatcher;
 
 class Router
@@ -65,7 +66,13 @@ class Router
 
                 break;
             case Dispatcher::FOUND:
-                $this->getController($routeName, $params);
+                try {
+                    $this->getController($routeName, $params);
+                } catch (Throwable $e) {
+                    (new Controller())->render('layout/errors/exception.html.twig', [
+                        'error' => $e->getMessage(),
+                    ]);
+                }
 
                 break;
             default:
@@ -93,7 +100,11 @@ class Router
         if ($matches[2]) {
             $action = $matches[2];
         }
-        if (!empty($params) && $params['id']) {
+        if (!empty($params)) {
+            if ($params['page']) {
+                return $controller->{$action}($params['page']);
+            }
+
             return $controller->{$action}($params['id']);
         }
 

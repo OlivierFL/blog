@@ -10,6 +10,7 @@
       <tr>
         <th scope="col">Comment ID</th>
         <th scope="col">Commentaire</th>
+        <th scope="col">Article</th>
         <th scope="col">Auteur</th>
         <th scope="col">Statut</th>
         <th scope="col">Dernière modification</th>
@@ -17,72 +18,41 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Commentaire 1</td>
-        <td>Olivier Floch</td>
-        <td class="text-success">
-          <i class="fas fa-check"></i>
-          Approuvé
-        </td>
-        <td>10/01/2020 à 15:00</td>
-        <td>
-          <a href="/admin/comments/1" class="btn btn-edit">
-            <i class="fas fa-eye"></i>
-            Voir
-          </a>
-          <a href="/admin/comments/edit/1" class="btn btn-edit">
-            <i class="fas fa-edit"></i>
-            Éditer</a>
-          <a href="/admin/comments/delete/1" class="btn btn-danger">
-            <i class="fas fa-trash-alt"></i>
-            Supprimer</a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Commentaire 2</td>
-        <td>Olivier Floch</td>
-        <td class="text-warning">
-          <i class="fas fa-clock"></i>
-          En attente de modération
-        </td>
-        <td>10/01/2020 à 16:30</td>
-        <td>
-          <a href="/admin/comments/2" class="btn btn-edit">
-            <i class="fas fa-eye"></i>
-            Voir
-          </a>
-          <a href="/admin/comments/edit/2" class="btn btn-edit">
-            <i class="fas fa-edit"></i>
-            Éditer</a>
-          <a href="/admin/comments/delete/2" class="btn btn-danger">
-            <i class="fas fa-trash-alt"></i>
-            Supprimer</a>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Commentaire 3</td>
-        <td>Olivier Floch</td>
-        <td class="text-danger">
-          <i class="fas fa-times"></i>
-          Refusé
-        </td>
-        <td>10/01/2020 à 17:00</td>
-        <td>
-          <a href="/admin/comments/3" class="btn btn-edit">
-            <i class="fas fa-eye"></i>
-            Voir
-          </a>
-          <a href="/admin/comments/edit/3" class="btn btn-edit">
-            <i class="fas fa-edit"></i>
-            Éditer</a>
-          <a href="/admin/comments/delete/3" class="btn btn-danger">
-            <i class="fas fa-trash-alt"></i>
-            Supprimer</a>
-        </td>
-      </tr>
+      {% for comment in comments %}
+        <tr>
+          <th scope="row">{{ comment.id }}</th>
+          <td>{{ comment.content|slice(0,50) }}...</td>
+          <td>
+            <a href="/admin/posts/{{ comment.post_id }}" class="text-primary">{{ comment.post_id }}</a>
+          </td>
+          <td>{{ comment.first_name }} {{ comment.last_name }}</td>
+          <td
+                  {% if comment.status == 'En attente de modération' %}
+                    class="text-warning"
+                  {% elseif comment.status == 'Approuvé' %}
+                    class="text-success"
+                  {% elseif comment.status == 'Non validé' %}
+                    class="text-danger"
+                  {% endif %}
+          >
+            {% if comment.status == 'En attente de modération' %}
+              <i class="fas fa-clock"></i>
+            {% elseif comment.status == 'Approuvé' %}
+              <i class="fas fa-check"></i>
+            {% elseif comment.status == 'Non validé' %}
+              <i class="fas fa-times"></i>
+            {% endif %}
+            {{ comment.status }}
+          </td>
+          <td>{{ comment.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</td>
+          <td>
+            <a href="/admin/comments/edit/{{ comment.id }}" class="btn btn-edit">
+              <i class="fas fa-edit"></i>
+              Modérer
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
       </tbody>
     </table>
   </div>

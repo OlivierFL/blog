@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Oct 30, 2020 at 03:55 PM
+-- Generation Time: Nov 06, 2020 at 07:37 AM
 -- Server version: 8.0.20
 -- PHP Version: 7.4.5
 
@@ -52,11 +52,23 @@ INSERT INTO `admin` (`id`, `description`, `url_avatar`, `alt_url_avatar`, `url_c
 CREATE TABLE `comment` (
   `id` int NOT NULL,
   `content` text COLLATE utf8mb4_general_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `post_id` int NOT NULL,
   `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comment`
+--
+
+INSERT INTO `comment` (`id`, `content`, `status`, `created_at`, `updated_at`, `post_id`, `user_id`) VALUES
+(1, 'Premier commentaire du blog', 'En attente de modération', '2020-10-30 17:32:02', '2020-10-31 17:37:36', 41, 33),
+(2, 'Deuxième commentaire', 'Approuvé', '2020-10-30 17:34:49', '2020-10-31 17:29:08', 41, 33),
+(3, 'Troisième commentaire', 'Non validé', '2020-10-30 17:36:05', '2020-10-31 14:45:19', 41, 33),
+(4, 'Premier commentaire sur le deuxième article du blog', 'Approuvé', '2020-10-31 16:52:44', '2020-10-31 16:53:02', 42, 33),
+(5, 'Commentaire sur le troisième article du blog', 'Approuvé', '2020-10-31 17:11:15', '2020-10-31 17:33:27', 43, 34);
 
 -- --------------------------------------------------------
 
@@ -109,7 +121,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `user_name`, `first_name`, `last_name`, `email`, `password`, `role`, `created_at`, `updated_at`) VALUES
 (33, 'olivier', 'Olivier', 'Floch', 'olivier.floch@example.com', '$2y$10$tW7iQ1ik0hZt385j.C32neXaIHynXOObQGX.yJBzStu4/0esIJyEq', 'admin', '2020-10-04 12:27:52', '2020-10-30 15:54:37'),
-(34, 'user', 'User', 'User', 'user@example.com', '$2y$10$iOIIoT5zT.YPgiWGUqUFBuces7ZkvNMAROmiXGZ9IR5u.eN7DR04.', 'user', '2020-10-04 12:28:53', '2020-10-24 11:54:42'),
+(34, 'user', 'User', 'User', 'user@example.com', '$2y$10$iOIIoT5zT.YPgiWGUqUFBuces7ZkvNMAROmiXGZ9IR5u.eN7DR04.', 'user', '2020-10-04 12:28:53', '2020-10-30 16:37:00'),
 (35, 'anonymous35', 'anonymous35', 'anonymous35', 'anonymous35@example.com', '$2y$10$kr19lm/A4j31TO2Lkn8aT.fXiIwtWAAcXbY6durgkMbD0uCnrgkze', 'ROLE_DISABLED', '2020-10-09 08:31:56', '2020-10-09 09:00:03');
 
 --
@@ -158,7 +170,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `post`

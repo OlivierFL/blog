@@ -2,7 +2,8 @@
 
 namespace App\Service;
 
-use Exception;
+use App\Exceptions\FileDeleteException;
+use App\Exceptions\FileUploadException;
 
 class FileUploader
 {
@@ -21,7 +22,7 @@ class FileUploader
      * @param array  $file
      * @param string $type
      *
-     * @throws Exception
+     * @throws FileUploadException
      *
      * @return mixed
      */
@@ -35,17 +36,17 @@ class FileUploader
         finfo_close($finfo);
 
         if (false === $fileMimeType) {
-            throw new Exception('Type de fichier invalide');
+            throw new FileUploadException('Type de fichier invalide');
         }
 
         // Check if file MIME type is accepted
         if (!\in_array($fileMimeType, self::IMAGE === $type ? $this->imageMimeTypes : $this->fileMimeTypes, true)) {
-            throw new Exception('Type de fichier non accepté');
+            throw new FileUploadException('Type de fichier non accepté');
         }
 
         // Check file size
         if ((int) $file['size'] > self::UPLOAD_MAX_SIZE) {
-            throw new Exception('Le poids du fichier est supérieur au poids maximal accepté, veuillez réessayer');
+            throw new FileUploadException('Le poids du fichier est supérieur au poids maximal accepté, veuillez réessayer');
         }
 
         // Rename uploaded file
@@ -59,7 +60,7 @@ class FileUploader
     /**
      * @param array $file
      *
-     * @throws Exception
+     * @throws FileUploadException
      *
      * @return string
      */
@@ -69,16 +70,22 @@ class FileUploader
             return $file['name'];
         }
 
-        throw new Exception('Erreur lors de l\'enregistrement de l\'image');
+        throw new FileUploadException('Erreur lors de l\'enregistrement de l\'image');
     }
 
     /**
      * @param string $fileName
      *
+     * @throws FileDeleteException
+     *
      * @return bool
      */
     public function delete(string $fileName): bool
     {
-        return unlink(self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.$fileName);
+        try {
+            return unlink(self::UPLOAD_DIR.\DIRECTORY_SEPARATOR.$fileName);
+        } catch (\Exception $e) {
+            throw new FileDeleteException('Erreur lors la suppression de l\'image');
+        }
     }
 }

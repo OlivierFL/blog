@@ -2,12 +2,28 @@
 
 namespace App\Controller;
 
+use App\Exceptions\InvalidPasswordException;
+use App\Exceptions\TwigException;
+use App\Exceptions\UserNotFoundException;
+use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
 
 class UserController extends Controller
 {
     /**
+     * @var UserAdministrator
+     */
+    private UserAdministrator $userAdministrator;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userAdministrator = new UserAdministrator($this->session);
+    }
+
+    /**
+     * @throws TwigException
      * @throws Exception
      */
     public function login(): void
@@ -15,9 +31,8 @@ class UserController extends Controller
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             try {
                 $this->auth->authenticateUser($_POST);
-                $this->addMessage('Connexion réussie');
                 header('Location: /');
-            } catch (Exception $e) {
+            } catch (UserNotFoundException | InvalidPasswordException $e) {
                 $this->addMessage($e->getMessage());
             }
         }
@@ -31,8 +46,7 @@ class UserController extends Controller
     public function signup(): void
     {
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $result = $this->userAdministrator->createUser($_POST);
-            $this->addMessage($result);
+            $this->userAdministrator->createUser($_POST);
         }
 
         $this->render('layout/signup.html.twig');
