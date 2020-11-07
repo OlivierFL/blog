@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Core\PDOFactory;
 use App\Core\Session;
 use App\Core\Validation\Validator;
-use App\Exceptions\DatabaseException;
+use App\Exceptions\FileUploadException;
 use App\Exceptions\UserException;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
@@ -101,8 +101,6 @@ class UserAdministrator
      * @param array $user
      * @param array $data
      *
-     * @throws DatabaseException
-     * @throws UserException
      * @throws Exception
      * @throws ReflectionException
      */
@@ -114,10 +112,6 @@ class UserAdministrator
 
         if ($validator->isValid()) {
             $this->update($user);
-
-            if (false === $result) {
-                throw UserException::update($updatedUser->getId());
-            }
 
             $this->session->addMessages('Utilisateur mis à jour');
 
@@ -246,35 +240,27 @@ class UserAdministrator
         }
 
         if (!$result) {
-            throw new Exception('Erreur lors de la mise à jour de l\'utilisateur');
+            throw UserException::update($user->getId());
         }
     }
 
     /**
      * @param array $data
      *
-     * @throws Exception
+     * @throws FileUploadException
      *
      * @return array
      */
     private function uploadAdminFiles(array $data): array
     {
         if (isset($_FILES) && 4 !== $_FILES['url_avatar']['error']) {
-            try {
-                $file = $this->fileUploader->checkFile($_FILES['url_avatar'], FileUploader::IMAGE);
-                $data['url_avatar'] = $this->fileUploader->upload($file);
-            } catch (Exception $e) {
-                throw new Exception('Erreur lors du téléchargement de l\'image : '.$e->getMessage());
-            }
+            $file = $this->fileUploader->checkFile($_FILES['url_avatar'], FileUploader::IMAGE);
+            $data['url_avatar'] = $this->fileUploader->upload($file);
         }
 
         if (isset($_FILES) && 4 !== $_FILES['url_cv']['error']) {
-            try {
-                $file = $this->fileUploader->checkFile($_FILES['url_cv'], FileUploader::FILE);
-                $data['url_cv'] = $this->fileUploader->upload($file);
-            } catch (Exception $e) {
-                throw new Exception('Erreur lors du téléchargement du fichier : '.$e->getMessage());
-            }
+            $file = $this->fileUploader->checkFile($_FILES['url_cv'], FileUploader::FILE);
+            $data['url_cv'] = $this->fileUploader->upload($file);
         }
 
         return $data;

@@ -55,11 +55,7 @@ class Validator
      */
     public function getUserUpdateValidator(): ValidatorConstraints
     {
-        foreach ($this->data as $key => $value) {
-            if (!\in_array($key, ['url_cv', 'url_avatar'], true)) {
-                $this->addUserUpdateValidations($key);
-            }
-        }
+        $this->addUserUpdateValidation();
 
         return $this->validator;
     }
@@ -107,28 +103,18 @@ class Validator
     }
 
     /**
-     * @param string $key
-     *
      * @throws Exception
      */
-    private function addUserUpdateValidations(string $key): void
+    private function addUserUpdateValidation(): void
     {
-        if ('user_name' === $key) {
-            $this->validator->length('user_name', 3, 255);
-        }
-
-        if ('last_name' === $key || 'first_name' === $key) {
-            $this->validator->length($key, 1, 255);
-        }
-
-        if ('email' === $key) {
-            $this->validator->length('email', 5, 255)
-                ->email('email')
+        $this->validator->length('user_name', 3, 255)
+            ->length('first_name', 1, 255)
+            ->length('last_name', 1, 255)
+            ->length('email', 5, 255)
+            ->email('email')
+            ->role('role')
+            ->length('description', 1, 255)
+            ->length('alt_url_avatar', 1, 255)
             ;
-        }
-
-        if ('role' === $key) {
-            $this->validator->role('role');
-        }
     }
 }
