@@ -108,7 +108,7 @@ class UserAdministrator
     {
         $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
 
-        $user = $this->updateUserWithNewValues($user, $data);
+        $user = $this->setNewValues($user, $data);
 
         if ($validator->isValid()) {
             $this->update($user);
@@ -182,7 +182,7 @@ class UserAdministrator
      *
      * @return array
      */
-    private function updateUserWithNewValues(array $user, array $data): array
+    private function setNewValues(array $user, array $data): array
     {
         foreach ($user['base_infos'] as $key => $value) {
             if (isset($data[$key]) && $value !== $data[$key]) {
