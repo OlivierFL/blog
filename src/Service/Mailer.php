@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Core\Session;
+use App\Exceptions\MailerException;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -11,37 +13,45 @@ class Mailer
      * @var PHPMailer
      */
     private PHPMailer $mailer;
+    /**
+     * @var Session
+     */
+    private Session $session;
 
     /**
      * Mailer constructor.
      *
+     * @param Session $session
+     *
      * @throws Exception
      */
-    public function __construct()
+    public function __construct(Session $session)
     {
         $this->mailer = new PHPMailer(true);
         $this->setConfig($this->mailer, $this->getConfig());
+        $this->session = $session;
     }
 
     /**
      * @param array $data
      *
-     * @throws \Exception
-     *
-     * @return string
+     * @throws Exception
+     * @throws MailerException
      */
-    public function send(array $data): string
+    public function sendEmail(array $data): void
     {
-        $this->mailer->Subject = $data['subject'];
         $this->mailer->addReplyTo($data['from']);
-        $this->mailer->Body = $data['content'];
+        $this->mailer->Subject = $data['subject'];
+        $this->mailer->Body = filter_var($data['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         try {
             $this->mailer->send();
 
-            return 'Email envoyé. Nous répondrons dans les plus brefs délais';
+            $this->session->addMessages('Email envoyé. Nous répondrons dans les plus brefs délais');
+
+            return;
         } catch (Exception $e) {
-            throw new \Exception($e->getMessage());
+            throw MailerException::send($e->getMessage());
         }
     }
 

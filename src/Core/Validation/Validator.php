@@ -93,16 +93,6 @@ class Validator
         return $this->validator;
     }
 
-    /**
-     * @return ValidatorConstraints
-     */
-    private function getBaseValidator(): ValidatorConstraints
-    {
-        $this->addBaseValidation();
-
-        return $this->validator;
-    }
-
     private function addBaseValidation(): void
     {
         foreach ($this->data as $key => $value) {

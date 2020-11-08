@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
+use App\Core\Validation\Validator;
 use App\Exceptions\TwigException;
 use App\Managers\PostManager;
-use App\Service\UserAdministrator;
-use App\Core\Validation\Validator;
 use App\Service\Mailer;
+use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
 
@@ -62,11 +62,9 @@ class IndexController extends Controller
         $validator = (new Validator($_POST))->getContactValidator();
 
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST) && $validator->isValid()) {
-            $result = (new Mailer())->send($_POST);
-            $this->addMessage($result);
+            (new Mailer($this->session))->sendEmail($_POST);
+
             header('Location: /');
         }
-
-        throw new Exception('Erreur lors de l\'envoi de l\'email');
     }
 }
