@@ -30,7 +30,7 @@ final class PostManager extends Manager
      */
     public function findOneWithAuthorAndCommentsBySlug(string $slug): array
     {
-        $query = $this->db->prepare('SELECT p.id, p.title, p.content, p.slug, p.cover_img, p.alt_cover_img, p.updated_at, c.id as comment_id, c.content as comment_content, c.status as comment_status, c.updated_at as comment_updated_at, u.user_name as comment_author, u2.user_name as author FROM comment c LEFT JOIN post p ON c.post_id = p.id LEFT JOIN user u ON c.user_id = u.id LEFT JOIN admin a ON p.admin_id = a.id LEFT JOIN user u2 ON a.user_id = u2.id WHERE c.status != \'En attente de modération\' AND p.slug = :slug GROUP BY p.id, c.id, c.updated_at ORDER BY c.updated_at');
+        $query = $this->db->prepare('SELECT p.id, p.title, p.content, p.slug, p.cover_img, p.alt_cover_img, p.updated_at, c.id as comment_id, c.content as comment_content, c.status as comment_status, c.updated_at as comment_updated_at, u.user_name as comment_author, u2.user_name as author FROM comment c LEFT JOIN post p ON c.post_id = p.id LEFT JOIN user u ON c.user_id = u.id LEFT JOIN user u2 ON p.user_id = u2.id WHERE c.status != \'En attente de modération\' AND p.slug = :slug GROUP BY p.id, c.id, c.updated_at ORDER BY c.updated_at');
 
         $query->bindParam(':slug', $slug);
 
