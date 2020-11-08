@@ -2,7 +2,7 @@ index:
   - action: index
     path: /
     methods: GET
-  - action: sendMail
+  - action: sendEmail
     path: /
     methods: POST
 posts:
