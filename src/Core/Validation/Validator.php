@@ -26,6 +26,16 @@ class Validator
     }
 
     /**
+     * @return ValidatorConstraints
+     */
+    public function getBaseValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+
+        return $this->validator;
+    }
+
+    /**
      *@throws Exception
      *
      *@return ValidatorConstraints
@@ -36,14 +46,6 @@ class Validator
         $this->addSignUpValidation();
 
         return $this->validator;
-    }
-
-    /**
-     * @return ValidatorConstraints
-     */
-    public function getLoginValidator(): ValidatorConstraints
-    {
-        return $this->getBaseValidator();
     }
 
     /**
@@ -60,14 +62,6 @@ class Validator
         }
 
         return $this->validator;
-    }
-
-    /**
-     * @return ValidatorConstraints
-     */
-    public function getPostCreateValidator(): ValidatorConstraints
-    {
-        return $this->getLoginValidator();
     }
 
     /**
