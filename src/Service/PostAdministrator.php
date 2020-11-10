@@ -64,24 +64,22 @@ class PostAdministrator
     }
 
     /**
-     * @param array $post
+     * @param Post  $post
      * @param array $data
      *
      * @throws DatabaseException
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
-     * @throws Exception
      */
-    public function updatePost(array $post, array $data): void
+    public function updatePost(Post $post, array $data): void
     {
         $validator = (new Validator($data))->getPostUpdateValidator();
 
         if ($validator->isValid()) {
-            $updatedPost = new Post($post);
             // Update current Post with new data from update form
-            $updatedPost->hydrate($data);
-            $this->createOrUpdatePost($updatedPost, true);
+            $post->hydrate($data);
+            $this->createOrUpdatePost($post, true);
 
             $this->session->addMessages('Article mis à jour');
 

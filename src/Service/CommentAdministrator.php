@@ -103,7 +103,7 @@ class CommentAdministrator
     private function create(array $data): void
     {
         $comment = new Comment($data);
-        $comment->setUserId($this->session->get('current_user')['base_infos']['id']);
+        $comment->setUserId($this->session->get('current_user')['id']);
 
         $result = $this->commentManager->create($comment);
 
