@@ -23,7 +23,7 @@ class Post extends Entity
     /** @var string */
     private $altCoverImg;
     /** @var string */
-    private $adminId;
+    private $userId;
 
     /**
      * Post constructor.
@@ -123,19 +123,19 @@ class Post extends Entity
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getAdminId(): string
+    public function getUserId(): int
     {
-        return $this->adminId;
+        return $this->userId;
     }
 
     /**
-     * @param string $adminId
+     * @param int $userId
      */
-    public function setAdminId(string $adminId): void
+    public function setUserId(int $userId): void
     {
-        $this->adminId = $adminId;
+        $this->userId = $userId;
     }
 
     /**
