@@ -6,7 +6,7 @@
       {{ include('_messages.html.twig') }}
     </div>
     <section class="my-5">
-      <form id="form-user-edit" method="post" action="/admin/users/edit/{{ user.base_infos.id }}">
+      <form id="form-user-edit" method="post" action="/admin/users/edit/{{ user.id }}">
         <div class="form-row mb-4">
           <div class="form-group col-md-4">
             <label for="user_name">Nom d'utilisateur</label>
@@ -14,8 +14,8 @@
                    class="form-control"
                    id="user_name"
                    name="user_name"
-                   value="{{ user.base_infos.user_name }}"
-                   placeholder="{{ user.base_infos.user_name }}"
+                   value="{{ user.user_name }}"
+                   placeholder="{{ user.user_name }}"
             >
           </div>
           <div class="form-group col-md-4">
@@ -24,8 +24,8 @@
                    class="form-control"
                    id="last_name"
                    name="last_name"
-                   value="{{ user.base_infos.last_name }}"
-                   placeholder="{{ user.base_infos.last_name }}"
+                   value="{{ user.last_name }}"
+                   placeholder="{{ user.last_name }}"
             >
           </div>
           <div class="form-group col-md-4">
@@ -34,8 +34,8 @@
                    class="form-control"
                    id="first_name"
                    name="first_name"
-                   value="{{ user.base_infos.first_name }}"
-                   placeholder="{{ user.base_infos.first_name }}"
+                   value="{{ user.first_name }}"
+                   placeholder="{{ user.first_name }}"
             >
           </div>
         </div>
@@ -46,8 +46,8 @@
                    class="form-control"
                    id="email"
                    name="email"
-                   value="{{ user.base_infos.email }}"
-                   placeholder="{{ user.base_infos.email }}"
+                   value="{{ user.email }}"
+                   placeholder="{{ user.email }}"
             >
           </div>
         </div>
@@ -60,7 +60,7 @@
                      name="role"
                      class="custom-control-input"
                      value="user"
-                      {% if user.base_infos.role == 'user' %} checked {% endif %}
+                      {% if user.role == 'user' %} checked {% endif %}
               >
               <label class="custom-control-label" for="role_user">Utilisateur</label>
             </div>
@@ -70,21 +70,21 @@
                      name="role"
                      class="custom-control-input"
                      value="admin"
-                      {% if user.base_infos.role == 'admin' %} checked {% endif %}
+                      {% if user.role == 'admin' %} checked {% endif %}
               >
               <label class="custom-control-label" for="role_admin">Admin</label>
             </div>
           </div>
         </div>
-        {% if user.base_infos.role == 'admin' %}
+        {% if user.role == 'admin' %}
           <div class="form-row mb-5">
             <div class="form-group col">
               <label for="description">Description</label>
               <textarea class="form-control"
                         id="description"
                         rows="6"
-                        placeholder="{{ user.admin_infos.description }}"
-              >{{- user.admin_infos.description -}}
+                        placeholder="{{ user.description }}"
+              >{{- user.description -}}
               </textarea>
             </div>
           </div>

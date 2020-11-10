@@ -48,24 +48,6 @@ class UserAdministrator
     }
 
     /**
-     * @param int $id
-     *
-     * @throws Exception
-     *
-     * @return array
-     */
-    public function getUser(int $id): array
-    {
-        $userInfos = $this->userManager->findOneBy(['id' => $id]);
-
-        if ('admin' === $userInfos['role']) {
-            $adminInfos = $this->adminManager->findOneBy(['user_id' => $id]);
-        }
-
-        return array_combine(['base_infos', 'admin_infos'], [$userInfos, $adminInfos ?? null]);
-    }
-
-    /**
      * @param array $data
      *
      * @throws Exception

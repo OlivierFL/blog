@@ -28,7 +28,7 @@
                   <p class="card-text black">{{ post.content|slice(0,50) }}...</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between mt-auto">
-                  <small class="text-muted">Par {{ post.first_name }} {{ post.last_name }}</small>
+                  <small class="text-muted">Par {{ post.user_name|capitalize }}</small>
                   <small class="text-muted">Mise à jour
                     : {{ post.updated_at|date('d\/m\/Y', 'Europe/Paris') }}</small>
                 </div>
