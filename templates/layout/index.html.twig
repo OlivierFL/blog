@@ -7,13 +7,9 @@
 {% block body %}
   <div class="hero-img">
     <div class="hero-text text-center">
-      <img class="avatar"
-           src="/uploads/{{ admin.admin_infos.url_avatar }}"
-           alt="{{ admin.admin_infos.alt_url_avatar }}"
-      >
-      <h1>{{ admin.base_infos.first_name|capitalize }} {{ admin.base_infos.last_name|capitalize }}</h1>
+      <h1>{{ user.first_name|capitalize }} {{ user.last_name|capitalize }}</h1>
       <hr class="separator-white">
-      <h2>{{ admin.admin_infos.description }}</h2>
+      <h2>{{ user.description }}</h2>
     </div>
   </div>
   <div class="container">
@@ -35,7 +31,7 @@
                   <p class="card-text black">{{ post.content|slice(0,50) }}...</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between mt-auto">
-                  <small class="text-muted">Par {{ post.first_name }} {{ post.last_name }}</small>
+                  <small class="text-muted">Par {{ post.user_name|capitalize }}</small>
                   <small class="text-muted">Mise à jour
                     : {{ post.updated_at|date('d\/m\/Y', 'Europe/Paris') }}</small>
                 </div>

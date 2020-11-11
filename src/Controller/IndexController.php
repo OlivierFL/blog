@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Exceptions\TwigException;
 use App\Managers\PostManager;
+use App\Managers\UserManager;
 use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
@@ -18,6 +19,10 @@ class IndexController extends Controller
      * @var UserAdministrator
      */
     protected UserAdministrator $userAdministrator;
+    /**
+     * @var UserManager
+     */
+    private UserManager $userManager;
 
     /**
      * IndexController constructor.
@@ -25,6 +30,7 @@ class IndexController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->userManager = new UserManager();
         $this->postManager = new PostManager();
         $this->userAdministrator = new UserAdministrator($this->session);
     }
@@ -35,12 +41,9 @@ class IndexController extends Controller
      */
     public function index(): void
     {
-        $admin = $this->userAdministrator->getUser(33);
-        $posts = $this->postManager->findAllWithAuthor(3);
-
         $this->render('layout/index.html.twig', [
-            'admin' => $admin,
-            'posts' => $posts,
+            'user' => $this->userManager->findUser(33),
+            'posts' => $this->postManager->findAllWithAuthor(3),
         ]);
     }
 
