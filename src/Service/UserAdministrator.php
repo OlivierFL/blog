@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Core\PDOFactory;
 use App\Core\Session;
 use App\Core\Validation\Validator;
-use App\Exceptions\DatabaseException;
+use App\Exceptions\FileUploadException;
 use App\Exceptions\UserException;
 use App\Managers\AdminManager;
 use App\Managers\UserManager;
@@ -33,6 +33,10 @@ class UserAdministrator
      * @var Session
      */
     private Session $session;
+    /**
+     * @var FileUploader
+     */
+    private FileUploader $fileUploader;
 
     /**
      * UserAdministrator constructor.
@@ -45,6 +49,7 @@ class UserAdministrator
         $this->adminManager = new AdminManager();
         $this->db = (new PDOFactory())->getMysqlConnexion();
         $this->session = $session;
+        $this->fileUploader = new FileUploader();
     }
 
     /**
@@ -78,24 +83,17 @@ class UserAdministrator
      * @param array $user
      * @param array $data
      *
-     * @throws DatabaseException
-     * @throws UserException
      * @throws Exception
      * @throws ReflectionException
      */
     public function updateUser(array $user, array $data): void
     {
         $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
-        $user['base_infos'] = array_merge($user['base_infos'], $data);
+
+        $user = $this->setNewValues($user, $data);
 
         if ($validator->isValid()) {
-            $updatedUser = new User($user['base_infos']);
-
-            $result = $this->userManager->update($updatedUser);
-
-            if (false === $result) {
-                throw UserException::update($updatedUser->getId());
-            }
+            $this->update($user);
 
             $this->session->addMessages('Utilisateur mis à jour');
 
@@ -158,5 +156,95 @@ class UserAdministrator
         }
 
         return $user;
+    }
+
+    /**
+     * @param array $user
+     * @param array $data
+     *
+     * @return array
+     */
+    private function setNewValues(array $user, array $data): array
+    {
+        foreach ($user['base_infos'] as $key => $value) {
+            if (isset($data[$key]) && $value !== $data[$key]) {
+                $user['base_infos'][$key] = $data[$key];
+            }
+        }
+
+        if (!empty($user['admin_infos'])) {
+            foreach ($user['admin_infos'] as $key => $value) {
+                if (isset($data[$key]) && $value !== $data[$key]) {
+                    $user['admin_infos'][$key] = $data[$key];
+                }
+            }
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    private function update(array $data): void
+    {
+        $user = new User($data['base_infos']);
+
+        if ($data['admin_infos']) {
+            // Upload resume file and avatar image
+            $data['admin_infos'] = $this->uploadAdminFiles($data['admin_infos']);
+
+            $admin = new Admin($data['admin_infos']);
+        }
+
+        try {
+            $this->db->beginTransaction();
+            $this->userManager->update($user);
+            if (isset($admin)) {
+                $this->adminManager->update($admin);
+            }
+            $this->db->commit();
+
+            $result = true;
+        } catch (Exception $e) {
+            if (isset($admin)) {
+                // If User update fails and if an avatar or a resume was uploaded, delete the uploaded files
+                null === $admin->getUrlAvatar() ?: $this->fileUploader->delete($admin->getUrlAvatar());
+                null === $admin->getUrlCv() ?: $this->fileUploader->delete($admin->getUrlCv());
+            }
+
+            $this->db->rollBack();
+
+            throw $e;
+        }
+
+        if (!$result) {
+            throw UserException::update($user->getId());
+        }
+    }
+
+    /**
+     * @param array $data
+     *
+     * @throws FileUploadException
+     *
+     * @return array
+     */
+    private function uploadAdminFiles(array $data): array
+    {
+        if (isset($_FILES) && 4 !== $_FILES['url_avatar']['error']) {
+            $file = $this->fileUploader->checkFile($_FILES['url_avatar'], FileUploader::IMAGE);
+            $data['url_avatar'] = $this->fileUploader->upload($file);
+        }
+
+        if (isset($_FILES) && 4 !== $_FILES['url_cv']['error']) {
+            $file = $this->fileUploader->checkFile($_FILES['url_cv'], FileUploader::FILE);
+            $data['url_cv'] = $this->fileUploader->upload($file);
+        }
+
+        return $data;
     }
 }

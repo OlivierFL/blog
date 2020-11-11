@@ -7,6 +7,10 @@
 {% block body %}
   <div class="hero-img">
     <div class="hero-text text-center">
+      <img class="avatar"
+           src="/uploads/{{ user.url_avatar }}"
+           alt="{{ user.alt_url_avatar }}"
+      >
       <h1>{{ user.first_name|capitalize }} {{ user.last_name|capitalize }}</h1>
       <hr class="separator-white">
       <h2>{{ user.description }}</h2>
@@ -77,7 +81,7 @@
           <div class="card-body">
             <h3>Télécharger le CV</h3>
             <hr class="separator-blue">
-            <a href="#" class="black">download</a>
+            <a href="/uploads/{{ admin.admin_infos.url_cv }}" class="black">Télécharger</a>
           </div>
         </div>
       </div>
