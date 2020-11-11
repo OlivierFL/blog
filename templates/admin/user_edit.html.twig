@@ -8,7 +8,7 @@
     <section class="my-5">
       <form id="form-user-edit"
             method="post"
-            action="/admin/users/edit/{{ user.base_infos.id }}"
+            action="/admin/users/edit/{{ user.id }}"
             enctype="multipart/form-data"
       >
         <div class="form-row mb-4">
@@ -107,9 +107,9 @@
                        accept="application/pdf"
                 >
                 <label class="custom-file-label" for="url_cv">Téléverser un CV</label>
-                {% if user.admin_infos.url_cv is not empty %}
-                  <p class="mt-4 mt-2">CV actuel : <a href="/uploads/{{ user.admin_infos.url_cv }}" class="text-primary"
-                                                      target="_blank">{{ user.admin_infos.url_cv }}</a>
+                {% if user.url_cv is not empty %}
+                  <p class="mt-4 mt-2">CV actuel : <a href="/uploads/{{ user.url_cv }}" class="text-primary"
+                                                      target="_blank">{{ user.url_cv }}</a>
                   </p>
                 {% endif %}
               </div>
@@ -127,10 +127,10 @@
                        accept="image/*"
                 >
                 <label class="custom-file-label" for="url_avatar">Téléverser une image de profil</label>
-                {% if user.admin_infos.url_avatar is not empty %}
-                  <p class="mt-4 mt-2">Image de profil actuelle : <a href="/uploads/{{ user.admin_infos.url_avatar }}"
+                {% if user.url_avatar is not empty %}
+                  <p class="mt-4 mt-2">Image de profil actuelle : <a href="/uploads/{{ user.url_avatar }}"
                                                                      class="text-primary"
-                                                                     target="_blank">{{ user.admin_infos.url_avatar }}</a>
+                                                                     target="_blank">{{ user.url_avatar }}</a>
                   </p>
                 {% endif %}
               </div>
@@ -141,8 +141,8 @@
                      class="form-control"
                      id="alt_url_avatar"
                      name="alt_url_avatar"
-                     value="{{ user.admin_infos.alt_url_avatar }}"
-                     placeholder="{{ user.admin_infos.alt_url_avatar }}"
+                     value="{{ user.alt_url_avatar }}"
+                     placeholder="{{ user.alt_url_avatar }}"
               >
               <small id="alt_url_avatar_help_text" class="form-text text-muted">
                 Le texte alternatif est utilisé lorsque l'image de profil ne peut pas être chargée.
