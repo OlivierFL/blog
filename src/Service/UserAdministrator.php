@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Core\PDOFactory;
 use App\Core\Session;
 use App\Core\Validation\Validator;
+use App\Exceptions\FileDeleteException;
 use App\Exceptions\FileUploadException;
 use App\Exceptions\UserException;
 use App\Managers\AdminManager;
@@ -13,7 +14,6 @@ use App\Model\Admin;
 use App\Model\User;
 use Exception;
 use PDO;
-use ReflectionException;
 
 class UserAdministrator
 {
@@ -84,16 +84,33 @@ class UserAdministrator
      * @param array $data
      *
      * @throws Exception
-     * @throws ReflectionException
      */
     public function updateUser(array $user, array $data): void
     {
         $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
 
-        $user = $this->setNewValues($user, $data);
-
         if ($validator->isValid()) {
-            $this->update($user);
+            if (User::ROLE_ADMIN === $user['role']) {
+                $this->uploadAdminFiles($data);
+
+                $admin = new Admin($user);
+                $admin->hydrate($data);
+                $admin->setId($user['admin_id']);
+                $result = $this->adminManager->update($admin);
+                if (false === $result) {
+                    $this->deleteAdminFiles($admin);
+
+                    throw UserException::update($admin->getId());
+                }
+            }
+
+            $updatedUser = new User($user);
+            $updatedUser->hydrate($data);
+            $result = $this->userManager->update($updatedUser);
+
+            if (false === $result) {
+                throw UserException::update($updatedUser->getId());
+            }
 
             $this->session->addMessages('Utilisateur mis à jour');
 
@@ -118,8 +135,9 @@ class UserAdministrator
             $deletedAdmin = new Admin($user['admin_infos']);
         }
 
+        $this->db->beginTransaction();
+
         try {
-            $this->db->beginTransaction();
             $this->userManager->update($deletedUser);
             if (isset($deletedAdmin)) {
                 $this->adminManager->update($deletedAdmin);
@@ -159,74 +177,6 @@ class UserAdministrator
     }
 
     /**
-     * @param array $user
-     * @param array $data
-     *
-     * @return array
-     */
-    private function setNewValues(array $user, array $data): array
-    {
-        foreach ($user['base_infos'] as $key => $value) {
-            if (isset($data[$key]) && $value !== $data[$key]) {
-                $user['base_infos'][$key] = $data[$key];
-            }
-        }
-
-        if (!empty($user['admin_infos'])) {
-            foreach ($user['admin_infos'] as $key => $value) {
-                if (isset($data[$key]) && $value !== $data[$key]) {
-                    $user['admin_infos'][$key] = $data[$key];
-                }
-            }
-        }
-
-        return $user;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @throws ReflectionException
-     * @throws Exception
-     */
-    private function update(array $data): void
-    {
-        $user = new User($data['base_infos']);
-
-        if ($data['admin_infos']) {
-            // Upload resume file and avatar image
-            $data['admin_infos'] = $this->uploadAdminFiles($data['admin_infos']);
-
-            $admin = new Admin($data['admin_infos']);
-        }
-
-        try {
-            $this->db->beginTransaction();
-            $this->userManager->update($user);
-            if (isset($admin)) {
-                $this->adminManager->update($admin);
-            }
-            $this->db->commit();
-
-            $result = true;
-        } catch (Exception $e) {
-            if (isset($admin)) {
-                // If User update fails and if an avatar or a resume was uploaded, delete the uploaded files
-                null === $admin->getUrlAvatar() ?: $this->fileUploader->delete($admin->getUrlAvatar());
-                null === $admin->getUrlCv() ?: $this->fileUploader->delete($admin->getUrlCv());
-            }
-
-            $this->db->rollBack();
-
-            throw $e;
-        }
-
-        if (!$result) {
-            throw UserException::update($user->getId());
-        }
-    }
-
-    /**
      * @param array $data
      *
      * @throws FileUploadException
@@ -246,5 +196,21 @@ class UserAdministrator
         }
 
         return $data;
+    }
+
+    /**
+     * @param Admin $admin
+     *
+     * @throws FileDeleteException
+     */
+    private function deleteAdminFiles(Admin $admin): void
+    {
+        if (null !== $admin->getUrlAvatar()) {
+            $this->fileUploader->delete($admin->getUrlAvatar());
+        }
+
+        if (null !== $admin->getUrlCv()) {
+            $this->fileUploader->delete($admin->getUrlCv());
+        }
     }
 }

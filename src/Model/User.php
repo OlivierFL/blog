@@ -25,6 +25,8 @@ class User extends Entity
     private $password;
     /** @var string */
     private $role;
+    /** @var null|int */
+    private ?int $adminId;
 
     /**
      * User constructor.
@@ -145,11 +147,7 @@ class User extends Entity
      */
     public function getRole(): string
     {
-        if (null === $this->role) {
-            return $this->role = self::ROLE_USER;
-        }
-
-        return $this->role;
+        return $this->role ?? ($this->role = self::ROLE_USER);
     }
 
     /**
@@ -160,6 +158,26 @@ class User extends Entity
     public function setRole(string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getAdminId(): ?int
+    {
+        return $this->adminId;
+    }
+
+    /**
+     * @param null|int $adminId
+     *
+     * @return User
+     */
+    public function setAdminId(?int $adminId): self
+    {
+        $this->adminId = $adminId;
 
         return $this;
     }

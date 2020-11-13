@@ -12,8 +12,6 @@ class Admin extends User
     private $altUrlAvatar;
     /** @var string */
     private $urlCv;
-    /** @var string */
-    private $userId;
 
     /**
      * Admin constructor.
@@ -101,26 +99,6 @@ class Admin extends User
     public function setUrlCV(?string $urlCv): self
     {
         $this->urlCv = $urlCv;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserId(): string
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param string $userId
-     *
-     * @return Admin
-     */
-    public function setUserId(string $userId): self
-    {
-        $this->userId = $userId;
 
         return $this;
     }
