@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use App\Core\Validation\Validator;
-use App\Exceptions\InvalidMethodException;
 use App\Exceptions\TwigException;
 use App\Managers\PostManager;
-use App\Service\Mailer;
 use App\Managers\UserManager;
+use App\Service\Mailer;
 use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
@@ -65,16 +64,12 @@ class IndexController extends Controller
     {
         $validator = (new Validator($_POST))->getContactValidator();
 
-        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            if ($validator->isValid()) {
-                (new Mailer($this->session))->sendEmail($_POST);
-            } else {
-                $this->session->addMessages($validator->getErrors());
-            }
-
-            header('Location: /');
+        if ($validator->isValid()) {
+            (new Mailer($this->session))->sendEmail($_POST);
+        } else {
+            $this->session->addMessages($validator->getErrors());
         }
 
-        throw InvalidMethodException::methodNotAllowed($_SERVER['REQUEST_METHOD']);
+        header('Location: /');
     }
 }

@@ -3,7 +3,7 @@ index:
     path: /
     methods: GET
   - action: sendEmail
-    path: /
+    path: /send-email
     methods: POST
 posts:
   - action: list
