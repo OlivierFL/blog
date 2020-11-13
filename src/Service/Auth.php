@@ -63,7 +63,7 @@ class Auth
             throw new InvalidPasswordException('Mot de passe invalide, veuillez réessayer.');
         }
 
-        $authenticatedUser = $this->userAdministrator->getUser($user['id']);
+        $authenticatedUser = $this->userManager->findUser($user['id']);
         $this->session->set('current_user', $authenticatedUser);
         $this->session->addMessages('Connexion réussie');
     }
@@ -73,7 +73,7 @@ class Auth
      */
     public function getCurrentUserRole()
     {
-        return $this->session->get('current_user')['base_infos']['role'];
+        return $this->session->get('current_user')['role'];
     }
 
     /**

@@ -232,7 +232,7 @@ class AdminController extends Controller
      */
     public function readUser(int $id): void
     {
-        $user = $this->userAdministrator->getUser($id);
+        $user = $this->userManager->findUser($id);
 
         $this->render('admin/user.html.twig', [
             'user' => $user,
@@ -248,13 +248,13 @@ class AdminController extends Controller
      */
     public function updateUser(int $id): void
     {
-        $user = $this->userAdministrator->getUser($id);
+        $user = $this->userManager->findUser($id);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $this->userAdministrator->updateUser($user, $_POST);
         }
 
         $this->render('admin/user_edit.html.twig', [
-            'user' => $this->userAdministrator->getUser($id),
+            'user' => $this->userManager->findUser($id),
             'link' => 'users',
             'link_text' => 'utilisateurs',
         ]);
@@ -267,7 +267,7 @@ class AdminController extends Controller
      */
     public function deleteUser(): void
     {
-        $user = $this->userAdministrator->getUser($_POST['id']);
+        $user = $this->userManager->findUser($_POST['id']);
 
         $this->userAdministrator->deleteUser($user);
 

@@ -78,7 +78,7 @@ class Admin extends User
      *
      * @return Admin
      */
-    public function setAltAvatar(?string $altUrlAvatar): self
+    public function setAltUrlAvatar(?string $altUrlAvatar): self
     {
         $this->altUrlAvatar = $altUrlAvatar;
 
