@@ -36,14 +36,27 @@ class Validator
     }
 
     /**
-     *@throws Exception
+     * @throws Exception
      *
-     *@return ValidatorConstraints
+     * @return ValidatorConstraints
      */
     public function getSignUpValidator(): ValidatorConstraints
     {
         $this->addBaseValidation();
         $this->addSignUpValidation();
+
+        return $this->validator;
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @return ValidatorConstraints
+     */
+    public function getSocialNetWorkValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+        $this->addSocialNetWorkValidation();
 
         return $this->validator;
     }
@@ -130,5 +143,15 @@ class Validator
         if ('role' === $key) {
             $this->validator->role('role');
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addSocialNetWorkValidation(): void
+    {
+        $this->validator->length('name', 1, 255)
+            ->length('url', 1, 255)
+        ;
     }
 }

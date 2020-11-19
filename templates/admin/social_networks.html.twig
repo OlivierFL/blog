@@ -1,0 +1,50 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block admin_body %}
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Liste des réseaux sociaux présents en bas de page</h1>
+    <a href="/admin/social-networks/create" class="btn btn-edit">Ajouter un réseau social</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover table-borderless">
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">Social Network ID</th>
+        <th scope="col">Nom du réseau social</th>
+        <th scope="col">Lien vers le réseau social</th>
+        <th scope="col">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for social_network in social_networks %}
+        <tr>
+          <th scope="row">{{ social_network.id }}</th>
+          <td><i class="fab {{ social_network.icon_name }} pr-2"></i>{{ social_network.name|capitalize }}</td>
+          <td><a href="{{ social_network.url }}" class="text-primary" target="_blank">{{ social_network.url }}</a></td>
+          <td>
+            <a href="/admin/social-networks/{{ social_network.id }}" class="btn btn-edit">
+              <i class="fas fa-eye"></i>
+              Voir
+            </a>
+            <a href="/admin/social-networks/edit/{{ social_network.id }}" class="btn btn-edit">
+              <i class="fas fa-edit"></i>
+              Éditer</a>
+            <button type="button"
+                    class="btn btn-danger"
+                    data-toggle="modal"
+                    data-target="#deleteModal"
+                    data-id="{{ social_network.id }}"
+                    data-item-info="{{ social_network.name }}"
+            >
+              <i class="fas fa-trash-alt"></i>
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ include('admin/_modal.html.twig') }}
+{% endblock %}
+
