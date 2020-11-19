@@ -11,7 +11,10 @@ use function FastRoute\simpleDispatcher;
 
 class Router
 {
-    private $dispatcher;
+    /**
+     * @var Dispatcher
+     */
+    private Dispatcher $dispatcher;
 
     /**
      * Router constructor.
@@ -30,7 +33,7 @@ class Router
 
         return simpleDispatcher(static function (RouteCollector $routes) use ($parsedRoutes) {
             foreach ($parsedRoutes as $routeGroup => $parsedRoute) {
-                $routes->addGroup($routeGroup === 'index' ? '' : '/' . $routeGroup, static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
+                $routes->addGroup('index' === $routeGroup ? '' : '/' . $routeGroup, static function (RouteCollector $routes) use ($parsedRoute, $routeGroup) {
                     foreach ($parsedRoute as $route) {
                         $methods = explode(' | ', $route['methods']);
                         $routes->addRoute($methods, $route['path'], $routeGroup . '.' . $route['action']);
@@ -62,7 +65,9 @@ class Router
 
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
-                echo 'Method not allowed';
+                (new Controller())->render('layout/errors/exception.html.twig', [
+                    'error' => 'Méthode non autorisée : ' . $_SERVER['REQUEST_METHOD'],
+                ]);
 
                 break;
             case Dispatcher::FOUND:
@@ -78,7 +83,6 @@ class Router
             default:
                 (new IndexController())->notFound();
         }
-
     }
 
     /**

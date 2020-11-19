@@ -76,6 +76,19 @@ class Validator
         return $this->validator;
     }
 
+    /**
+     * @throws Exception
+     *
+     * @return ValidatorConstraints
+     */
+    public function getContactValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+        $this->addContactValidation();
+
+        return $this->validator;
+    }
+
     private function addBaseValidation(): void
     {
         foreach ($this->data as $key => $value) {
@@ -120,5 +133,18 @@ class Validator
                 ->length('alt_url_avatar', 1, 255)
             ;
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addContactValidation(): void
+    {
+        $this->validator->length('last_name', 1, 255)
+            ->length('first_name', 1, 255)
+            ->length('from', 5, 255)
+            ->length('subject', 1, 78)
+            ->email('from')
+        ;
     }
 }
