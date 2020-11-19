@@ -28,17 +28,18 @@ class Post extends Entity
     /**
      * Post constructor.
      *
-     * @param array $data
+     * @param null|array $data
      *
      * @throws Exception
      */
-    public function __construct(array $data)
+    public function __construct(?array $data)
     {
-        $this->hydrate($data);
-        $this->setSlug();
-        if (!isset($data['created_at'], $data['updated_at'])) {
-            $this->setCreatedAt();
-            $this->setUpdatedAt();
+        if (null !== $data) {
+            $this->hydrate($data);
+            if (!isset($data['created_at'], $data['updated_at'])) {
+                $this->setCreatedAt();
+                $this->setUpdatedAt();
+            }
         }
     }
 
@@ -83,11 +84,13 @@ class Post extends Entity
     }
 
     /**
+     * @param null|string $slug
+     *
      * @throws Exception
      */
-    public function setSlug(): void
+    public function setSlug(?string $slug): void
     {
-        $this->slug = $this->createSlug($this->title);
+        $this->slug = $slug;
     }
 
     /**
@@ -145,7 +148,7 @@ class Post extends Entity
      *
      * @return string
      */
-    private function createSlug(string $title): string
+    public function createSlug(string $title): string
     {
         $sluggedTitle = (new Slugify())->slugify($title);
 

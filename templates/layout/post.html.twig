@@ -20,7 +20,7 @@
       <p class="text-justify">{{ post.0.content|nl2br }}</p>
     </section>
     <section class="row mb-5 px-3 text-muted justify-content-between">
-      <p>Par {{ post.0.author|capitalize }}</p>
+      <p>Par {{ post.0.author }}</p>
       <p>Article mis à jour le&nbsp;: {{ post.0.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
     </section>
     <section class="text-center">

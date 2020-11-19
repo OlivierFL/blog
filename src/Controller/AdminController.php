@@ -12,7 +12,6 @@ use App\Managers\CommentManager;
 use App\Managers\PostManager;
 use App\Managers\UserManager;
 use App\Model\Comment;
-use App\Model\Post;
 use App\Service\CommentAdministrator;
 use App\Service\PostAdministrator;
 use App\Service\UserAdministrator;
@@ -139,9 +138,9 @@ class AdminController extends Controller
      */
     public function updatePost(int $id): void
     {
-        $post = $this->postManager->findOneWithAuthor($id);
+        $post = $this->postManager->findOneBy(['id' => $id]);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $this->postAdministrator->updatePost(new Post($post), $_POST);
+            $this->postAdministrator->updatePost($post, $_POST);
         }
 
         $this->render('admin/post_edit.html.twig', [
@@ -244,7 +243,6 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws ReflectionException
      * @throws TwigException
      * @throws Exception
      */

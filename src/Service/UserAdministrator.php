@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Core\PDOFactory;
 use App\Core\Session;
 use App\Core\Validation\Validator;
 use App\Exceptions\FileDeleteException;
@@ -13,7 +12,6 @@ use App\Managers\UserManager;
 use App\Model\Admin;
 use App\Model\User;
 use Exception;
-use PDO;
 
 class UserAdministrator
 {
@@ -25,10 +23,6 @@ class UserAdministrator
      * @var AdminManager
      */
     private AdminManager $adminManager;
-    /**
-     * @var PDO
-     */
-    private PDO $db;
     /**
      * @var Session
      */
@@ -47,7 +41,6 @@ class UserAdministrator
     {
         $this->userManager = new UserManager();
         $this->adminManager = new AdminManager();
-        $this->db = (new PDOFactory())->getMysqlConnexion();
         $this->session = $session;
         $this->fileUploader = new FileUploader();
     }
@@ -80,36 +73,31 @@ class UserAdministrator
     }
 
     /**
-     * @param array $user
-     * @param array $data
+     * @param Admin|User $user
+     * @param array      $data
      *
      * @throws Exception
      */
-    public function updateUser(array $user, array $data): void
+    public function updateUser($user, array $data): void
     {
         $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
 
         if ($validator->isValid()) {
-            if (User::ROLE_ADMIN === $user['role']) {
+            $user->hydrate($data);
+
+            if (User::ROLE_ADMIN === $user->getRole()) {
                 $this->uploadAdminFiles($data);
-
-                $admin = new Admin($user);
-                $admin->hydrate($data);
-                $admin->setId($user['admin_id']);
-                $result = $this->adminManager->update($admin);
-                if (false === $result) {
-                    $this->deleteAdminFiles($admin);
-
-                    throw UserException::update($admin->getId());
-                }
+                $result = $this->userManager->updateAdmin($user);
+            } else {
+                $result = $this->userManager->update($user);
             }
 
-            $updatedUser = new User($user);
-            $updatedUser->hydrate($data);
-            $result = $this->userManager->update($updatedUser);
-
             if (false === $result) {
-                throw UserException::update($updatedUser->getId());
+                if ('admin' === $user->getRole()) {
+                    $this->deleteAdminFiles($user);
+                }
+
+                throw UserException::update($user->getId());
             }
 
             $this->session->addMessages('Utilisateur mis à jour');
@@ -121,31 +109,23 @@ class UserAdministrator
     }
 
     /**
-     * @param array $user
+     * @param Admin|User $user
      *
      * @throws UserException
      * @throws Exception
      */
-    public function deleteUser(array $user): void
+    public function deleteUser($user): void
     {
-        $user = $this->anonymizeUser($user);
-
-        $deletedUser = new User($user['base_infos']);
-        if (null !== $user['admin_infos']) {
-            $deletedAdmin = new Admin($user['admin_infos']);
-        }
-
-        $this->db->beginTransaction();
+        $deletedUser = $this->anonymizeUser($user);
 
         try {
-            $this->userManager->update($deletedUser);
-            if (isset($deletedAdmin)) {
-                $this->adminManager->update($deletedAdmin);
+            if (User::ROLE_ADMIN === $user->getRole()) {
+                $this->deleteAdminFiles($user);
+                $this->adminManager->update($deletedUser);
+            } else {
+                $this->userManager->update($deletedUser);
             }
-            $this->db->commit();
         } catch (Exception $e) {
-            $this->db->rollBack();
-
             throw UserException::delete($deletedUser->getId());
         }
 
@@ -153,25 +133,26 @@ class UserAdministrator
     }
 
     /**
-     * @param array $user
+     * @param Admin|User $user
      *
-     * @throws Exception
-     *
-     * @return array
+     * @return Admin|User
      */
-    private function anonymizeUser(array $user): array
+    private function anonymizeUser($user)
     {
-        $anonymousUser = 'anonymous'.$user['base_infos']['id'];
-        $user['base_infos']['user_name'] = $anonymousUser;
-        $user['base_infos']['first_name'] = $anonymousUser;
-        $user['base_infos']['last_name'] = $anonymousUser;
-        $user['base_infos']['email'] = $anonymousUser.'@example.com';
-        $user['base_infos']['role'] = 'ROLE_DISABLED';
-        $user['base_infos']['updated_at'] = (new \DateTime())->format('Y-m-d H:i:s');
+        $anonymousUser = 'anonymous'.$user->getId();
+        $user->setUserName($anonymousUser);
+        $user->setFirstName($anonymousUser);
+        $user->setLastName($anonymousUser);
+        $user->setEmail($anonymousUser.'@example.com');
 
-        if (null !== $user['admin_infos']) {
-            unset($user['admin_infos']);
+        if (User::ROLE_ADMIN === $user->getRole()) {
+            $user->setDescription(null);
+            $user->setUrlCV(null);
+            $user->setAltUrlAvatar(null);
+            $user->setUrlCV(null);
         }
+
+        $user->setRole('ROLE_DISABLED');
 
         return $user;
     }

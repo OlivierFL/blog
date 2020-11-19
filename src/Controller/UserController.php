@@ -16,6 +16,9 @@ class UserController extends Controller
      */
     private UserAdministrator $userAdministrator;
 
+    /**
+     * UserController constructor.
+     */
     public function __construct()
     {
         parent::__construct();

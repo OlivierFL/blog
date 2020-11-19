@@ -31,14 +31,16 @@ class User extends Entity
     /**
      * User constructor.
      *
-     * @param array $data
+     * @param null|array $data
      */
-    public function __construct(array $data)
+    public function __construct(?array $data)
     {
-        $this->hydrate($data);
-        if (!isset($data['created_at'], $data['updated_at'])) {
-            $this->setCreatedAt();
-            $this->setUpdatedAt();
+        if (null !== $data) {
+            $this->hydrate($data);
+            if (!isset($data['created_at'], $data['updated_at'])) {
+                $this->setCreatedAt();
+                $this->setUpdatedAt();
+            }
         }
     }
 

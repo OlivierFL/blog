@@ -71,6 +71,7 @@ class PostAdministrator
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
+     * @throws Exception
      */
     public function updatePost(Post $post, array $data): void
     {
@@ -129,7 +130,7 @@ class PostAdministrator
             $file = $this->fileUploader->checkFile($_FILES['cover_img'], FileUploader::IMAGE);
             $post->setCoverImg($this->fileUploader->upload($file));
         }
-        $post->setUserId($this->session->get('current_user')['id']);
+        $post->setUserId($this->session->get('current_user')->getId());
 
         if ($update) {
             $result = $this->postManager->update($post);

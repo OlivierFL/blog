@@ -15,6 +15,8 @@ abstract class Manager
     protected PDO $db;
     /** @var null|string */
     protected ?string $tableName;
+    /** @var string */
+    protected string $entity;
 
     /**
      * Manager constructor.
@@ -25,6 +27,7 @@ abstract class Manager
     {
         $this->db = (new PDOFactory())->getMysqlConnexion();
         $this->tableName = $this->getTableName();
+        $this->entity = '\\App\\Model\\'.ucfirst($this->tableName);
     }
 
     /**
@@ -60,7 +63,15 @@ abstract class Manager
 
         $query->execute();
 
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        $entities = [];
+
+        foreach ($results as $result) {
+            $entities[] = new $this->entity($result);
+        }
+
+        return $entities;
     }
 
     /**
@@ -81,7 +92,15 @@ abstract class Manager
      */
     public function findAll(): array
     {
-        return $this->db->query('SELECT * FROM '.$this->tableName)->fetchAll(PDO::FETCH_ASSOC);
+        $results = $this->db->query('SELECT * FROM '.$this->tableName)->fetchAll(PDO::FETCH_ASSOC);
+
+        $entities = [];
+
+        foreach ($results as $result) {
+            $entities[] = new $this->entity($result);
+        }
+
+        return $entities;
     }
 
     /**
@@ -165,6 +184,62 @@ abstract class Manager
     }
 
     /**
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    protected function getColumns(Entity $entity): array
+    {
+        $columns = [];
+        $properties = $entity->getProperties();
+        foreach ($properties as $property) {
+            $columns[] = $this->camelCaseToSnakeCase($property->name);
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    protected function getValues(Entity $entity): array
+    {
+        $properties = $entity->getProperties();
+        $values = [];
+        foreach ($properties as $property) {
+            $method = 'get'.ucfirst($property->name);
+            if (method_exists($entity, $method)) {
+                $values[] = $entity->{$method}();
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param PDOStatement $query
+     * @param array        $values
+     *
+     * @return PDOStatement
+     */
+    protected function bindValues(PDOStatement $query, array $values): PDOStatement
+    {
+        $i = 0;
+        foreach ($values as $value) {
+            ++$i;
+            $query->bindValue($i, $value, \is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+
+        return $query;
+    }
+
+    /**
      * @throws ReflectionException
      *
      * @return null|string
@@ -239,62 +314,6 @@ abstract class Manager
         }
 
         return $queryLimit;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws ReflectionException
-     *
-     * @return array
-     */
-    private function getColumns(Entity $entity): array
-    {
-        $columns = [];
-        $properties = $entity->getProperties();
-        foreach ($properties as $property) {
-            $columns[] = $this->camelCaseToSnakeCase($property->name);
-        }
-
-        return $columns;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws ReflectionException
-     *
-     * @return array
-     */
-    private function getValues(Entity $entity): array
-    {
-        $properties = $entity->getProperties();
-        $values = [];
-        foreach ($properties as $property) {
-            $method = 'get'.ucfirst($property->name);
-            if (method_exists($entity, $method)) {
-                $values[] = $entity->{$method}();
-            }
-        }
-
-        return $values;
-    }
-
-    /**
-     * @param PDOStatement $query
-     * @param array        $values
-     *
-     * @return PDOStatement
-     */
-    private function bindValues(PDOStatement $query, array $values): PDOStatement
-    {
-        $i = 0;
-        foreach ($values as $value) {
-            ++$i;
-            $query->bindValue($i, $value, \is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
-        }
-
-        return $query;
     }
 
     /**
