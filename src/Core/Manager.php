@@ -130,9 +130,9 @@ abstract class Manager
 
         $query = $this->bindValues($query, $this->getValues($entity));
 
-        $query->execute();
+        $result = $query->execute();
 
-        if (0 < $query->rowCount()) {
+        if (true === $result) {
             return $query->rowCount().' ligne(s) mise(s) à jour.';
         }
 

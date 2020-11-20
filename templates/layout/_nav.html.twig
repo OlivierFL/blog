@@ -14,7 +14,7 @@
           <a class="nav-link" href="/posts">Articles</a>
         </li>
         {% if session.current_user is defined %}
-          {% if session.current_user.base_infos.role == 'admin' %}
+          {% if session.current_user.role == 'admin' %}
             <li class="nav-item mx-2">
               <a class="nav-link" href="/admin">Admin</a>
             </li>
