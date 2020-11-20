@@ -56,6 +56,21 @@ admin:
   - action: deleteUser
     path: /users/delete
     methods: POST
+  - action: readSocialNetWorks
+    path: /social-networks
+    methods: GET
+  - action: readSocialNetWork
+    path: /social-networks/{id:\d+}
+    methods: GET
+  - action: updateSocialNetWork
+    path: /social-networks/edit/{id:\d+}
+    methods: GET | POST
+  - action: createSocialNetWork
+    path: /social-networks/create
+    methods: GET | POST
+  - action: deleteSocialNetWork
+    path: /social-networks/delete
+    methods: POST
 user:
   - action: login
     path: /login

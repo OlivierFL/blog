@@ -1,0 +1,21 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block admin_body %}
+  <div class="container">
+    <section class="my-5">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Nom du réseau social</h5>
+          <hr class="separator-blue-left">
+          <p><i class="fab {{ social_network.icon_name }} pr-2"></i>{{ social_network.name|capitalize }}</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Lien du réseau social</h5>
+          <hr class="separator-blue-left">
+          <p><a href="{{ social_network.url }}" class="text-primary" target="_blank">{{ social_network.url }}</a></p>
+        </div>
+      </div>
+    </section>
+  </div>
+  {{ include('admin/_modal.html.twig') }}
+{% endblock %}

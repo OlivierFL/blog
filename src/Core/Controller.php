@@ -4,6 +4,7 @@ namespace Core;
 
 use App\Core\Session;
 use App\Exceptions\TwigException;
+use App\Managers\SocialNetworkManager;
 use App\Service\Auth;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -41,6 +42,7 @@ class Controller
         $this->twig = $this->initTwig($config);
         $this->setConfig($this->twig, $config);
         $this->twig->addFunction(new TwigFunction('get_session_messages', [$this, 'getMessages']));
+        $this->twig->addFunction(new TwigFunction('get_social_networks', [$this, 'getSocialNetWorks']));
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
@@ -74,6 +76,17 @@ class Controller
         } catch (RuntimeError $e) {
             throw new TwigException(TwigException::RUNTIME_ERROR_MESSAGE.$e->getMessage());
         }
+    }
+
+    /**
+     * Method used by Twig to display social networks in footer.
+     * This method is added to Twig as TwigFunction in Controller constructor.
+     *
+     * @return array
+     */
+    public function getSocialNetWorks(): array
+    {
+        return (new SocialNetworkManager())->findAll();
     }
 
     /**

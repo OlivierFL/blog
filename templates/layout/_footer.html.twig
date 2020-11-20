@@ -48,21 +48,13 @@
       <h4>Restons connectés</h4>
       <hr class="separator-white">
       <ul class="row justify-content-center mt-4">
-        <li class="px-2">
-          <a href="#">
-            <img class="footer-logo" src="img/logos/facebook-logo.png" alt="logo Facebook">
-          </a>
-        </li>
-        <li class="px-2">
-          <a href="#">
-            <img class="footer-logo" src="img/logos/twitter.png" alt="logo Twitter">
-          </a>
-        </li>
-        <li class="px-2">
-          <a href="#">
-            <img class="footer-logo" src="img/logos/youtube-logotype.png" alt="logo Youtube">
-          </a>
-        </li>
+        {% for social_network in get_social_networks() %}
+          <li class="px-2">
+            <a href="{{ social_network.url }}" target="_blank">
+              <i class="footer-logo fab {{ social_network.icon_name }}"></i>
+            </a>
+          </li>
+        {% endfor %}
       </ul>
     </nav>
   </div>

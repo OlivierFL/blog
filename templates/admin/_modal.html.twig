@@ -20,6 +20,8 @@
           {{ include('admin/_form_user_delete.html.twig') }}
         {% elseif posts is defined or post is defined %}
           {{ include('admin/_form_post_delete.html.twig') }}
+        {% elseif social_networks is defined or social_network is defined %}
+          {{ include('admin/_form_social_networks_delete.html.twig') }}
         {% endif %}
       </div>
     </div>

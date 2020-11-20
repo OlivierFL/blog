@@ -1,0 +1,53 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block admin_body %}
+  <div class="container">
+    <div class="text-center">
+      {{ include('_messages.html.twig') }}
+    </div>
+    <section class="my-5">
+      <form id="form-social-networks-create"
+            method="post"
+            action="/admin/social-networks/create"
+      >
+        <div class="form-row">
+          <div class="form-group col-md-6 pr-md-3">
+            <label for="name">Nom *</label>
+            <select class="form-control custom-select"
+                    id="name"
+                    name="name"
+                    required
+            >
+              <option value="linkedin">LinkedIn</option>
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="youtube">Youtube</option>
+              <option value="twitter">Twitter</option>
+              <option value="github">Github</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="url">Lien du réseau social *</label>
+            <input type="url"
+                   class="form-control"
+                   id="url"
+                   name="url"
+                   placeholder="Adresse du réseau social"
+                   required
+            >
+          </div>
+        </div>
+        <div class="row justify-content-around justify-content-md-end my-5">
+          <a href="/admin/social-networks" class="btn btn-danger mr-md-3 mb-4">
+            <i class="fas fa-times"></i>
+            Annuler
+          </a>
+          <button type="submit" class="btn btn-success mb-4" form="form-social-networks-create">
+            <i class="fas fa-check"></i>
+            Valider
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+{% endblock %}

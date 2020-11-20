@@ -10,10 +10,13 @@ use App\Exceptions\TwigException;
 use App\Exceptions\UserException;
 use App\Managers\CommentManager;
 use App\Managers\PostManager;
+use App\Managers\SocialNetworkManager;
 use App\Managers\UserManager;
 use App\Model\Comment;
+use App\Model\SocialNetwork;
 use App\Service\CommentAdministrator;
 use App\Service\PostAdministrator;
+use App\Service\SocialNetworksAdministrator;
 use App\Service\UserAdministrator;
 use Core\Controller;
 use Exception;
@@ -45,6 +48,14 @@ class AdminController extends Controller
      * @var UserAdministrator
      */
     private UserAdministrator $userAdministrator;
+    /**
+     * @var SocialNetworkManager
+     */
+    private SocialNetworkManager $socialNetworksManager;
+    /**
+     * @var SocialNetworksAdministrator
+     */
+    private SocialNetworksAdministrator $socialNetWorksAdministrator;
 
     /**
      * @throws AccessDeniedException
@@ -62,6 +73,8 @@ class AdminController extends Controller
         $this->postAdministrator = new PostAdministrator($this->session);
         $this->commentManager = new CommentManager();
         $this->commentAdministrator = new CommentAdministrator($this->session);
+        $this->socialNetworksManager = new SocialNetworkManager();
+        $this->socialNetWorksAdministrator = new SocialNetworksAdministrator($this->session);
     }
 
     /**
@@ -274,6 +287,87 @@ class AdminController extends Controller
         $this->render('admin/successful_edit.html.twig', [
             'link' => 'users',
             'link_text' => 'utilisateurs',
+        ]);
+    }
+
+    /**
+     * @throws DatabaseException
+     * @throws ReflectionException
+     * @throws TwigException
+     */
+    public function createSocialNetWork(): void
+    {
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $this->socialNetWorksAdministrator->createSocialNetwork($_POST);
+        }
+
+        $this->render('admin/social_networks_create.html.twig', [
+            'link' => 'social-networks',
+            'link_text' => 'réseaux sociaux',
+        ]);
+    }
+
+    /**
+     * @throws TwigException
+     */
+    public function readSocialNetWorks(): void
+    {
+        $socialNetworks = $this->socialNetworksManager->findAll();
+
+        $this->render('admin/social_networks.html.twig', [
+            'social_networks' => $socialNetworks,
+        ]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws TwigException
+     * @throws Exception
+     */
+    public function readSocialNetWork(int $id): void
+    {
+        $socialNetwork = $this->socialNetworksManager->findOneBy(['id' => $id]);
+
+        $this->render('admin/social_network.html.twig', [
+            'social_network' => $socialNetwork,
+        ]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws TwigException
+     * @throws Exception
+     */
+    public function updateSocialNetWork(int $id): void
+    {
+        $socialNetWork = $this->socialNetworksManager->findOneBy(['id' => $id]);
+
+        if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
+            $this->socialNetWorksAdministrator->updateSocialNetwork(new SocialNetwork($socialNetWork), $_POST);
+        }
+
+        $this->render('admin/social_networks_edit.html.twig', [
+            'social_network' => $this->socialNetworksManager->findOneBy(['id' => $id]),
+            'link' => 'social-networks',
+            'link_text' => 'réseaux sociaux',
+        ]);
+    }
+
+    /**
+     * @throws TwigException
+     * @throws Exception
+     */
+    public function deleteSocialNetWork(): void
+    {
+        $socialNetWork = $this->socialNetworksManager->findOneBy(['id' => $_POST['id']]);
+
+        $this->socialNetWorksAdministrator->deleteSocialNetWork(new SocialNetwork($socialNetWork));
+
+        $this->render('admin/successful_edit.html.twig', [
+            'link' => 'social-networks',
+            'link_text' => 'réseaux sociaux',
         ]);
     }
 }
