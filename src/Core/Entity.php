@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use App\Model\Admin;
 use ReflectionClass;
 use ReflectionException;
 
@@ -50,13 +49,6 @@ class Entity
     public function getProperties(): array
     {
         $reflectionClass = new ReflectionClass($this);
-
-        if ($this instanceof Admin) {
-            $parentClassProperties = $reflectionClass->getParentClass()->getProperties();
-            $childClassProperties = $reflectionClass->getProperties();
-
-            return array_merge($parentClassProperties, $childClassProperties);
-        }
 
         return $reflectionClass->getProperties();
     }
