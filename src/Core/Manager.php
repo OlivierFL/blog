@@ -65,13 +65,7 @@ abstract class Manager
 
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        $entities = [];
-
-        foreach ($results as $result) {
-            $entities[] = new $this->entity($result);
-        }
-
-        return $entities;
+        return $this->getEntities($results);
     }
 
     /**
@@ -94,13 +88,7 @@ abstract class Manager
     {
         $results = $this->db->query('SELECT * FROM '.$this->tableName)->fetchAll(PDO::FETCH_ASSOC);
 
-        $entities = [];
-
-        foreach ($results as $result) {
-            $entities[] = new $this->entity($result);
-        }
-
-        return $entities;
+        return $this->getEntities($results);
     }
 
     /**
@@ -340,5 +328,21 @@ abstract class Manager
     private function camelCaseToSnakeCase(string $property): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
+    }
+
+    /**
+     * @param array $results
+     *
+     * @return array
+     */
+    private function getEntities(array $results): array
+    {
+        $entities = [];
+
+        foreach ($results as $result) {
+            $entities[] = new $this->entity($result);
+        }
+
+        return $entities;
     }
 }
