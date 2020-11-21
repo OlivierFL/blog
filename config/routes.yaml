@@ -2,6 +2,9 @@ index:
   - action: index
     path: /
     methods: GET
+  - action: sendEmail
+    path: /send-email
+    methods: POST
 posts:
   - action: list
     path: '[/{page:[\d+]}]'
@@ -52,6 +55,21 @@ admin:
     methods: GET | POST
   - action: deleteUser
     path: /users/delete
+    methods: POST
+  - action: readSocialNetWorks
+    path: /social-networks
+    methods: GET
+  - action: readSocialNetWork
+    path: /social-networks/{id:\d+}
+    methods: GET
+  - action: updateSocialNetWork
+    path: /social-networks/edit/{id:\d+}
+    methods: GET | POST
+  - action: createSocialNetWork
+    path: /social-networks/create
+    methods: GET | POST
+  - action: deleteSocialNetWork
+    path: /social-networks/delete
     methods: POST
 user:
   - action: login

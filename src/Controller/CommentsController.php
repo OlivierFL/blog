@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exceptions\AccessDeniedException;
 use App\Exceptions\CommentException;
 use App\Exceptions\DatabaseException;
 use App\Service\CommentAdministrator;
@@ -14,10 +15,25 @@ class CommentsController extends Controller
      * @var CommentAdministrator
      */
     private CommentAdministrator $commentAdministrator;
+    /**
+     * @var array|string[]
+     */
+    private array $roles = [
+        'admin',
+        'user',
+    ];
 
+    /**
+     * CommentsController constructor.
+     *
+     * @throws AccessDeniedException
+     */
     public function __construct()
     {
         parent::__construct();
+        if (!\in_array($this->auth->getCurrentUserRole(), $this->roles, true)) {
+            throw new AccessDeniedException('Accès non autorisé !');
+        }
         $this->commentAdministrator = new CommentAdministrator($this->session);
     }
 

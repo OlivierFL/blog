@@ -36,14 +36,27 @@ class Validator
     }
 
     /**
-     *@throws Exception
+     * @throws Exception
      *
-     *@return ValidatorConstraints
+     * @return ValidatorConstraints
      */
     public function getSignUpValidator(): ValidatorConstraints
     {
         $this->addBaseValidation();
         $this->addSignUpValidation();
+
+        return $this->validator;
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @return ValidatorConstraints
+     */
+    public function getSocialNetWorkValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+        $this->addSocialNetWorkValidation();
 
         return $this->validator;
     }
@@ -72,6 +85,19 @@ class Validator
                 ;
             }
         }
+
+        return $this->validator;
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @return ValidatorConstraints
+     */
+    public function getContactValidator(): ValidatorConstraints
+    {
+        $this->addBaseValidation();
+        $this->addContactValidation();
 
         return $this->validator;
     }
@@ -123,5 +149,28 @@ class Validator
                 $this->validator->length('alt_url_avatar', 1, 255);
             }
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addContactValidation(): void
+    {
+        $this->validator->length('last_name', 1, 255)
+            ->length('first_name', 1, 255)
+            ->length('from', 5, 255)
+            ->length('subject', 1, 78)
+            ->email('from')
+        ;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addSocialNetWorkValidation(): void
+    {
+        $this->validator->length('name', 1, 255)
+            ->length('url', 1, 255)
+        ;
     }
 }
