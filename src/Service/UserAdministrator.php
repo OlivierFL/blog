@@ -12,6 +12,7 @@ use App\Managers\UserManager;
 use App\Model\Admin;
 use App\Model\User;
 use Exception;
+use ReflectionException;
 
 class UserAdministrator
 {
@@ -76,6 +77,10 @@ class UserAdministrator
      * @param Admin|User $user
      * @param array      $data
      *
+     * @throws FileDeleteException
+     * @throws FileUploadException
+     * @throws UserException
+     * @throws ReflectionException
      * @throws Exception
      */
     public function updateUser($user, array $data): void

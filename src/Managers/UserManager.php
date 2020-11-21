@@ -3,7 +3,6 @@
 namespace App\Managers;
 
 use App\Core\Manager;
-use App\Exceptions\DatabaseException;
 use App\Model\Admin;
 use App\Model\User;
 use PDO;
@@ -36,12 +35,11 @@ final class UserManager extends Manager
     /**
      * @param User $user
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      *
-     * @return string
+     * @return bool
      */
-    public function updateAdmin(User $user): string
+    public function updateAdmin(User $user): bool
     {
         $columns = implode(' = ?, ', $this->getColumns($user));
         $columns .= ' = ?';
@@ -50,12 +48,6 @@ final class UserManager extends Manager
 
         $query = $this->bindValues($query, $this->getValues($user));
 
-        $result = $query->execute();
-
-        if (true === $result) {
-            return $query->rowCount().' ligne(s) mise(s) à jour.';
-        }
-
-        throw DatabaseException::update();
+        return $query->execute();
     }
 }
