@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Core\Session;
 use App\Core\Validation\Validator;
-use App\Exceptions\DatabaseException;
 use App\Exceptions\FileDeleteException;
 use App\Exceptions\FileUploadException;
 use App\Exceptions\PostException;
@@ -43,7 +42,6 @@ class PostAdministrator
     /**
      * @param array $data
      *
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
@@ -67,7 +65,6 @@ class PostAdministrator
      * @param Post  $post
      * @param array $data
      *
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
@@ -118,7 +115,6 @@ class PostAdministrator
      *
      * @throws PostException
      * @throws ReflectionException
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws Exception
      */

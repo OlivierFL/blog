@@ -108,7 +108,6 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
@@ -129,7 +128,6 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws TwigException
      * @throws FileUploadException
