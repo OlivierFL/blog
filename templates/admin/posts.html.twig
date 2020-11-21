@@ -21,7 +21,7 @@
         <tr>
           <th scope="row">{{ post.id }}</th>
           <td>{{ post.title|capitalize }}</td>
-          <td>{{ post.first_name|capitalize }} {{ post.last_name|capitalize }}</td>
+          <td>{{ post.user_name }}</td>
           <td>{{ post.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</td>
           <td>
             <a href="/admin/posts/{{ post.id }}" class="btn btn-edit">

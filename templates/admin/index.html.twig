@@ -55,7 +55,7 @@
           <div class="row">
             {% for user in users %}
               <div class="col-6 col-md-3 mb-3">
-                <h5>{{ user.firstName }} {{ user.lastName }}</h5>
+                <h5>{{ user.first_name }} {{ user.last_name }}</h5>
                 <p class="{% if user.role == 'admin' %}text-success{% else %}text-primary{% endif %}"><i
                           class="fas {% if user.role == 'admin' %}fa-user-shield{% else %}fa-user{% endif %}"></i>&nbsp;{{ user.role|capitalize }}
                 </p>

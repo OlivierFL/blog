@@ -3,12 +3,9 @@
 namespace App\Model;
 
 use App\Core\Entity;
-use App\Core\TimestampableEntity;
 
 class User extends Entity
 {
-    use TimestampableEntity;
-
     /** @var string */
     public const ROLE_USER = 'user';
     /** @var string */
@@ -27,22 +24,6 @@ class User extends Entity
     protected $role;
     /** @var null|int */
     protected ?int $adminId;
-
-    /**
-     * User constructor.
-     *
-     * @param null|array $data
-     */
-    public function __construct(?array $data)
-    {
-        if (null !== $data) {
-            $this->hydrate($data);
-            if (!isset($data['created_at'], $data['updated_at'])) {
-                $this->setCreatedAt();
-                $this->setUpdatedAt();
-            }
-        }
-    }
 
     /**
      * @return string

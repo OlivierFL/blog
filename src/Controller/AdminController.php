@@ -201,9 +201,9 @@ class AdminController extends Controller
      */
     public function updateComment(int $id): void
     {
-        $comment = $this->commentManager->findOneWithAuthor($id);
+        $comment = $this->commentManager->findOneBy(['id' => $id]);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $this->commentAdministrator->updateComment(new Comment($comment), $_POST);
+            $this->commentAdministrator->updateComment($comment, $_POST);
         }
 
         $this->render('admin/comment.html.twig', [

@@ -91,24 +91,22 @@ class PostAdministrator
     }
 
     /**
-     * @param array $post
+     * @param Post $post
      *
      * @throws FileDeleteException
      * @throws PostException
      * @throws Exception
      */
-    public function deletePost(array $post): void
+    public function deletePost(Post $post): void
     {
-        $deletedPost = new Post($post);
-
-        if ($deletedPost->getCoverImg()) {
-            $this->fileUploader->delete($deletedPost->getCoverImg());
+        if ($post->getCoverImg()) {
+            $this->fileUploader->delete($post->getCoverImg());
         }
 
         try {
-            $this->postManager->delete($deletedPost);
+            $this->postManager->delete($post);
         } catch (Exception $e) {
-            throw PostException::delete($deletedPost->getId());
+            throw PostException::delete($post->getId());
         }
 
         $this->session->addMessages('Article supprimé');

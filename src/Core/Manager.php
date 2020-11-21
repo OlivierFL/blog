@@ -27,7 +27,7 @@ abstract class Manager
     {
         $this->db = (new PDOFactory())->getMysqlConnexion();
         $this->tableName = $this->getTableName();
-        $this->entity = '\\App\\Model\\'.ucfirst($this->tableName);
+        $this->entity = '\App\Model\\'.ucfirst($this->tableName);
     }
 
     /**

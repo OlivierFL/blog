@@ -3,15 +3,12 @@
 namespace App\Model;
 
 use App\Core\Entity;
-use App\Core\TimestampableEntity;
 use App\Managers\PostManager;
 use Cocur\Slugify\Slugify;
 use Exception;
 
 class Post extends Entity
 {
-    use TimestampableEntity;
-
     /** @var string */
     private $title;
     /** @var string */
@@ -34,12 +31,9 @@ class Post extends Entity
      */
     public function __construct(?array $data)
     {
-        if (null !== $data) {
-            $this->hydrate($data);
-            if (!isset($data['created_at'], $data['updated_at'])) {
-                $this->setCreatedAt();
-                $this->setUpdatedAt();
-            }
+        parent::__construct($data);
+        if (null === $this->slug) {
+            $this->slug = $this->createSlug($data['title']);
         }
     }
 

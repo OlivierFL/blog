@@ -3,12 +3,9 @@
 namespace App\Model;
 
 use App\Core\Entity;
-use App\Core\TimestampableEntity;
 
 class Comment extends Entity
 {
-    use TimestampableEntity;
-
     /** @var string */
     public const STATUS_PENDING = 'En attente de modération';
     /** @var string */
@@ -23,22 +20,6 @@ class Comment extends Entity
     private $userId;
     /** @var string */
     private $postId;
-
-    /**
-     * Comment constructor.
-     *
-     * @param null|array $data
-     */
-    public function __construct(?array $data)
-    {
-        if (null !== $data) {
-            $this->hydrate($data);
-            if (!isset($data['created_at'], $data['updated_at'])) {
-                $this->setCreatedAt();
-                $this->setUpdatedAt();
-            }
-        }
-    }
 
     /**
      * @return string
