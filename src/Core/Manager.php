@@ -94,13 +94,12 @@ abstract class Manager
     /**
      * @param Entity $entity
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      *
-     * @return false|PDOStatement
+     * @return bool
      */
-    public function create(Entity $entity)
+    public function create(Entity $entity): bool
     {
         $columns = implode(', ', $this->getColumns($entity));
         $values = $this->getValues($entity);
@@ -110,25 +109,19 @@ abstract class Manager
         $query = $this->db->prepare('INSERT INTO '.$this->tableName.' ('.$columns.') VALUES ('.$valuesPlaceholder.')');
 
         $query = $this->bindValues($query, $values);
-        $query->execute();
 
-        if (0 < $query->rowCount()) {
-            return $query->rowCount().' ligne(s) insérée(s).';
-        }
-
-        throw DatabaseException::create();
+        return $query->execute();
     }
 
     /**
      * @param Entity $entity
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      *
-     * @return int
+     * @return bool
      */
-    public function update(Entity $entity): int
+    public function update(Entity $entity): bool
     {
         $columns = implode(' = ?, ', $this->getColumns($entity));
         $columns .= ' = ?';
@@ -137,13 +130,7 @@ abstract class Manager
 
         $query = $this->bindValues($query, $this->getValues($entity));
 
-        $result = $query->execute();
-
-        if (true === $result) {
-            return $query->rowCount().' ligne(s) mise(s) à jour.';
-        }
-
-        throw DatabaseException::update();
+        return $query->execute();
     }
 
     /**
