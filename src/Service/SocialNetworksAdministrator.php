@@ -4,10 +4,9 @@ namespace App\Service;
 
 use App\Core\Session;
 use App\Core\Validation\Validator;
-use App\Exceptions\DatabaseException;
 use App\Exceptions\SocialNetWorkException;
 use App\Managers\SocialNetworkManager;
-use App\Model\SocialNetwork;
+use App\Model\Socialnetwork;
 use Exception;
 use ReflectionException;
 
@@ -47,7 +46,6 @@ class SocialNetworksAdministrator
     /**
      * @param array $data
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      */
@@ -56,7 +54,7 @@ class SocialNetworksAdministrator
         $validator = (new Validator($data))->getSocialNetWorkValidator();
         if ($validator->isValid()) {
             $data['icon_name'] = $this->getIconName($data['name']);
-            $socialNetWork = new SocialNetwork($data);
+            $socialNetWork = new Socialnetwork($data);
             $this->socialNetWorkManager->create($socialNetWork);
 
             $this->session->addMessages('Nouveau réseau social créé avec succès');
@@ -68,14 +66,13 @@ class SocialNetworksAdministrator
     }
 
     /**
-     * @param SocialNetwork $socialNetWork
+     * @param Socialnetwork $socialNetWork
      * @param array         $data
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      */
-    public function updateSocialNetwork(SocialNetwork $socialNetWork, array $data): void
+    public function updateSocialNetwork(Socialnetwork $socialNetWork, array $data): void
     {
         $validator = (new Validator($data))->getSocialNetWorkValidator();
         if ($validator->isValid()) {
@@ -92,11 +89,11 @@ class SocialNetworksAdministrator
     }
 
     /**
-     * @param SocialNetwork $socialNetWork
+     * @param Socialnetwork $socialNetWork
      *
      * @throws SocialNetWorkException
      */
-    public function deleteSocialNetWork(SocialNetwork $socialNetWork): void
+    public function deleteSocialNetWork(Socialnetwork $socialNetWork): void
     {
         try {
             $this->socialNetWorkManager->delete($socialNetWork);
