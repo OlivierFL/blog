@@ -8,13 +8,19 @@
           : {{ comment.comment_updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</small>
       </div>
     </div>
-  {% else %}
+  {% elseif comment.comment_status == 'Non validé' %}
     <div class="media mb-4 px-3 py-2">
       <div class="media-body">
         <h5 class="mt-0">{{ comment.comment_author|capitalize }}</h5>
         <p class="text-danger font-italic">Commentaire modéré par l'administrateur</p>
         <small class="text-muted font-italic">Commentaire publié le
           : {{ comment.comment_updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</small>
+      </div>
+    </div>
+  {% else %}
+    <div class="mb-4 px-3 py-2">
+      <div class="media-body">
+        <p class="text-muted font-italic">Soyez le premier à publier un commentaire</p>
       </div>
     </div>
   {% endif %}

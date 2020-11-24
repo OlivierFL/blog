@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Core\Entity;
 
-class SocialNetwork extends Entity
+class Socialnetwork extends Entity
 {
     /**
      * @var string
@@ -20,16 +20,6 @@ class SocialNetwork extends Entity
     private string $url;
 
     /**
-     * SocialNetwork constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        $this->hydrate($data);
-    }
-
-    /**
      * @return null|string
      */
     public function getName(): ?string
@@ -40,7 +30,7 @@ class SocialNetwork extends Entity
     /**
      * @param null|string $name
      *
-     * @return SocialNetwork
+     * @return Socialnetwork
      */
     public function setName(?string $name): self
     {
@@ -60,7 +50,7 @@ class SocialNetwork extends Entity
     /**
      * @param null|string $name
      *
-     * @return SocialNetwork
+     * @return Socialnetwork
      */
     public function setIconName(?string $name): self
     {
@@ -80,7 +70,7 @@ class SocialNetwork extends Entity
     /**
      * @param null|string $url
      *
-     * @return SocialNetwork
+     * @return Socialnetwork
      */
     public function setUrl(?string $url): self
     {

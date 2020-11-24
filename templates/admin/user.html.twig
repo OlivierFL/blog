@@ -7,12 +7,12 @@
         <div class="col-md-4 mt-3">
           <h5>Nom de l'utilisateur</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.user_name }}</p>
+          <p>{{ user.userName }}</p>
         </div>
         <div class="col-md-4 mt-3">
           <h5>Nom</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.first_name }} {{ user.last_name }}</p>
+          <p>{{ user.firstName|capitalize }} {{ user.lastName|capitalize }}</p>
         </div>
         <div class="col-md-4 mt-3">
           <h5>Adresse mail</h5>
@@ -34,12 +34,12 @@
         <div class="col-md-4 mt-3">
           <h5>Date d'inscription</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
+          <p>{{ user.createdAt|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
         </div>
         <div class="col-md-4 mt-3">
           <h5>Date de modification</h5>
           <hr class="separator-blue-left">
-          <p>{{ user.updated_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
+          <p>{{ user.updatedAt|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</p>
         </div>
       </div>
     </section>
@@ -55,13 +55,12 @@
         <div class="col-md-6 mt-3">
           <h5>Fichier téléchargé</h5>
           <hr class="separator-blue-left">
-          <a href="{{ user.url_cv }}">{{ user.url_cv }}</a>
+          <a href="/uploads/{{ user.urlCv }}" class="text-primary" target="_blank">{{ user.urlCv }}</a>
         </div>
         <div class="col-md-6 mt-3">
           <h5>Photo de profil</h5>
           <hr class="separator-blue-left">
-          <img src="{{ user.url_avatar }}" alt="{{ user.alt_url_avatar }}" height="200"
-               width="300">
+          <img src="/uploads/{{ user.urlAvatar }}" alt="{{ user.altUrlAvatar }}" height="200">
         </div>
       </section>
     {% endif %}

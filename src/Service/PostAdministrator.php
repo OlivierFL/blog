@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Core\Session;
 use App\Core\Validation\Validator;
-use App\Exceptions\DatabaseException;
 use App\Exceptions\FileDeleteException;
 use App\Exceptions\FileUploadException;
 use App\Exceptions\PostException;
@@ -43,16 +42,16 @@ class PostAdministrator
     /**
      * @param array $data
      *
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
+     * @throws Exception
      */
     public function createPost(array $data): void
     {
         $validator = (new Validator($data))->getBaseValidator();
         if ($validator->isValid()) {
-            $this->createOrUpdatePost($data);
+            $this->createOrUpdatePost(new Post($data));
 
             $this->session->addMessages('Nouvel article créé avec succès');
 
@@ -63,21 +62,21 @@ class PostAdministrator
     }
 
     /**
-     * @param array $post
+     * @param Post  $post
      * @param array $data
      *
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
      * @throws Exception
      */
-    public function updatePost(array $post, array $data): void
+    public function updatePost(Post $post, array $data): void
     {
-        $post = $this->updatePostWithNewValues($post, $data);
         $validator = (new Validator($data))->getPostUpdateValidator();
 
         if ($validator->isValid()) {
+            // Update current Post with new data from update form
+            $post->hydrate($data);
             $this->createOrUpdatePost($post, true);
 
             $this->session->addMessages('Article mis à jour');
@@ -89,47 +88,43 @@ class PostAdministrator
     }
 
     /**
-     * @param array $post
+     * @param Post $post
      *
      * @throws FileDeleteException
      * @throws PostException
      * @throws Exception
      */
-    public function deletePost(array $post): void
+    public function deletePost(Post $post): void
     {
-        $deletedPost = new Post($post);
-
-        if ($deletedPost->getCoverImg()) {
-            $this->fileUploader->delete($deletedPost->getCoverImg());
+        if ($post->getCoverImg()) {
+            $this->fileUploader->delete($post->getCoverImg());
         }
 
         try {
-            $this->postManager->delete($deletedPost);
+            $this->postManager->delete($post);
         } catch (Exception $e) {
-            throw PostException::delete($deletedPost->getId());
+            throw PostException::delete($post->getId());
         }
 
         $this->session->addMessages('Article supprimé');
     }
 
     /**
-     * @param array $data
-     * @param bool  $update
+     * @param Post $post
+     * @param bool $update
      *
      * @throws PostException
      * @throws ReflectionException
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws Exception
      */
-    private function createOrUpdatePost(array $data, bool $update = false): void
+    private function createOrUpdatePost(Post $post, bool $update = false): void
     {
         if (isset($_FILES) && 4 !== $_FILES['cover_img']['error']) {
             $file = $this->fileUploader->checkFile($_FILES['cover_img'], FileUploader::IMAGE);
-            $data['cover_img'] = $this->fileUploader->upload($file);
+            $post->setCoverImg($this->fileUploader->upload($file));
         }
-        $post = new Post($data);
-        $post->setAdminId($this->session->get('current_user')['admin_infos']['id']);
+        $post->setUserId($this->session->get('current_user')->getId());
 
         if ($update) {
             $result = $this->postManager->update($post);
@@ -147,22 +142,5 @@ class PostAdministrator
 
             throw PostException::create();
         }
-    }
-
-    /**
-     * @param array $post
-     * @param array $data
-     *
-     * @return array
-     */
-    private function updatePostWithNewValues(array $post, array $data): array
-    {
-        foreach ($post as $key => $value) {
-            if (isset($data[$key]) && $value !== $data[$key]) {
-                $post[$key] = $data[$key];
-            }
-        }
-
-        return $post;
     }
 }

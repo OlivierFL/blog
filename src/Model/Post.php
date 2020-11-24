@@ -3,15 +3,12 @@
 namespace App\Model;
 
 use App\Core\Entity;
-use App\Core\TimestampableEntity;
 use App\Managers\PostManager;
 use Cocur\Slugify\Slugify;
 use Exception;
 
 class Post extends Entity
 {
-    use TimestampableEntity;
-
     /** @var string */
     private $title;
     /** @var string */
@@ -23,22 +20,20 @@ class Post extends Entity
     /** @var string */
     private $altCoverImg;
     /** @var string */
-    private $adminId;
+    private $userId;
 
     /**
      * Post constructor.
      *
-     * @param array $data
+     * @param null|array $data
      *
      * @throws Exception
      */
-    public function __construct(array $data)
+    public function __construct(?array $data)
     {
-        $this->hydrate($data);
-        $this->setSlug();
-        if (!isset($data['created_at'], $data['updated_at'])) {
-            $this->setCreatedAt();
-            $this->setUpdatedAt();
+        parent::__construct($data);
+        if (null === $this->slug) {
+            $this->slug = $this->createSlug($data['title']);
         }
     }
 
@@ -83,11 +78,13 @@ class Post extends Entity
     }
 
     /**
+     * @param null|string $slug
+     *
      * @throws Exception
      */
-    public function setSlug(): void
+    public function setSlug(?string $slug): void
     {
-        $this->slug = $this->createSlug($this->title);
+        $this->slug = $slug;
     }
 
     /**
@@ -123,19 +120,19 @@ class Post extends Entity
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getAdminId(): string
+    public function getUserId(): int
     {
-        return $this->adminId;
+        return $this->userId;
     }
 
     /**
-     * @param string $adminId
+     * @param int $userId
      */
-    public function setAdminId(string $adminId): void
+    public function setUserId(int $userId): void
     {
-        $this->adminId = $adminId;
+        $this->userId = $userId;
     }
 
     /**
@@ -145,7 +142,7 @@ class Post extends Entity
      *
      * @return string
      */
-    private function createSlug(string $title): string
+    public function createSlug(string $title): string
     {
         $sluggedTitle = (new Slugify())->slugify($title);
 

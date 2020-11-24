@@ -3,42 +3,27 @@
 namespace App\Model;
 
 use App\Core\Entity;
-use App\Core\TimestampableEntity;
 
 class User extends Entity
 {
-    use TimestampableEntity;
-
     /** @var string */
     public const ROLE_USER = 'user';
     /** @var string */
     public const ROLE_ADMIN = 'admin';
     /** @var string */
-    private $userName;
+    protected $userName;
     /** @var string */
-    private $firstName;
+    protected $firstName;
     /** @var string */
-    private $lastName;
+    protected $lastName;
     /** @var string */
-    private $email;
+    protected $email;
     /** @var string */
-    private $password;
+    protected $password;
     /** @var string */
-    private $role;
-
-    /**
-     * User constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        $this->hydrate($data);
-        if (!isset($data['created_at'], $data['updated_at'])) {
-            $this->setCreatedAt();
-            $this->setUpdatedAt();
-        }
-    }
+    protected $role;
+    /** @var null|int */
+    protected ?int $adminId;
 
     /**
      * @return string
@@ -145,11 +130,7 @@ class User extends Entity
      */
     public function getRole(): string
     {
-        if (null === $this->role) {
-            return $this->role = self::ROLE_USER;
-        }
-
-        return $this->role;
+        return $this->role ?? ($this->role = self::ROLE_USER);
     }
 
     /**
@@ -160,6 +141,26 @@ class User extends Entity
     public function setRole(string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getAdminId(): ?int
+    {
+        return $this->adminId;
+    }
+
+    /**
+     * @param null|int $adminId
+     *
+     * @return User
+     */
+    public function setAdminId(?int $adminId): self
+    {
+        $this->adminId = $adminId;
 
         return $this;
     }

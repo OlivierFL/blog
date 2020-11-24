@@ -13,7 +13,6 @@ use App\Managers\PostManager;
 use App\Managers\SocialNetworkManager;
 use App\Managers\UserManager;
 use App\Model\Comment;
-use App\Model\SocialNetwork;
 use App\Service\CommentAdministrator;
 use App\Service\PostAdministrator;
 use App\Service\SocialNetworksAdministrator;
@@ -121,7 +120,6 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws DatabaseException
      * @throws FileUploadException
      * @throws PostException
      * @throws ReflectionException
@@ -142,15 +140,15 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws TwigException
      * @throws FileUploadException
      * @throws PostException
+     * @throws Exception
      */
     public function updatePost(int $id): void
     {
-        $post = $this->postManager->findOneWithAuthor($id);
+        $post = $this->postManager->findOneBy(['id' => $id]);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
             $this->postAdministrator->updatePost($post, $_POST);
         }
@@ -213,9 +211,9 @@ class AdminController extends Controller
      */
     public function updateComment(int $id): void
     {
-        $comment = $this->commentManager->findOneWithAuthor($id);
+        $comment = $this->commentManager->findOneBy(['id' => $id]);
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $this->commentAdministrator->updateComment(new Comment($comment), $_POST);
+            $this->commentAdministrator->updateComment($comment, $_POST);
         }
 
         $this->render('admin/comment.html.twig', [
@@ -255,7 +253,6 @@ class AdminController extends Controller
     /**
      * @param int $id
      *
-     * @throws ReflectionException
      * @throws TwigException
      * @throws Exception
      */
@@ -291,7 +288,6 @@ class AdminController extends Controller
     }
 
     /**
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws TwigException
      */
@@ -309,10 +305,11 @@ class AdminController extends Controller
 
     /**
      * @throws TwigException
+     * @throws DatabaseException
      */
     public function readSocialNetWorks(): void
     {
-        $socialNetworks = $this->socialNetworksManager->findAll();
+        $socialNetworks = $this->socialNetworksManager->findBy([], ['updated_at' => 'DESC']);
 
         $this->render('admin/social_networks.html.twig', [
             'social_networks' => $socialNetworks,
@@ -345,7 +342,7 @@ class AdminController extends Controller
         $socialNetWork = $this->socialNetworksManager->findOneBy(['id' => $id]);
 
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST)) {
-            $this->socialNetWorksAdministrator->updateSocialNetwork(new SocialNetwork($socialNetWork), $_POST);
+            $this->socialNetWorksAdministrator->updateSocialNetwork($socialNetWork, $_POST);
         }
 
         $this->render('admin/social_networks_edit.html.twig', [
@@ -363,7 +360,7 @@ class AdminController extends Controller
     {
         $socialNetWork = $this->socialNetworksManager->findOneBy(['id' => $_POST['id']]);
 
-        $this->socialNetWorksAdministrator->deleteSocialNetWork(new SocialNetwork($socialNetWork));
+        $this->socialNetWorksAdministrator->deleteSocialNetWork($socialNetWork);
 
         $this->render('admin/successful_edit.html.twig', [
             'link' => 'social-networks',

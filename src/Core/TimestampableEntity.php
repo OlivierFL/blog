@@ -7,9 +7,9 @@ use DateTime;
 trait TimestampableEntity
 {
     /** @var DateTime */
-    private $createdAt;
+    protected $createdAt;
     /** @var DateTime */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * @return null|string

@@ -1,19 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-  Olivier Floch - Développeur web PHP/Symfony
+  {{ user.firstName|capitalize }} {{ user.lastName|capitalize }} - {{ user.description|capitalize }}
 {% endblock %}
 
 {% block body %}
   <div class="hero-img">
     <div class="hero-text text-center">
       <img class="avatar"
-           src="/uploads/{{ user.url_avatar }}"
-           alt="{{ user.alt_url_avatar }}"
+           src="/uploads/{{ user.urlAvatar }}"
+           alt="{{ user.altUrlAvatar }}"
       >
-      <h1>{{ user.first_name|capitalize }} {{ user.last_name|capitalize }}</h1>
+      <h1>{{ user.firstName|capitalize }} {{ user.lastName|capitalize }}</h1>
       <hr class="separator-white">
-      <h2>{{ user.description }}</h2>
+      <h2>{{ user.description|capitalize }}</h2>
     </div>
   </div>
   <div class="container">
@@ -59,7 +59,7 @@
           <div class="card-body">
             <h3>Télécharger le CV</h3>
             <hr class="separator-blue">
-            <a href="/uploads/{{ admin.admin_infos.url_cv }}" class="black">Télécharger</a>
+            <a href="/uploads/{{ user.urlCv }}" class="black">Télécharger</a>
           </div>
         </div>
       </div>

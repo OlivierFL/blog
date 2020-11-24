@@ -19,10 +19,6 @@ class Auth
      * @var Session
      */
     private Session $session;
-    /**
-     * @var UserAdministrator
-     */
-    private UserAdministrator $userAdministrator;
 
     /**
      * Auth constructor.
@@ -33,7 +29,6 @@ class Auth
     {
         $this->userManager = new UserManager();
         $this->session = $session;
-        $this->userAdministrator = new UserAdministrator($this->session);
     }
 
     /**
@@ -55,15 +50,15 @@ class Auth
 
         $user = $this->userManager->findOneBy(['email' => $data['email']]);
 
-        if (empty($user) || 'ROLE_DISABLED' === $user['role']) {
+        if (empty($user) || 'ROLE_DISABLED' === $user->getRole()) {
             throw new UserNotFoundException('Aucun utilisateur trouvé pour l\'adresse email : '.$data['email']);
         }
 
-        if (false === $this->checkPassword($data['password'], $user['password'])) {
+        if (false === $this->checkPassword($data['password'], $user->getPassword())) {
             throw new InvalidPasswordException('Mot de passe invalide, veuillez réessayer.');
         }
 
-        $authenticatedUser = $this->userManager->findUser($user['id']);
+        $authenticatedUser = $this->userManager->findUser($user->getId());
         $this->session->set('current_user', $authenticatedUser);
         $this->session->addMessages('Connexion réussie');
     }
@@ -73,7 +68,7 @@ class Auth
      */
     public function getCurrentUserRole()
     {
-        return $this->session->get('current_user')['role'];
+        return $this->session->get('current_user')->getRole();
     }
 
     /**

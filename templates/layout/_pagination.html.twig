@@ -17,7 +17,7 @@
     </li>
     {% for i in 1..max_pages %}
       {% if i == 1 %}
-        <li class="page-item">
+        <li class="page-item {% if page == 1 %}active{% endif %}">
           <a href="/posts" class="page-link">{{ i }}</a>
         </li>
       {% else %}

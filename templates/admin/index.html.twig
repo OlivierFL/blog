@@ -33,7 +33,7 @@
             {% for comment in comments %}
               {% if comment.status == 'En attente de modération' %}
                 <li>
-                  <h5>Dans article {{ comment.post_id }}</h5>
+                  <h5>Dans article {{ comment.postId }}</h5>
                   <p>{{ comment.content|slice(0, 50) }}...</p>
                   <a href="/admin/comments/edit/{{ comment.id }}" class="black btn btn-sm btn-edit">
                     <i class="fas fa-edit"></i>

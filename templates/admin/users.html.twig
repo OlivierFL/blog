@@ -20,13 +20,13 @@
       {% for user in users %}
         <tr>
           <th scope="row">{{ user.id }}</th>
-          <td>{{ user.user_name }}</td>
-          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>{{ user.userName }}</td>
+          <td>{{ user.firstName|capitalize }} {{ user.lastName|capitalize }}</td>
           <td class="{% if user.role == 'admin' %}text-success{% else %}text-primary{% endif %}">
             <i class="fas {% if user.role == 'admin' %}fa-user-shield{% else %}fa-user{% endif %}"></i>
             {{ user.role|capitalize }}
           </td>
-          <td>{{ user.created_at|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</td>
+          <td>{{ user.createdAt|date('d\/m\/Y \\à H:i', 'Europe/Paris') }}</td>
           <td>
             <a href="/admin/users/{{ user.id }}" class="btn btn-edit">
               <i class="fas fa-eye"></i>
@@ -41,7 +41,7 @@
                       data-toggle="modal"
                       data-target="#deleteModal"
                       data-id="{{ user.id }}"
-                      data-item-info="{{ user.first_name }} {{ user.last_name }}"
+                      data-item-info="{{ user.firstName|capitalize }} {{ user.lastName|capitalize }}"
               >
                 <i class="fas fa-trash-alt"></i>
                 Supprimer

@@ -15,6 +15,8 @@ abstract class Manager
     protected PDO $db;
     /** @var null|string */
     protected ?string $tableName;
+    /** @var string */
+    protected string $entity;
 
     /**
      * Manager constructor.
@@ -25,6 +27,7 @@ abstract class Manager
     {
         $this->db = (new PDOFactory())->getMysqlConnexion();
         $this->tableName = $this->getTableName();
+        $this->entity = '\App\Model\\'.ucfirst($this->tableName);
     }
 
     /**
@@ -60,7 +63,9 @@ abstract class Manager
 
         $query->execute();
 
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $this->getEntities($results);
     }
 
     /**
@@ -81,19 +86,20 @@ abstract class Manager
      */
     public function findAll(): array
     {
-        return $this->db->query('SELECT * FROM '.$this->tableName)->fetchAll(PDO::FETCH_ASSOC);
+        $results = $this->db->query('SELECT * FROM '.$this->tableName)->fetchAll(PDO::FETCH_ASSOC);
+
+        return $this->getEntities($results);
     }
 
     /**
      * @param Entity $entity
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      *
-     * @return false|PDOStatement
+     * @return bool
      */
-    public function create(Entity $entity)
+    public function create(Entity $entity): bool
     {
         $columns = implode(', ', $this->getColumns($entity));
         $values = $this->getValues($entity);
@@ -103,25 +109,19 @@ abstract class Manager
         $query = $this->db->prepare('INSERT INTO '.$this->tableName.' ('.$columns.') VALUES ('.$valuesPlaceholder.')');
 
         $query = $this->bindValues($query, $values);
-        $query->execute();
 
-        if (0 < $query->rowCount()) {
-            return $query->rowCount().' ligne(s) insérée(s).';
-        }
-
-        throw DatabaseException::create();
+        return $query->execute();
     }
 
     /**
      * @param Entity $entity
      *
-     * @throws DatabaseException
      * @throws ReflectionException
      * @throws Exception
      *
-     * @return int
+     * @return bool
      */
-    public function update(Entity $entity): int
+    public function update(Entity $entity): bool
     {
         $columns = implode(' = ?, ', $this->getColumns($entity));
         $columns .= ' = ?';
@@ -130,13 +130,7 @@ abstract class Manager
 
         $query = $this->bindValues($query, $this->getValues($entity));
 
-        $result = $query->execute();
-
-        if (true === $result) {
-            return $query->rowCount().' ligne(s) mise(s) à jour.';
-        }
-
-        throw DatabaseException::update();
+        return $query->execute();
     }
 
     /**
@@ -162,6 +156,62 @@ abstract class Manager
     public function preventReuse(array $criteria): bool
     {
         return empty($this->findOneBy($criteria));
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    protected function getColumns(Entity $entity): array
+    {
+        $columns = [];
+        $properties = $entity->getProperties();
+        foreach ($properties as $property) {
+            $columns[] = $this->camelCaseToSnakeCase($property->name);
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    protected function getValues(Entity $entity): array
+    {
+        $properties = $entity->getProperties();
+        $values = [];
+        foreach ($properties as $property) {
+            $method = 'get'.ucfirst($property->name);
+            if (method_exists($entity, $method)) {
+                $values[] = $entity->{$method}();
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param PDOStatement $query
+     * @param array        $values
+     *
+     * @return PDOStatement
+     */
+    protected function bindValues(PDOStatement $query, array $values): PDOStatement
+    {
+        $i = 0;
+        foreach ($values as $value) {
+            ++$i;
+            $query->bindValue($i, $value, \is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+
+        return $query;
     }
 
     /**
@@ -242,62 +292,6 @@ abstract class Manager
     }
 
     /**
-     * @param Entity $entity
-     *
-     * @throws ReflectionException
-     *
-     * @return array
-     */
-    private function getColumns(Entity $entity): array
-    {
-        $columns = [];
-        $properties = $entity->getProperties();
-        foreach ($properties as $property) {
-            $columns[] = $this->camelCaseToSnakeCase($property->name);
-        }
-
-        return $columns;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws ReflectionException
-     *
-     * @return array
-     */
-    private function getValues(Entity $entity): array
-    {
-        $properties = $entity->getProperties();
-        $values = [];
-        foreach ($properties as $property) {
-            $method = 'get'.ucfirst($property->name);
-            if (method_exists($entity, $method)) {
-                $values[] = $entity->{$method}();
-            }
-        }
-
-        return $values;
-    }
-
-    /**
-     * @param PDOStatement $query
-     * @param array        $values
-     *
-     * @return PDOStatement
-     */
-    private function bindValues(PDOStatement $query, array $values): PDOStatement
-    {
-        $i = 0;
-        foreach ($values as $value) {
-            ++$i;
-            $query->bindValue($i, $value, \is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
-        }
-
-        return $query;
-    }
-
-    /**
      * @param array $values
      *
      * @return string
@@ -321,5 +315,21 @@ abstract class Manager
     private function camelCaseToSnakeCase(string $property): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
+    }
+
+    /**
+     * @param array $results
+     *
+     * @return array
+     */
+    private function getEntities(array $results): array
+    {
+        $entities = [];
+
+        foreach ($results as $result) {
+            $entities[] = new $this->entity($result);
+        }
+
+        return $entities;
     }
 }

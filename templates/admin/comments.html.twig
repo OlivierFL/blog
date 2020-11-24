@@ -25,7 +25,7 @@
           <td>
             <a href="/admin/posts/{{ comment.post_id }}" class="text-primary">{{ comment.post_id }}</a>
           </td>
-          <td>{{ comment.first_name }} {{ comment.last_name }}</td>
+          <td>{{ comment.user_name }}</td>
           <td
                   {% if comment.status == 'En attente de modération' %}
                     class="text-warning"

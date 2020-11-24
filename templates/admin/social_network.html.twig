@@ -16,6 +16,24 @@
         </div>
       </div>
     </section>
+    <section class="row justify-content-around justify-content-md-end">
+      <a href="/admin/social-networks" class="btn btn-edit mr-md-3 mb-4">
+        <i class="fas fa-chevron-left"></i>
+        Retour</a>
+      <a href="/admin/social-networks/edit/{{ social_network.id }}" class="btn btn-edit mr-md-3 mb-4">
+        <i class="fas fa-edit"></i>
+        Éditer</a>
+      <button type="button"
+              class="btn btn-danger mr-md-3 mb-4"
+              data-toggle="modal"
+              data-target="#deleteModal"
+              data-id="{{ social_network.id }}"
+              data-item-info="{{ social_network.name }}"
+      >
+        <i class="fas fa-trash-alt"></i>
+        Supprimer
+      </button>
+    </section>
   </div>
   {{ include('admin/_modal.html.twig') }}
 {% endblock %}
