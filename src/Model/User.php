@@ -11,19 +11,19 @@ class User extends Entity
     /** @var string */
     public const ROLE_ADMIN = 'admin';
     /** @var string */
-    protected $userName;
+    protected string $userName;
     /** @var string */
-    protected $firstName;
+    protected string $firstName;
     /** @var string */
-    protected $lastName;
+    protected string $lastName;
     /** @var string */
-    protected $email;
+    protected string $email;
     /** @var string */
-    protected $password;
+    protected string $password;
     /** @var string */
-    protected $role;
+    protected string $role;
     /** @var null|int */
-    protected ?int $adminId;
+    protected ?int $adminId = null;
 
     /**
      * @return string

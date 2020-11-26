@@ -13,13 +13,13 @@ class Comment extends Entity
     /** @var string */
     public const STATUS_REJECTED = 'Non validé';
     /** @var string */
-    private $content;
+    private string $content;
     /** @var string */
-    private $status;
+    private string $status;
     /** @var string */
-    private $userId;
+    private string $userId;
     /** @var string */
-    private $postId;
+    private string $postId;
 
     /**
      * @return string
@@ -31,10 +31,14 @@ class Comment extends Entity
 
     /**
      * @param string $content
+     *
+     * @return Comment
      */
-    public function setContent(string $content): void
+    public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
     }
 
     /**
@@ -47,10 +51,14 @@ class Comment extends Entity
 
     /**
      * @param string $status
+     *
+     * @return Comment
      */
-    public function setStatus(string $status): void
+    public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
     }
 
     /**
@@ -62,11 +70,15 @@ class Comment extends Entity
     }
 
     /**
-     * @param null|string $userId
+     * @param string $userId
+     *
+     * @return Comment
      */
-    public function setUserId(?string $userId): void
+    public function setUserId(string $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
     }
 
     /**
@@ -78,10 +90,14 @@ class Comment extends Entity
     }
 
     /**
-     * @param null|string $postId
+     * @param string $postId
+     *
+     * @return Comment
      */
-    public function setPostId(?string $postId): void
+    public function setPostId(string $postId): self
     {
         $this->postId = $postId;
+
+        return $this;
     }
 }

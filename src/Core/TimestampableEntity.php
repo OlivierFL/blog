@@ -6,9 +6,9 @@ use DateTime;
 
 trait TimestampableEntity
 {
-    /** @var DateTime */
+    /** @var DateTime|string */
     protected $createdAt;
-    /** @var DateTime */
+    /** @var DateTime|string */
     protected $updatedAt;
 
     /**
