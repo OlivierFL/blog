@@ -145,7 +145,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `user_name`, `first_name`, `last_name`, `email`, `password`, `role`, `created_at`, `updated_at`, `admin_id`) VALUES
-(33, 'olivier', 'Olivier', 'Floch', 'olivier.floch@example.com', '$2y$10$tW7iQ1ik0hZt385j.C32neXaIHynXOObQGX.yJBzStu4/0esIJyEq', 'admin', '2020-10-04 12:27:52', '2020-11-26 12:52:58', 5),
+(33, 'olivier', 'Olivier', 'Floch', 'admin@example.com', '$2y$10$tW7iQ1ik0hZt385j.C32neXaIHynXOObQGX.yJBzStu4/0esIJyEq', 'admin', '2020-10-04 12:27:52', '2020-11-26 12:52:58', 5),
 (34, 'user', 'User', 'User', 'user@example.com', '$2y$10$iOIIoT5zT.YPgiWGUqUFBuces7ZkvNMAROmiXGZ9IR5u.eN7DR04.', 'user', '2020-10-04 12:28:53', '2020-11-25 12:19:19', NULL),
 (35, 'anonymous35', 'anonymous35', 'anonymous35', 'anonymous35@example.com', '$2y$10$kr19lm/A4j31TO2Lkn8aT.fXiIwtWAAcXbY6durgkMbD0uCnrgkze', 'ROLE_DISABLED', '2020-10-09 08:31:56', '2020-10-09 09:00:03', NULL);
 
