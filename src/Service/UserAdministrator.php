@@ -88,17 +88,20 @@ class UserAdministrator
         $validator = (new Validator($data, $this->userManager))->getUserUpdateValidator();
 
         if ($validator->isValid()) {
+            if (User::ROLE_ADMIN === $user->getRole() && $this->checkFilesToUpload()) {
+                $data = $this->updateAdminFiles($user, $data);
+            }
+
             $user->hydrate($data);
 
             if (User::ROLE_ADMIN === $user->getRole()) {
-                $this->uploadAdminFiles($data);
                 $result = $this->userManager->updateAdmin($user);
             } else {
                 $result = $this->userManager->update($user);
             }
 
             if (false === $result) {
-                if ('admin' === $user->getRole()) {
+                if (User::ROLE_ADMIN === $user->getRole()) {
                     $this->deleteAdminFiles($user);
                 }
 
@@ -163,20 +166,32 @@ class UserAdministrator
     }
 
     /**
+     * @param Admin $admin
      * @param array $data
      *
      * @throws FileUploadException
+     * @throws FileDeleteException
      *
      * @return array
      */
-    private function uploadAdminFiles(array $data): array
+    private function updateAdminFiles(Admin $admin, array $data): array
     {
         if (isset($_FILES) && 4 !== $_FILES['url_avatar']['error']) {
+            // Delete old file if there is one
+            if (null !== $admin->getUrlAvatar()) {
+                $this->fileUploader->delete($admin->getUrlAvatar());
+            }
+
             $file = $this->fileUploader->checkFile($_FILES['url_avatar'], FileUploader::IMAGE);
             $data['url_avatar'] = $this->fileUploader->upload($file);
         }
 
         if (isset($_FILES) && 4 !== $_FILES['url_cv']['error']) {
+            // Delete old avatar image if there is one
+            if (null !== $admin->getUrlCv()) {
+                $this->fileUploader->delete($admin->getUrlCv());
+            }
+
             $file = $this->fileUploader->checkFile($_FILES['url_cv'], FileUploader::FILE);
             $data['url_cv'] = $this->fileUploader->upload($file);
         }
@@ -198,5 +213,15 @@ class UserAdministrator
         if (null !== $admin->getUrlCv()) {
             $this->fileUploader->delete($admin->getUrlCv());
         }
+    }
+
+    /**
+     * Method used to check if new files are uploaded on user update.
+     *
+     * @return bool
+     */
+    private function checkFilesToUpload(): bool
+    {
+        return isset($_FILES) && (4 !== $_FILES['url_avatar']['error'] || 4 !== $_FILES['url_cv']['error']);
     }
 }
