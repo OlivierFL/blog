@@ -42,3 +42,7 @@ In order to have a fully functional blog, the SQL file contains :
     
 - 5 blog posts. 3 posts per page are displayed with pagination.
 - 5 comments created by various users and in different states (_pending_, _rejected_ and _approved_).
+
+# Sending emails
+
+Emails are sent with `php mailer` _package_. To send emails, create `mail.yaml` configuration file. An example configuration is available in `mail.yaml.example` file.

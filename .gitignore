@@ -3,4 +3,5 @@
 /vendor/
 /var/
 /config/db-config.yaml
+/config/mail.yaml
 /codeclimate-master
