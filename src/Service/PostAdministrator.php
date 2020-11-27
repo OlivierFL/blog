@@ -75,6 +75,11 @@ class PostAdministrator
         $validator = (new Validator($data))->getPostUpdateValidator();
 
         if ($validator->isValid()) {
+            // Delete old cover image if there is a new uploaded image
+            if ((isset($_FILES) && 4 !== $_FILES['cover_img']['error']) && null !== $post->getCoverImg()) {
+                $this->fileUploader->delete($post->getCoverImg());
+            }
+
             // Update current Post with new data from update form
             $post->hydrate($data);
             $this->createOrUpdatePost($post, true);
