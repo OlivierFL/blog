@@ -10,17 +10,17 @@ use Exception;
 class Post extends Entity
 {
     /** @var string */
-    private $title;
+    private string $title;
     /** @var string */
-    private $content;
+    private string $content;
+    /** @var null|string */
+    private ?string $slug = null;
+    /** @var null|string */
+    private ?string $coverImg = null;
     /** @var string */
-    private $slug;
+    private string $altCoverImg;
     /** @var string */
-    private $coverImg;
-    /** @var string */
-    private $altCoverImg;
-    /** @var string */
-    private $userId;
+    private string $userId;
 
     /**
      * Post constructor.
@@ -47,10 +47,14 @@ class Post extends Entity
 
     /**
      * @param string $title
+     *
+     * @return Post
      */
-    public function setTitle(string $title): void
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
     }
 
     /**
@@ -63,16 +67,20 @@ class Post extends Entity
 
     /**
      * @param string $content
+     *
+     * @return Post
      */
-    public function setContent(string $content): void
+    public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
@@ -80,11 +88,13 @@ class Post extends Entity
     /**
      * @param null|string $slug
      *
-     * @throws Exception
+     * @return Post
      */
-    public function setSlug(?string $slug): void
+    public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
     }
 
     /**
@@ -97,10 +107,14 @@ class Post extends Entity
 
     /**
      * @param null|string $coverImg
+     *
+     * @return Post
      */
-    public function setCoverImg(?string $coverImg): void
+    public function setCoverImg(?string $coverImg): self
     {
         $this->coverImg = $coverImg;
+
+        return $this;
     }
 
     /**
@@ -112,11 +126,15 @@ class Post extends Entity
     }
 
     /**
-     * @param null|string $altCoverImg
+     * @param string $altCoverImg
+     *
+     * @return Post
      */
-    public function setAltCoverImg(?string $altCoverImg): void
+    public function setAltCoverImg(string $altCoverImg): self
     {
         $this->altCoverImg = $altCoverImg;
+
+        return $this;
     }
 
     /**
@@ -129,10 +147,14 @@ class Post extends Entity
 
     /**
      * @param int $userId
+     *
+     * @return Post
      */
-    public function setUserId(int $userId): void
+    public function setUserId(int $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
     }
 
     /**

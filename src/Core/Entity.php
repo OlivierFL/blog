@@ -10,7 +10,7 @@ class Entity
     use TimestampableEntity;
 
     /** @var int */
-    private $id;
+    private int $id;
 
     /**
      * Entity constructor.

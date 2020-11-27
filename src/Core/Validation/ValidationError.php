@@ -7,15 +7,15 @@ class ValidationError
     /**
      * @var string
      */
-    private $key;
+    private string $key;
     /**
      * @var string
      */
-    private $rule;
+    private string $rule;
     /**
      * @var array
      */
-    private $messages = [
+    private array $messages = [
         'required' => 'Le champ %s est obligatoire',
         'not_blank' => 'Le champ %s ne doit pas être vide',
         'unique' => 'Le champ %s existe déjà',
@@ -30,7 +30,7 @@ class ValidationError
     /**
      * @var array
      */
-    private $attributes;
+    private array $attributes;
 
     /**
      * ValidationError constructor.

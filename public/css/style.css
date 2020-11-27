@@ -12,7 +12,7 @@ main {
 }
 
 h1 {
-    font-family: 'Abril Fatface', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 6rem;
 }
 
@@ -247,6 +247,10 @@ li {
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
+}
+
+.hero-img-post h1 {
+    font-family: 'Poiret One', sans-serif;
 }
 
 .hero-img-post img {

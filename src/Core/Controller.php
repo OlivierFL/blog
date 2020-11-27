@@ -2,12 +2,10 @@
 
 namespace Core;
 
-use App\Core\PDOFactory;
 use App\Core\Session;
 use App\Exceptions\TwigException;
 use App\Managers\SocialNetworkManager;
 use App\Service\Auth;
-use PDO;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -34,8 +32,6 @@ class Controller
      * @var Auth
      */
     protected Auth $auth;
-    /** @var PDO */
-    protected PDO $db;
 
     /**
      * Controller constructor.
@@ -50,7 +46,6 @@ class Controller
         $this->session = new Session($_SESSION);
         $this->auth = new Auth($this->session);
         $this->twig->addGlobal('session', $this->session->getSession());
-        $this->db = (new PDOFactory())->getMysqlConnexion();
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Core\Session;
 use App\Core\Validation\Validator;
 use App\Exceptions\CommentException;
-use App\Exceptions\DatabaseException;
 use App\Managers\CommentManager;
 use App\Model\Comment;
 use Exception;
@@ -17,7 +16,7 @@ class CommentAdministrator
      * @var CommentManager
      */
     private CommentManager $commentManager;
-    /** œ.
+    /**
      * @var Session
      */
     private Session $session;
@@ -37,7 +36,6 @@ class CommentAdministrator
      * @param array $data
      *
      * @throws CommentException
-     * @throws DatabaseException
      * @throws ReflectionException
      */
     public function createComment(array $data): void
@@ -80,7 +78,7 @@ class CommentAdministrator
 
         try {
             $this->commentManager->update($comment);
-        } catch (DatabaseException | ReflectionException $e) {
+        } catch (ReflectionException $e) {
             throw CommentException::update($comment->getId());
         }
 
@@ -98,7 +96,6 @@ class CommentAdministrator
      *
      * @throws CommentException
      * @throws ReflectionException
-     * @throws DatabaseException
      */
     private function create(array $data): void
     {
