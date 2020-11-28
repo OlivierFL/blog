@@ -57,3 +57,10 @@ In order to have a fully functional blog, the SQL file contains :
 # Sending emails
 
 Emails are sent with `php mailer` _package_. To send emails, create `mail.yaml` configuration file. An example configuration is available in `mail.yaml.example` file.
+
+# Code quality
+
+Links to code quality tools used for this project:
+
+- Codeclimate : https://codeclimate.com/github/OlivierFL/blog
+- SonarCloud : https://sonarcloud.io/dashboard?id=OlivierFL_blog
