@@ -9,7 +9,7 @@ class PDOFactory
     /**
      * @var array
      */
-    private $config;
+    private array $config;
 
     /**
      * PDOFactory constructor.

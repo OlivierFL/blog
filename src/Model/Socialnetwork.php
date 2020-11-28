@@ -6,75 +6,69 @@ use App\Core\Entity;
 
 class Socialnetwork extends Entity
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private string $name;
-    /**
-     * @var string
-     */
+    /** @var string */
     private string $iconName;
-    /**
-     * @var string
-     */
+    /** @var string */
     private string $url;
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param null|string $name
+     * @param string $name
      *
      * @return Socialnetwork
      */
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
-        $name ? $this->name = $name : null;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getIconName(): ?string
+    public function getIconName(): string
     {
         return $this->iconName;
     }
 
     /**
-     * @param null|string $name
+     * @param string $name
      *
      * @return Socialnetwork
      */
-    public function setIconName(?string $name): self
+    public function setIconName(string $name): self
     {
-        $name ? $this->iconName = $name : null;
+        $this->iconName = $name;
 
         return $this;
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getUrl(): ?string
+    public function getUrl(): string
     {
         return $this->url;
     }
 
     /**
-     * @param null|string $url
+     * @param string $url
      *
      * @return Socialnetwork
      */
-    public function setUrl(?string $url): self
+    public function setUrl(string $url): self
     {
-        $url ? $this->url = $url : null;
+        $this->url = $url;
 
         return $this;
     }

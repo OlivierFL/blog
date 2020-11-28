@@ -4,27 +4,17 @@ namespace App\Model;
 
 class Admin extends User
 {
-    /** @var string */
-    private $description;
-    /** @var string */
-    private $urlAvatar;
-    /** @var string */
-    private $altUrlAvatar;
-    /** @var string */
-    private $urlCv;
+    /** @var null|string */
+    private ?string $description = null;
+    /** @var null|string */
+    private ?string $urlAvatar = null;
+    /** @var null|string */
+    private ?string $altUrlAvatar = null;
+    /** @var null|string */
+    private ?string $urlCv = null;
 
     /**
-     * Admin constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
-        $this->hydrate($data);
-    }
-
-    /**
-     * @return string
+     * @return null|string
      */
     public function getDescription(): ?string
     {
@@ -44,7 +34,7 @@ class Admin extends User
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getUrlAvatar(): ?string
     {
@@ -64,7 +54,7 @@ class Admin extends User
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getAltUrlAvatar(): ?string
     {
@@ -84,7 +74,7 @@ class Admin extends User
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getUrlCv(): ?string
     {
