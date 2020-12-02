@@ -23,6 +23,10 @@ use ReflectionException;
 
 class AdminController extends Controller
 {
+    private const SUCCESSFUL_EDIT_TEMPLATE = 'admin/successful_edit.html.twig';
+
+    private const SOCIAL_NETWORKS_LINK_TEXT = 'réseaux sociaux';
+
     /**
      * @var CommentAdministrator
      */
@@ -170,7 +174,7 @@ class AdminController extends Controller
 
         $this->postAdministrator->deletePost($post);
 
-        $this->render('admin/successful_edit.html.twig', [
+        $this->render(self::SUCCESSFUL_EDIT_TEMPLATE, [
             'link' => 'posts',
             'link_text' => 'articles',
         ]);
@@ -281,7 +285,7 @@ class AdminController extends Controller
 
         $this->userAdministrator->deleteUser($user);
 
-        $this->render('admin/successful_edit.html.twig', [
+        $this->render(self::SUCCESSFUL_EDIT_TEMPLATE, [
             'link' => 'users',
             'link_text' => 'utilisateurs',
         ]);
@@ -299,7 +303,7 @@ class AdminController extends Controller
 
         $this->render('admin/social_networks_create.html.twig', [
             'link' => 'social-networks',
-            'link_text' => 'réseaux sociaux',
+            'link_text' => self::SOCIAL_NETWORKS_LINK_TEXT,
         ]);
     }
 
@@ -348,7 +352,7 @@ class AdminController extends Controller
         $this->render('admin/social_networks_edit.html.twig', [
             'social_network' => $this->socialNetworksManager->findOneBy(['id' => $id]),
             'link' => 'social-networks',
-            'link_text' => 'réseaux sociaux',
+            'link_text' => self::SOCIAL_NETWORKS_LINK_TEXT,
         ]);
     }
 
@@ -362,9 +366,9 @@ class AdminController extends Controller
 
         $this->socialNetWorksAdministrator->deleteSocialNetWork($socialNetWork);
 
-        $this->render('admin/successful_edit.html.twig', [
+        $this->render(self::SUCCESSFUL_EDIT_TEMPLATE, [
             'link' => 'social-networks',
-            'link_text' => 'réseaux sociaux',
+            'link_text' => self::SOCIAL_NETWORKS_LINK_TEXT,
         ]);
     }
 }
